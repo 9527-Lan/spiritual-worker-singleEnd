@@ -1,0 +1,172 @@
+{
+	"easycom": {
+		"autoscan": true,
+		"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-bottom"
+				}
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-bottom"
+				}
+			}
+		},
+		{
+			"path": "pages/index/home",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/my/index",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path" : "pages/index/search",
+			"style" : 
+			{
+				"navigationBarTitleText" : "搜索",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/editInfo",
+			"style" : 
+			{
+				"navigationBarTitleText" : "我的信息",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/authenticate/uploadIDCard",
+			"style" : 
+			{
+				"navigationBarTitleText" : "上传身份证",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/authenticate/uploadLicense",
+			"style" : 
+			{
+				"navigationBarTitleText" : "上传营业执照",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/enterpriseCertification",
+			"style" : 
+			{
+				"navigationBarTitleText" : "企业认证",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/signContract",
+			"style" : 
+			{
+				"navigationBarTitleText" : "签署合同",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/index/personalDetails/index",
+			"style" : 
+			{
+				"navigationBarTitleText" : "个人信息",
+				"navigationBarBackgroundColor": "#3a84f0",
+				"navigationBarTextStyle": "#fff",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/index/personalDetails/check",
+			"style" : 
+			{
+				"navigationBarTitleText" : "个人信息",
+				"navigationBarBackgroundColor": "#3a84f0",
+				"navigationBarTextStyle": "#fff",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/order/index",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh" : true
+			}
+		},
+		{
+			"path" : "pages/order/detail/being",
+			"style" : 
+			{
+				"navigationBarTitleText" : "用工详情",
+				"navigationBarBackgroundColor": "#3a84f0",
+				"navigationBarTextStyle": "#fff",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/order/detail/grab",
+			"style" : 
+			{
+				"navigationBarTitleText" : "用工详情",
+				"navigationBarBackgroundColor": "#3a84f0",
+				"navigationBarTextStyle": "#fff",
+				"enablePullDownRefresh" : false
+			}
+		}
+	],
+	"tabBar": {
+		"color": "##DDDDDD",
+		"selectedColor": "#3A84F0",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+			"pagePath": "pages/index/home",
+			"iconPath": "static/home.png",
+			"selectedIconPath": "static/home_sl.png",
+			"text": "首页"
+		}, {
+			"pagePath": "pages/my/index",
+			"iconPath": "static/my.png",
+			"selectedIconPath": "static/my_sl.png",
+			"text": "我的"
+		}]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "灵活用工",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	}
+}
