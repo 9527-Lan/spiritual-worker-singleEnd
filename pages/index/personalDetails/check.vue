@@ -8,11 +8,7 @@
 						<view class="flex-center">
 							<view class="name">{{ detailData.name }}</view>
 							<view class="sex-box" :style="{ backgroundColor: sexBgColor[detailData.sex] }">
-								<u-icon
-									name="account-fill"
-									size="24rpx"
-									labelSize="24rpx"
-									:label="detailData.sex"
+								<u-icon name="account-fill" size="24rpx" labelSize="24rpx" :label="detailData.sex"
 									:color="colorFilter[detailData.sex]"
 									:label-color="colorFilter[detailData.sex]"></u-icon>
 							</view>
@@ -34,7 +30,8 @@
 					<view class="tip-text">用工数：{{ detailData.times }}次</view>
 				</view>
 				<view class="record-list">
-					<view class="record-item flex-center-between" v-for="(item, index) in detailData.records" :key="index">
+					<view class="record-item flex-center-between" v-for="(item, index) in detailData.records"
+						:key="index">
 						<view class="record-item-title">{{ item.title }}</view>
 						<view class="record-item-time">{{ item.startTime }}-{{ item.endTime }}</view>
 					</view>
@@ -42,7 +39,8 @@
 			</view>
 		</view>
 		<view class="footer">
-			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"></u-icon>
+			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
+				size="36rpx"></u-icon>
 			<view class="flex-center btn-box">
 				<u-button text="拒绝Ta" type="info" plain></u-button>
 				<u-button text="审核通过" color="#3A84F0"></u-button>
@@ -52,6 +50,9 @@
 </template>
 
 <script>
+	import {
+		employment
+	} from "@/api/user.js"
 	export default {
 		props: {
 			//detialsID
@@ -77,10 +78,14 @@
 					男: '#E6F0FF',
 					女: '#FFF1F1',
 				},
+				id: '1'
 			}
 		},
 		created() {
 			this.init()
+		},
+		onLoad() {
+			this.employmentList()
 		},
 		methods: {
 			init() {
@@ -96,27 +101,87 @@
 						hasCertificate: true,
 						certificate: '/static/证书.png',
 						times: 13,
-						records: [
-							{ title: '电工维修', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '大厦电路检测', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '物业机房电路维修', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '电力抢救', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '大厦电路检测', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '物业机房电路维修', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '电力抢救', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '大厦电路检测', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '物业机房电路维修', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '电力抢救', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '大厦电路检测', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '物业机房电路维修', startTime: '2023.09.17', endTime: '2023.09.25' },
-							{ title: '电工维修', startTime: '2023.09.17', endTime: '2023.09.25' },
+						records: [{
+								title: '电工维修',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '大厦电路检测',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '物业机房电路维修',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '电力抢救',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '大厦电路检测',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '物业机房电路维修',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '电力抢救',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '大厦电路检测',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '物业机房电路维修',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '电力抢救',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '大厦电路检测',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '物业机房电路维修',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
+							{
+								title: '电工维修',
+								startTime: '2023.09.17',
+								endTime: '2023.09.25'
+							},
 						],
 					}
 					this.detailData = JSON.parse(JSON.stringify(res))
 					resolve(res)
 				})
 			},
+			employmentList() {
+				let params = {
+					id: this.id
+				}
+				employment(params).then(res => {
+					console.log(res)
+				})
+			}
 		},
+		
 	}
 </script>
 
@@ -124,8 +189,10 @@
 	page {
 		background-color: #f2f6ff;
 	}
+
 	.pages-index-personalDetails-check {
 		position: relative;
+
 		.header {
 			background-color: #3a84f0;
 			color: #fff;
@@ -135,15 +202,18 @@
 			left: 0;
 			right: 0;
 		}
+
 		.flex-center {
 			display: flex;
 			align-items: center;
 		}
+
 		.flex-center-between {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 		}
+
 		.body-wrapper {
 			position: absolute;
 			top: 32rpx;
@@ -152,16 +222,19 @@
 			padding: 0 32rpx;
 			box-sizing: border-box;
 			z-index: 1;
+
 			.title {
 				font-size: 28rpx;
 				font-weight: bold;
 				color: #333333;
 				margin: 30rpx 0;
 			}
+
 			.tip-text {
 				font-size: 24rpx;
 				color: #666666;
 			}
+
 			.body {
 				padding: 32rpx;
 				box-sizing: border-box;
@@ -169,27 +242,33 @@
 				background: #ffffff;
 				border-radius: 15rpx;
 				margin-bottom: 230rpx;
+
 				.information {
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
+
 					.information-left {
 						height: 100%;
 					}
+
 					.name {
 						font-size: 32rpx;
 						font-weight: bold;
 						color: #333333;
 					}
+
 					.sex-box {
 						margin-left: 33rpx;
 						padding: 10rpx;
 						border-radius: 5rpx;
 					}
+
 					.information-tag {
 						margin-top: 24rpx;
 						display: flex;
 						align-items: center;
+
 						.tag-item {
 							border-radius: 5rpx;
 							font-size: 24rpx;
@@ -199,26 +278,31 @@
 							padding: 0 11rpx;
 							height: 43rpx;
 							line-height: 43rpx;
-							& + .tag-item {
+
+							&+.tag-item {
 								margin-left: 10rpx;
 							}
 						}
 					}
 				}
+
 				.certificate {
 					display: flex;
 					align-items: center;
 					justify-content: center;
 				}
+
 				.record-list {
 					.record-item {
 						margin-top: 40rpx;
 					}
+
 					.record-item-title {
 						font-size: 24rpx;
 						font-weight: 500;
 						color: #333333;
 					}
+
 					.record-item-time {
 						font-size: 20rpx;
 						font-weight: 500;
@@ -227,6 +311,7 @@
 				}
 			}
 		}
+
 		.footer {
 			position: fixed;
 			z-index: 3;
@@ -239,13 +324,16 @@
 			display: flex;
 			align-items: center;
 			background-color: #fff;
+
 			.btn-box {
 				flex: 1;
 				height: 89rpx;
 				margin-left: 47rpx;
+
 				.u-button {
 					height: 100%;
-					& + .u-button {
+
+					&+.u-button {
 						margin-left: 20rpx;
 					}
 				}
