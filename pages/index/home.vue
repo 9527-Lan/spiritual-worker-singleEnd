@@ -11,7 +11,7 @@
 		<view class="order-box">
 			<u-image src="@/static/publish.png" height="200rpx" width="100%"></u-image>
 			<view class="order-btn">
-				<u-button color="#3A84F0" size="mini" @click="$toRoute('/pages/order/index')">一键下单</u-button>
+				<u-button color="#3A84F0" size="mini" @click="$toRoute('/pages/order/add')">一键下单</u-button>
 			</view>
 		</view>
 		<view>

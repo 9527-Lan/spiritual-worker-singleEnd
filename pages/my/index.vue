@@ -10,7 +10,7 @@
 		<view class="operate-container">
 			<view class="title">我的订单</view>
 			<u-grid :col="4" :border="false">
-				<u-grid-item v-for="(item, index) in operates" :key="index">
+				<u-grid-item v-for="(item, index) in operates" :key="index" @click="$toRoute(item.route)">
 					<view class="operate-item">
 						<view class="number" :style="{ color: item.color }">{{ item.number }}</view>
 						<view class="laber">{{ item.label }}</view>
@@ -40,6 +40,7 @@
 	export default {
 		data() {
 			return {
+<<<<<<< HEAD
 				information: {
 					img: '',
 					name: '张三三',
@@ -65,6 +66,14 @@
 						label: '异常',
 						color: '#F37878'
 					},
+=======
+				information: { img: '', name: '张三三', phone: 15344446666 },
+				operates: [
+					{ number: 3, label: '抢单中', color: '#333333', route: '/pages/order/index?state=grab' },
+					{ number: 1, label: '进行中', color: '#333333', route: '/pages/order/index?state=being' },
+					{ number: 56, label: '已完成', color: '#333333', route: '/pages/order/index?state=completes' },
+					{ number: 0, label: '异常', color: '#F37878', route: '/pages/order/index?state=exceptions' },
+>>>>>>> 404790d6cb1d621a239ec037eb92a2b5d938c58d
 				],
 				cellList: [{
 						icon: '/static/我的信息.png',
@@ -179,7 +188,9 @@
 
 				.status {
 					margin-left: 13rpx;
-					padding: 7rpx 19rpx;
+					padding: 0 19rpx;
+					height: 35rpx;
+					line-height: 35rpx;
 					box-sizing: border-box;
 					background-color: #f37878;
 					color: #fff;

@@ -53,7 +53,7 @@
         "appid" : "touristappid",
         "setting" : {
             "urlCheck" : false,
-            "minified" : true
+            "minified" : false
         },
         "usingComponents" : true
     },

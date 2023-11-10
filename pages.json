@@ -102,7 +102,7 @@
 			{
 				"navigationBarTitleText" : "个人信息",
 				"navigationBarBackgroundColor": "#3a84f0",
-				"navigationBarTextStyle": "#fff",
+				"navigationBarTextStyle": "white",
 				"enablePullDownRefresh" : false
 			}
 		},
@@ -112,7 +112,7 @@
 			{
 				"navigationBarTitleText" : "个人信息",
 				"navigationBarBackgroundColor": "#3a84f0",
-				"navigationBarTextStyle": "#fff",
+				"navigationBarTextStyle": "white",
 				"enablePullDownRefresh" : false
 			}
 		},
@@ -131,7 +131,7 @@
 			{
 				"navigationBarTitleText" : "用工详情",
 				"navigationBarBackgroundColor": "#3a84f0",
-				"navigationBarTextStyle": "#fff",
+				"navigationBarTextStyle": "white",
 				"enablePullDownRefresh" : false
 			}
 		},
@@ -141,7 +141,25 @@
 			{
 				"navigationBarTitleText" : "用工详情",
 				"navigationBarBackgroundColor": "#3a84f0",
-				"navigationBarTextStyle": "#fff",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/order/detail/completing",
+			"style" : 
+			{
+				"navigationBarTitleText" : "用工详情",
+				"navigationBarBackgroundColor": "#3a84f0",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/order/add",
+			"style" : 
+			{
+				"navigationBarTitleText" : "一键下单",
 				"enablePullDownRefresh" : false
 			}
 		}
@@ -150,7 +168,7 @@
 		"color": "##DDDDDD",
 		"selectedColor": "#3A84F0",
 		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
+		"backgroundColor": "#fff",
 		"list": [{
 			"pagePath": "pages/index/home",
 			"iconPath": "static/home.png",

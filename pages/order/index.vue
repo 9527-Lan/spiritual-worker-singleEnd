@@ -14,7 +14,7 @@
 			</view>
 		</view>
 		<view class="order-list">
-			<orderItem v-for="(item, index) in orderList" :key="index" :compData="item" ></orderItem>
+			<orderItem v-for="(item, index) in orderList" :key="index" :compData="item"></orderItem>
 		</view>
 		<view class="page-footer">
 			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx" class="page-footer"></u-icon>
@@ -122,7 +122,23 @@
 				],
 			}
 		},
-		onShow() {
+		onLoad(event) {
+			switch (event.state) {
+				case 'being':
+					this.currentType = 0
+					break
+				case 'grab':
+					this.currentType = 1
+					break
+				case 'completes':
+					this.currentType = 2
+					break
+				case 'exceptions':
+					this.currentType = 3
+					break
+				default:
+					break
+			}
 			this.init()
 		},
 		onPullDownRefresh() {
@@ -176,7 +192,7 @@
 	}
 	.pages-order-index {
 		padding: 0 32rpx;
-		padding-top: 88px;
+		padding-top: 203rpx;
 		width: 100%;
 		.flex-center {
 			display: flex;

@@ -95,7 +95,9 @@
 					font-weight: 500;
 					color: #333333;
 					background-color: #eaeff4;
-					padding: 11rpx;
+					padding:0 11rpx;
+					height: 43rpx;
+					line-height: 43rpx;
 					& + .tag-item {
 						margin-left: 10rpx;
 					}
