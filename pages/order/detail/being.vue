@@ -281,7 +281,7 @@
 						.progress-item-right {
 							flex: 1;
 							margin-left: 10rpx;
-							.u-album {
+							/deep/.u-album {
 								margin-top: 10rpx;
 								image {
 									width: 132rpx !important;
