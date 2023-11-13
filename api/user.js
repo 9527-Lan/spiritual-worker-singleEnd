@@ -19,13 +19,7 @@ export function login( mobile,code) {
 		}
 	})
 }
-// 工程师查询
-export function findCasualEngineer(){
-	return request({
-		url: '/web/casualEngineer/pages',
-		method: 'get',
-	})
-}
+
 // 任务订单新增
 export function casualOrderAdd(){
 	return request({

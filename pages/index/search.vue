@@ -10,7 +10,7 @@
 <script>
 	import {
 		findCasualEngineer
-	} from "@/api/user.js"
+	} from "@/api/index.js"
 	import listItem from './components/list-item'
 	export default {
 		components: {
@@ -19,73 +19,30 @@
 		data() {
 			return {
 				searchPlaceholder: '保安',
-				pageList: [{
-						img: 'https://cdn.uviewui.com/uview/album/1.jpg',
-						name: '张三三',
-						sex: '男',
-						role: '电工',
-						experience: '三年经验以上',
-						hasCertificate: true,
-						times: 13
-					},
-					{
-						img: 'https://cdn.uviewui.com/uview/album/4.jpg',
-						name: '李林',
-						sex: '女',
-						role: '电工',
-						experience: '有经验',
-						hasCertificate: false,
-						times: 0
-					},
-					{
-						img: '',
-						name: '李贤峰',
-						sex: '男',
-						role: '电工',
-						experience: '三年经验以上',
-						hasCertificate: true,
-						times: 1
-					},
-					{
-						img: '',
-						name: '肖国运',
-						sex: '男',
-						role: '电工',
-						experience: '三年经验以上',
-						hasCertificate: false,
-						times: 0
-					},
-					{
-						img: '',
-						name: '徐敏',
-						sex: '女',
-						role: '电工',
-						experience: '三年经验以上',
-						hasCertificate: false,
-						times: 0
-					},
-					{
-						img: '',
-						name: '刘三琪',
-						sex: '男',
-						role: '电工',
-						experience: '三年经验以上',
-						hasCertificate: false,
-						times: 0
-					},
-				],
+				pageList: [],
 			}
 		},
 		onLoad(){
 		this.findCasualEngineerList()	
 		},
 		methods: {
-			// 工程师查询
+			// 搜索
 			findCasualEngineerList() {
-				findCasualEngineer().then(res => {
-					console.log(res)
+				findCasualEngineer().then(res => {					
+					this.pageList=res.data.list.map(item => {
+						return {
+							img: item.cardImgPositive,
+							name: item.engineerRealname,
+							sex: item.engineerSexName,
+							role: item.typeName,
+							experience: item.labelName,
+							times: item.employmentNumber,
+							hasCertificate:true
+						}			
+					})
 				})
 			}
+			
 		},
 	}
 </script>

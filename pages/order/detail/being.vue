@@ -364,15 +364,6 @@
 							flex: 1;
 							margin-left: 10rpx;
 
-							/deep/.u-album {
-								margin-top: 10rpx;
-
-								image {
-									width: 132rpx !important;
-									height: 114rpx !important;
-								}
-
-
 								.remark {
 									margin-top: 29rpx;
 									font-size: 24rpx;
@@ -410,5 +401,5 @@
 			box-sizing: border-box;
 			background-color: #fff;
 		}
-	}
+	
 </style>
