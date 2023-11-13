@@ -7,3 +7,20 @@ export function employmentPerson (params){
 		params:params,
 	})
 }
+
+// 获取用工类型
+export function getWorkType (params){
+	return request({
+		url: '/web/casualServiceLabel/getByIdOption',
+		method: 'get',
+		params:params,
+	})
+}
+// 服务类型
+
+export function getType (){
+	return request({
+		url: '/web/casualServiceType/options',
+		method: 'get',
+	})
+}

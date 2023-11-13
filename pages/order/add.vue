@@ -6,7 +6,7 @@
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }"
 					:model="form">
 					<u-form-item label="用工标题" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workTitile" border="none" placeholder="张三"></u--input>
+						<u--input v-model="dataForm.workTitile" border="none" placeholder="张三" @change='getWorkTitile'></u--input>
 					</u-form-item>
 					<u-form-item label="用工类型" prop="userInfo.sex" borderBottom @click="showSex = !showSex; " ref="item1"
 						required>
@@ -21,35 +21,39 @@
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工地址" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workAddress" border="none" placeholder="请输入"></u--input>
+						<u--input v-model="dataForm.workAddress" border="none" placeholder="请输入" @change='getWorkAddress'></u--input>
 					</u-form-item>
 					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入"></u--input>
+						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入" @change='getWorkplace'></u--input>
 					</u-form-item>
 					<u-form-item label="用工数量" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入"></u--input>
+						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入" @change='getWorkNum'></u--input>
 					</u-form-item>
-					<u-form-item label="单人日新" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.singleMoney" border="none" placeholder="请输入"></u--input>
+					<u-form-item label="单人日薪" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="dataForm.singleMoney" border="none" @change='getSingleMoney' placeholder="请输入"></u--input>
 					</u-form-item>
-					<u-form-item label="开始时间" prop="userInfo.name" borderBottom ref="item1" required @click="dateShow = !dateShow;">
-						<u--input v-model="dataForm.startTime" border="none" placeholder="请输入"></u--input>
+					<u-form-item label="开始时间" prop="userInfo.name" borderBottom ref="item1" required
+						@click="dateShow = !dateShow;">
+						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择"></u--input>
 					</u-form-item>
-					<u-form-item label="结束时间" prop="userInfo.name" borderBottom ref="item1" required @click="endDateShow = !endDateShow;">
-						<u--input v-model="dataForm.endTime" border="none" placeholder="请输入"></u--input>
+					<u-form-item label="结束时间" prop="userInfo.name" borderBottom ref="item1" required
+						@click="endDateShow = !endDateShow;">
+						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择"></u--input>
 					</u-form-item>
 
 				</u-form>
 			</view>
 			<view class="footer-tip">平台承诺，严格保障您的隐私安全</view>
 		</view>
-		<u-action-sheet :show="showSex" :actions="actions" title="请选择类型" @close="showSex = false" @select="sexSelect">
+		<u-action-sheet :show="showSex" :actions="workTypeList" title="请选择类型" @close="showSex = false" @select="typeSelect">
 		</u-action-sheet>
-		<u-action-sheet :show="showLabel" :actions="actions" title="请选择标签" @close="showLabel = false"
-			@select="sexSelect">
+		<u-action-sheet :show="showLabel" :actions="labelList" title="请选择标签" @close="showLabel = false"
+			@select="labelSelect">
 		</u-action-sheet>
-		<u-datetime-picker :show="dateShow" v-model="dataForm.startTime" mode="datetime"></u-datetime-picker>
-		<u-datetime-picker :show="endDateShow" v-model="dataForm.endTime" mode="datetime"></u-datetime-picker>
+		<u-datetime-picker :show="dateShow"  mode="date" @cancel='starts'
+			@confirm="getStartTimes" :formatter="formatter" ref="startPicker"></u-datetime-picker>
+		<u-datetime-picker :show="endDateShow"  mode="date" @cancel='ends'
+			@confirm="getEndTimes" :formatter="formatter" ref="endPicker"></u-datetime-picker>
 		<view class="footer">
 			<u-button text="保存" color="#3A84F0" @click="onBack"></u-button>
 		</view>
@@ -57,6 +61,7 @@
 </template>
 
 <script>
+	import { getWorkType, getType } from '@/api/sub.js'
 	export default {
 		data() {
 			return {
@@ -68,17 +73,19 @@
 					workPlace: '',
 					workNum: '',
 					singleMoney: '',
-					startTime:'',
-					endTime:'',
+					startTime: '',
+					endTime: '',
 				},
+				workTypeList: [],
+				labelList: [],
 				options: [{
 					label: "222",
 					value: 1
 				}],
 				showSex: false,
 				showLabel: false,
-				dateShow:false,
-				endDateShow:false,
+				dateShow: false,
+				endDateShow: false,
 				form: {
 					name: '',
 				},
@@ -201,10 +208,75 @@
 				],
 			}
 		},
+		created() {
+			getType().then(res =>{
+				this.workTypeList = res.data.map(item =>{
+					return {
+						name: item.label,
+						value:item.value
+					}
+				});
+			})
+		},
 		methods: {
 			onBack() {
 				console.log(this.dataForm);
 				// uni.navigateBack(1)
+			},
+			starts() {
+				this.dateShow = false;
+			},
+			ends() {
+				this.endDateShow = false;
+			},
+			getStartTimes(e) {
+				this.dataForm.startTime = this.timestampToTime(e.value);
+				this.dateShow = false;
+			},
+			getEndTimes(e) {
+				this.dataForm.endTime = this.timestampToTime(e.value);
+				this.endDateShow = false;
+			},
+			typeSelect(e) {
+				this.dataForm.workType = e.name;
+				getWorkType({typeId:e.value}).then(res =>{
+					this.labelList = res.data.map(item =>{
+						return {
+							name:item.label,
+							value:item.value
+						}
+					})
+				})
+			},
+			labelSelect(e) {
+				this.dataForm.workLabel = e.name;
+			},
+			getWorkTitile(e) {
+				this.dataForm.workTitile = e;
+			},
+			getWorkAddress(e) {
+			    this.dataForm.workAddress = e;
+			},
+			getWorkplace(e) {
+				this.dataForm.workPlace = e;
+			},
+			getWorkNum(e) {
+				this.dataForm.workNum = e;
+			},
+			getSingleMoney(e) {
+				this.dataForm.singleMoney = e;
+			},
+			formatter(type, value) {
+				if (type === 'year') {
+					return `${value}年`
+				}
+				if (type === 'month') {
+					return `${value}月`
+				}
+				if (type === 'day') {
+					return `${value}日`
+				}
+				return value
 			},
 			handleClick(event) {
 				console.log(111);
@@ -223,6 +295,20 @@
 				// 	default:
 				// 		break
 				// }
+			},
+			timestampToTime(timestamp) {
+			  // 时间戳为10位需*1000，时间戳为13位不需乘1000
+			  var date = new Date(timestamp);
+			  var Y = date.getFullYear() + "-";
+			  var M =
+			    (date.getMonth() + 1 < 10
+			      ? "0" + (date.getMonth() + 1)
+			      : date.getMonth() + 1) + "-";
+			  var D = (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) + " ";
+			  var h = date.getHours() + ":";
+			  var m = date.getMinutes() + ":";
+			  var s = date.getSeconds();
+			  return Y + M + D;
 			},
 		},
 	}
