@@ -43,90 +43,117 @@
 			}
 		},
 		{
-			"path" : "pages/index/search",
-			"style" : 
-			{
-				"navigationBarTitleText" : "搜索",
+			"path": "pages/index/search",
+			"style": {
+				"navigationBarTitleText": "搜索",
 				"navigationBarBackgroundColor": "#f2f6ff",
-				"enablePullDownRefresh" : false
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path" : "pages/my/editInfo",
-			"style" : 
-			{
-				"navigationBarTitleText" : "我的信息",
+			"path": "pages/my/editInfo",
+			"style": {
+				"navigationBarTitleText": "我的信息",
 				"navigationBarBackgroundColor": "#f2f6ff",
-				"enablePullDownRefresh" : false
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path" : "pages/my/authenticate/uploadIDCard",
-			"style" : 
-			{
-				"navigationBarTitleText" : "上传身份证",
+			"path": "pages/my/authenticate/uploadIDCard",
+			"style": {
+				"navigationBarTitleText": "上传身份证",
 				"navigationBarBackgroundColor": "#f2f6ff",
-				"enablePullDownRefresh" : false
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path" : "pages/my/authenticate/uploadLicense",
-			"style" : 
-			{
-				"navigationBarTitleText" : "上传营业执照",
+			"path": "pages/my/authenticate/uploadLicense",
+			"style": {
+				"navigationBarTitleText": "上传营业执照",
 				"navigationBarBackgroundColor": "#f2f6ff",
-				"enablePullDownRefresh" : false
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path" : "pages/my/enterpriseCertification",
-			"style" : 
-			{
-				"navigationBarTitleText" : "企业认证",
+			"path": "pages/my/enterpriseCertification",
+			"style": {
+				"navigationBarTitleText": "企业认证",
 				"navigationBarBackgroundColor": "#f2f6ff",
-				"enablePullDownRefresh" : false
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path" : "pages/my/signContract",
-			"style" : 
-			{
-				"navigationBarTitleText" : "签署合同",
+			"path": "pages/my/signContract",
+			"style": {
+				"navigationBarTitleText": "签署合同",
 				"navigationBarBackgroundColor": "#f2f6ff",
-				"enablePullDownRefresh" : false
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path" : "pages/index/personalDetails/index",
-			"style" : 
-			{
-				"navigationBarTitleText" : "个人信息",
+			"path": "pages/index/personalDetails/index",
+			"style": {
+				"navigationBarTitleText": "个人信息",
 				"navigationBarBackgroundColor": "#3a84f0",
 				"navigationBarTextStyle": "white",
-				"enablePullDownRefresh" : false
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path" : "pages/index/personalDetails/check",
-			"style" : 
-			{
-				"navigationBarTitleText" : "个人信息",
+			"path": "pages/index/personalDetails/check",
+			"style": {
+				"navigationBarTitleText": "个人信息",
 				"navigationBarBackgroundColor": "#3a84f0",
 				"navigationBarTextStyle": "white",
-				"enablePullDownRefresh" : false
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path" : "pages/order/index",
-			"style" : 
-			{
-				"navigationBarTitleText" : "",
+			"path": "pages/order/index",
+			"style": {
+				"navigationBarTitleText": "",
 				"navigationStyle": "custom",
-				"enablePullDownRefresh" : true
+				"enablePullDownRefresh": true
 			}
 		},
 		{
-			"path" : "pages/order/detail/being",
+			"path": "pages/order/detail/being",
+			"style": {
+				"navigationBarTitleText": "用工详情",
+				"navigationBarBackgroundColor": "#3a84f0",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/order/detail/grab",
+			"style": {
+				"navigationBarTitleText": "用工详情",
+				"navigationBarBackgroundColor": "#3a84f0",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/order/detail/completing",
+			"style": {
+				"navigationBarTitleText": "用工详情",
+				"navigationBarBackgroundColor": "#3a84f0",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/order/detail/completed",
+			"style": {
+				"navigationBarTitleText": "用工详情",
+				"navigationBarBackgroundColor": "#3a84f0",
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path" : "pages/order/detail/exception",
 			"style" : 
 			{
 				"navigationBarTitleText" : "用工详情",
@@ -136,31 +163,37 @@
 			}
 		},
 		{
-			"path" : "pages/order/detail/grab",
+			"path" : "pages/order/detail/paymentDetails",
 			"style" : 
 			{
-				"navigationBarTitleText" : "用工详情",
+				"navigationBarTitleText" : "支付明细",
 				"navigationBarBackgroundColor": "#3a84f0",
 				"navigationBarTextStyle": "white",
 				"enablePullDownRefresh" : false
 			}
 		},
 		{
-			"path" : "pages/order/detail/completing",
-			"style" : 
-			{
-				"navigationBarTitleText" : "用工详情",
-				"navigationBarBackgroundColor": "#3a84f0",
-				"navigationBarTextStyle": "white",
-				"enablePullDownRefresh" : false
+			"path": "pages/order/add",
+			"style": {
+				"navigationBarTitleText": "一键下单",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path" : "pages/order/add",
-			"style" : 
-			{
-				"navigationBarTitleText" : "一键下单",
-				"enablePullDownRefresh" : false
+			"path": "pages/order/confirm",
+			"style": {
+				"navigationBarTitleText": "确认订单",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/order/addSuccess",
+			"style": {
+				"navigationBarTitleText": "下单成功",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh": false
 			}
 		}
 	],

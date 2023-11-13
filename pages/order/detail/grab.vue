@@ -39,10 +39,16 @@
 		<view class="footer">
 			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"></u-icon>
 			<view class="flex-center btn-box">
-				<u-button text="撤销订单" type="primary" plain></u-button>
+				<u-button text="撤销订单" type="primary" plain @click="onCancelOrder"></u-button>
 				<u-button text="审核通过" color="#3A84F0"></u-button>
 			</view>
 		</view>
+		<u-modal :show="cancelModalVisible" title="是否撤销此订单" :showConfirmButton="false">
+			<view class="cancel-modal-btns">
+				<u-button text="取消" type="info" plain style="height: 100%" @click="cancelModalVisible = false"></u-button>
+				<u-button text="确定" type="primary" color="#3A84F0" style="height: 100%" @click="cancelModalVisible = false"></u-button>
+			</view>
+		</u-modal>
 	</view>
 </template>
 
@@ -56,6 +62,7 @@
 		},
 		data() {
 			return {
+				cancelModalVisible: false,
 				compData: {
 					state: 'being',
 					title: '临时电工',
@@ -95,6 +102,18 @@
 				},
 			}
 		},
+		onShareAppMessage: function (options) {
+			return {
+				title: this.compData.title + ',' + this.compData.salary,
+				path: '/pages/order/detail/grab',
+				imageUrl: '/static/shareBg.png',
+			}
+		},
+		methods: {
+			onCancelOrder() {
+				this.cancelModalVisible = true
+			},
+		},
 	}
 </script>
 
@@ -104,6 +123,17 @@
 	}
 	.pages-order-detail-grab {
 		position: relative;
+		.cancel-modal-btns {
+			padding-top: 80rpx;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			/deep/.u-button {
+				height: 73rpx !important;
+				width: 207rpx !important;
+			}
+		}
 		.header {
 			background-color: #3a84f0;
 			color: #fff;

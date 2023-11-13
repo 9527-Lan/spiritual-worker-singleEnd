@@ -1,5 +1,5 @@
 <template>
-	<view class="order-info">
+	<view class="order-info" :style="{borderRadius:radius,margin:margin}">
 		<view class="body">
 			<view class="flex-center between">
 				<view class="title">{{ compData.title }}</view>
@@ -21,6 +21,7 @@
 				<u-icon name="clock-fill" size="24rpx" color="#666666" :label="`${compData.startTime}-${compData.endTime}`" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
 		</view>
+		<slot name="footer"></slot>
 	</view>
 </template>
 
@@ -28,6 +29,14 @@
 	export default {
 		props: {
 			compData: Object,
+			radius: {
+				type: String,
+				default: '15rpx',
+			},
+			margin: {
+				type: String,
+				default: '28rpx 0 35rpx 0',
+			},
 		},
 		data() {
 			return {}
@@ -38,10 +47,8 @@
 
 <style lang="scss">
 	.order-info {
-		margin-top: 28rpx;
 		background-color: #fff;
-		border-radius: 15rpx;
-		margin-bottom: 35rpx;
+		overflow: hidden;
 		.body {
 			box-sizing: border-box;
 			padding: 35rpx;
