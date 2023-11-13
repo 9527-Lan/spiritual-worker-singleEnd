@@ -1,8 +1,9 @@
 <template>
 	<view class="page-index">
-		<u-navbar :bgColor="bgColor">
-			<view slot="left" class="search-box">
-				<u-search :showAction="false" placeholder="搜索用工类型信息..." bgColor="#fff" style="width: 100%"  disabled @click="$toRoute('/pages/index/search')"></u-search>
+		<u-navbar :bgColor="bgColor" >
+			<view slot="left" class="search-box" >
+				<u-search :showAction="false" placeholder="搜索用工类型信息..." bgColor="#fff" style="width: 100%" disabled
+					@click="toSearch" ></u-search>
 			</view>
 		</u-navbar>
 		<view class="swiper-box">
@@ -15,16 +16,21 @@
 			</view>
 		</view>
 		<view>
-			<u-tabs :list="tabList" @click="onTabClick" lineHeight="16rpx" lineWidth="64rpx"></u-tabs>
+			<u-tabs :list="tabList" @click="onTabClick" lineHeight="16rpx" lineWidth="64rpx" @change="changeTabList"></u-tabs>
 		</view>
 		<view>
 			<!-- /pages/index/personalDetails/index -->
-			<listItem v-for="(item, index) in pageList" :key="index" :compData="item" @onClick="$toRoute('/pages/index/personalDetails/check')"></listItem>
+			<listItem v-for="(item, index) in pageList" :key="index" :compData="item"
+				@onClick="$toRoute('/pages/index/personalDetails/check')"></listItem>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {
+		findCasualEngineer,
+		casualServiceType
+	} from "@/api/index.js"
 	import listItem from './components/list-item'
 	export default {
 		components: {
@@ -38,17 +44,98 @@
 					'https://cdn.uviewui.com/uview/swiper/swiper2.png',
 					'https://cdn.uviewui.com/uview/swiper/swiper3.png',
 				],
-				tabList: [{ name: '推荐' }, { name: '保安' }, { name: '保洁' }, { name: '电工' }, { name: '环卫' }, { name: '物业' }],
-				pageList: [
-					{ img: 'https://cdn.uviewui.com/uview/album/1.jpg', name: '张三三', sex: '男', role: '电工', experience: '三年经验以上', hasCertificate: true, times: 13 },
-					{ img: 'https://cdn.uviewui.com/uview/album/4.jpg', name: '李林', sex: '女', role: '电工', experience: '有经验', hasCertificate: false, times: 0 },
-					{ img: '', name: '张三三', sex: '男', role: '电工', experience: '三年经验以上', hasCertificate: true, times: 1 },
-				],
+				tabList: [{
+					name: '推荐'
+				}, {
+					name: '保安'
+				}, {
+					name: '保洁'
+				}, {
+					name: '电工'
+				}, {
+					name: '环卫'
+				}, {
+					name: '物业'
+				}],
+				// {
+				// 		img: 'https://cdn.uviewui.com/uview/album/1.jpg',
+				// 		name: '张三三',
+				// 		sex: '男',
+				// 		role: '电工',
+				// 		experience: '三年经验以上',
+				// 		hasCertificate: true,
+				// 		times: 13
+				// 	},
+				pageList: [],					
+				pageNum: 1,
+				pageSize: 10,
+				typeId: 1,
 			}
 		},
 		methods: {
 			onTabClick() {},
+			toSearch(){
+				console.log('111')
+				uni.navigateTo({
+					url:`/pages/index/search`
+				})
+			},
+			// 首页列表渲染
+			findCasualEngineerList(){
+				let params = {
+					typeId: this.typeId,
+					pageNum: this.pageNum,
+					pageSize: this.pageSize
+				}
+				findCasualEngineer(params).then(res => {
+					console.log(res)					
+					const dataList = res.data.list.map(item => {
+						return {
+							img: item.cardImgPositive,
+							name: item.engineerRealname,
+							sex: item.engineerSexName,
+							role: item.typeName,
+							experience: item.labelName,
+							times: item.employmentNumber,
+						}			
+					})
+					this.pageList=this.pageList.concat(dataList)
+				})				
+			},
+	
+		// 首页tab栏渲染
+		casualServiceTypeList(){
+			casualServiceType().then(res=>{
+				console.log(res)
+				this.tabList=res.data.map(item=>{
+					return {
+						name:item.label,
+						value:item.value
+					}
+					
+					this.typeIds=res.data[0].value
+					this.findCasualEngineerList()
+				})
+			})
 		},
+		// 改变tab栏
+		changeTabList(e){
+			this.pageNum = 1
+			this.pageList = []
+			this.typeId = this.tabList[e.index].value
+			console.log(this.typeId)
+			this.findCasualEngineerList()
+		},
+		},
+		mounted() {
+			this.findCasualEngineerList()
+			this.casualServiceTypeList()
+		},
+		// 触底加载
+		onReachBottom(){
+			this.pageNum++;
+			this.casualServiceTypeList()
+		}
 	}
 </script>
 
@@ -56,22 +143,27 @@
 	page {
 		background-color: #f2f6ff;
 	}
+
 	.page-index {
 		padding: 0 32rpx;
 		padding-top: 88px;
 		width: 100%;
+
 		.search-box {
 			width: 480rpx;
 			height: 64rpx;
 		}
+
 		.swiper-box {
 			margin-top: 16rpx;
 			border-radius: 15rpx;
 			overflow: hidden;
 		}
+
 		.order-box {
 			margin-top: 16rpx;
 			position: relative;
+
 			.order-btn {
 				position: absolute;
 				width: 149rpx;
@@ -80,7 +172,7 @@
 				right: 139rpx;
 			}
 		}
-		.body {
-		}
+
+		.body {}
 	}
 </style>
