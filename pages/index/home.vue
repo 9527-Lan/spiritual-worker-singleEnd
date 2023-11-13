@@ -21,7 +21,7 @@
 		<view>
 			<!-- /pages/index/personalDetails/index -->
 			<listItem v-for="(item, index) in pageList" :key="index" :compData="item"
-				@onClick="$toRoute('/pages/index/personalDetails/check')"></listItem>
+				@onClick="pageTo(item,index)"></listItem>
 		</view>
 	</view>
 </template>
@@ -70,6 +70,7 @@
 				pageNum: 1,
 				pageSize: 10,
 				typeId: 1,
+				personData: "",
 			}
 		},
 		methods: {
@@ -78,6 +79,11 @@
 				console.log('111')
 				uni.navigateTo({
 					url:`/pages/index/search`
+				})
+			},
+			pageTo(e,i) {
+				uni.navigateTo({
+					url:'/pages/index/personalDetails/check?id=' + e.id + '&data=' + JSON.stringify(this.personData[i])
 				})
 			},
 			// 首页列表渲染
@@ -97,8 +103,11 @@
 							role: item.typeName,
 							experience: item.labelName,
 							times: item.employmentNumber,
+							id: item.id,
 						}			
 					})
+					const data = res.data.list;
+					this.personData = data;
 					this.pageList=this.pageList.concat(dataList)
 				})				
 			},

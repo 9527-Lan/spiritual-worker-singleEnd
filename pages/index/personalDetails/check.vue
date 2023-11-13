@@ -15,7 +15,7 @@
 						</view>
 						<view class="information-tag">
 							<view class="tag-item">{{ detailData.role }}</view>
-							<view class="tag-item">{{ detailData.experience }}</view>
+							<view class="tag-item" v-if="detailData.experience != null">{{ detailData.experience }}</view>
 							<view class="tag-item" v-if="detailData.hasCertificate">持证上岗</view>
 						</view>
 					</view>
@@ -27,13 +27,13 @@
 				</view>
 				<view class="flex-center-between">
 					<view class="title">Ta的用工记录</view>
-					<view class="tip-text">用工数：{{ detailData.times }}次</view>
+					<view class="tip-text">用工数：{{ detailData.records.length }}次</view>
 				</view>
 				<view class="record-list">
 					<view class="record-item flex-center-between" v-for="(item, index) in detailData.records"
 						:key="index">
-						<view class="record-item-title">{{ item.title }}</view>
-						<view class="record-item-time">{{ item.startTime }}-{{ item.endTime }}</view>
+						<view class="record-item-title">{{ item.name }}</view>
+						<view class="record-item-time">{{ item.date }}</view>
 					</view>
 				</view>
 			</view>
@@ -53,6 +53,9 @@
 	import {
 		employment
 	} from "@/api/user.js"
+	import {
+		employmentPerson
+	} from "@/api/sub.js"
 	export default {
 		props: {
 			//detialsID
@@ -78,13 +81,26 @@
 					男: '#E6F0FF',
 					女: '#FFF1F1',
 				},
-				id: '1'
+				id: "",
 			}
 		},
 		created() {
 			this.init()
 		},
-		onLoad() {
+		onLoad(options) {
+			const datas = JSON.parse(options.data);
+			this.detailData = {
+					img: "",
+					name: datas.engineerRealname,
+					sex: datas.engineerSexName,
+					role: datas.typeName,
+					experience: datas.cardImgPositive,
+					hasCertificate: false,
+					certificate: datas.cardImgPositive,
+					times: 0,
+					records: [],
+				},
+			this.id = options.id;
 			this.employmentList()
 		},
 		methods: {
@@ -171,13 +187,14 @@
 					this.detailData = JSON.parse(JSON.stringify(res))
 					resolve(res)
 				})
+
 			},
 			employmentList() {
 				let params = {
 					id: this.id
 				}
 				employment(params).then(res => {
-					console.log(res)
+					this.detailData.records = res.data;
 				})
 			}
 		},

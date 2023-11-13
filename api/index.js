@@ -14,3 +14,13 @@ export function casualServiceType(){
 		method: 'get',
 	})
 }
+
+
+// 首页搜索接口
+export function casualEngineerSearch(params){
+	return request({
+		url: '/LowerSingleEnd/web/casualEngineer/pages',
+		method: 'get',
+		params:params,
+	})
+}

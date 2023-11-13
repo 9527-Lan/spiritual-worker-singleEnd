@@ -1,7 +1,7 @@
 <template>
 	<view class="list-item" @click="onClick">
 		<u-avatar :src="compData.img" size="92rpx"></u-avatar>
-		<view class="information">
+		<view class="information" >
 			<view class="information-top">
 				<view class="flex-center">
 					<view class="name">{{ compData.name }}</view>
@@ -19,7 +19,7 @@
 			</view>
 			<view class="information-tag">
 				<view class="tag-item">{{ compData.role }}</view>
-				<view class="tag-item">{{ compData.experience }}</view>
+				<view class="tag-item" v-if="compData.experience != null">{{ compData.experience }}</view>
 				<view class="tag-item" v-if="compData.hasCertificate">持证上岗</view>
 				<!-- <u-tag type="info" size="mini" :text="compData.role" plain class="tag-item"></u-tag>
 				<u-tag type="info" size="mini" :text="compData.experience" plain class="tag-item"></u-tag>
@@ -48,7 +48,8 @@
 		methods:{
 			onClick(){
 				this.$emit('onClick')
-			}
+			},
+
 		}
 	}
 </script>
