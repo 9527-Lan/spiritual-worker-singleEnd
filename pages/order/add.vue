@@ -6,34 +6,37 @@
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }"
 					:model="form">
 					<u-form-item label="用工标题" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="model1.userInfo.name" border="none" placeholder="张三"></u--input>
+						<u--input v-model="dataForm.workTitile" border="none" placeholder="张三"></u--input>
 					</u-form-item>
 					<u-form-item label="用工类型" prop="userInfo.sex" borderBottom @click="showSex = !showSex; " ref="item1"
 						required>
-						<u--input v-model="model1.userInfo.sex" disabled disabledColor="#ffffff" placeholder="请选择"
+						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" placeholder="请选择"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工标签" prop="userInfo.sex" borderBottom @click="showLabel = !showSex; "
 						ref="item1" required>
-						<u--input v-model="model1.userInfo.sex" disabled disabledColor="#ffffff" placeholder="请选择"
+						<u--input v-model="dataForm.workLabel" disabled disabledColor="#ffffff" placeholder="请选择"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工地址" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+						<u--input v-model="dataForm.workAddress" border="none" placeholder="请输入"></u--input>
 					</u-form-item>
 					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入"></u--input>
 					</u-form-item>
 					<u-form-item label="用工数量" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入"></u--input>
 					</u-form-item>
 					<u-form-item label="单人日新" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+						<u--input v-model="dataForm.singleMoney" border="none" placeholder="请输入"></u--input>
 					</u-form-item>
 					<u-form-item label="开始时间" prop="userInfo.name" borderBottom ref="item1" required @click="dateShow = !dateShow;">
-						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+						<u--input v-model="dataForm.startTime" border="none" placeholder="请输入"></u--input>
+					</u-form-item>
+					<u-form-item label="结束时间" prop="userInfo.name" borderBottom ref="item1" required @click="endDateShow = !endDateShow;">
+						<u--input v-model="dataForm.endTime" border="none" placeholder="请输入"></u--input>
 					</u-form-item>
 
 				</u-form>
@@ -45,7 +48,8 @@
 		<u-action-sheet :show="showLabel" :actions="actions" title="请选择标签" @close="showLabel = false"
 			@select="sexSelect">
 		</u-action-sheet>
-		<u-datetime-picker :show="dateShow" v-model="value1" mode="datetime"></u-datetime-picker>
+		<u-datetime-picker :show="dateShow" v-model="dataForm.startTime" mode="datetime"></u-datetime-picker>
+		<u-datetime-picker :show="endDateShow" v-model="dataForm.endTime" mode="datetime"></u-datetime-picker>
 		<view class="footer">
 			<u-button text="保存" color="#3A84F0" @click="onBack"></u-button>
 		</view>
@@ -56,7 +60,17 @@
 	export default {
 		data() {
 			return {
-				dataForm: {},
+				dataForm: {
+					workTitile: '',
+					workType: '',
+					workLabel: '',
+					workAddress: '',
+					workPlace: '',
+					workNum: '',
+					singleMoney: '',
+					startTime:'',
+					endTime:'',
+				},
 				options: [{
 					label: "222",
 					value: 1
@@ -64,6 +78,7 @@
 				showSex: false,
 				showLabel: false,
 				dateShow:false,
+				endDateShow:false,
 				form: {
 					name: '',
 				},
