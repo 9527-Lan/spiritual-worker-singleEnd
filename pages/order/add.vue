@@ -5,20 +5,47 @@
 			<view class="form">
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }"
 					:model="form">
-					<u-form-item label="姓 名" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="model1.userInfo.name" border="none"></u--input>
+					<u-form-item label="用工标题" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="model1.userInfo.name" border="none" placeholder="张三"></u--input>
 					</u-form-item>
-					<u-form-item label="性 别" prop="userInfo.sex" borderBottom @click="showSex = !showSex; " ref="item1" required>
-						<u--input v-model="model1.userInfo.sex" disabled disabledColor="#ffffff" placeholder="请选择性别"
+					<u-form-item label="用工类型" prop="userInfo.sex" borderBottom @click="showSex = !showSex; " ref="item1"
+						required>
+						<u--input v-model="model1.userInfo.sex" disabled disabledColor="#ffffff" placeholder="请选择"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
+					<u-form-item label="用工标签" prop="userInfo.sex" borderBottom @click="showLabel = !showSex; "
+						ref="item1" required>
+						<u--input v-model="model1.userInfo.sex" disabled disabledColor="#ffffff" placeholder="请选择"
+							border="none"></u--input>
+						<u-icon slot="right" name="arrow-right"></u-icon>
+					</u-form-item>
+					<u-form-item label="用工地址" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+					</u-form-item>
+					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+					</u-form-item>
+					<u-form-item label="用工数量" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+					</u-form-item>
+					<u-form-item label="单人日新" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+					</u-form-item>
+					<u-form-item label="开始时间" prop="userInfo.name" borderBottom ref="item1" required @click="dateShow = !dateShow;">
+						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入"></u--input>
+					</u-form-item>
+
 				</u-form>
 			</view>
 			<view class="footer-tip">平台承诺，严格保障您的隐私安全</view>
 		</view>
-		<u-action-sheet :show="showSex" :actions="actions" title="请选择性别" @close="showSex = false" @select="sexSelect">
+		<u-action-sheet :show="showSex" :actions="actions" title="请选择类型" @close="showSex = false" @select="sexSelect">
 		</u-action-sheet>
+		<u-action-sheet :show="showLabel" :actions="actions" title="请选择标签" @close="showLabel = false"
+			@select="sexSelect">
+		</u-action-sheet>
+		<u-datetime-picker :show="dateShow" v-model="value1" mode="datetime"></u-datetime-picker>
 		<view class="footer">
 			<u-button text="保存" color="#3A84F0" @click="onBack"></u-button>
 		</view>
@@ -35,6 +62,8 @@
 					value: 1
 				}],
 				showSex: false,
+				showLabel: false,
+				dateShow:false,
 				form: {
 					name: '',
 				},
