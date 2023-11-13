@@ -163,9 +163,9 @@
 					description: '对公司的项目进行临时安保工作<br /><br />一、工作地点:<br />可根据个人意愿就近分配工作，如有环境不适应可申请调换。<br />二、任职资格:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br /><br />三、岗位职责:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br />',
 				},
 				id: "1",
-				OrderId:'1',
-				order_id:'10',
-				engineer_id:'1',
+				OrderId: '1',
+				order_id: '10',
+				engineer_id: '1',
 			}
 		},
 		onLoad() {
@@ -182,7 +182,7 @@
 					console.log(res)
 				})
 			},
-			getorderItemsList(){
+			getorderItemsList() {
 				let params = {
 					order_id: this.OrderId
 				}
@@ -190,10 +190,10 @@
 					console.log(res)
 				})
 			},
-			listOrderItemList(){
+			listOrderItemList() {
 				let params = {
 					order_id: this.order_id,
-					engineer_id:this.engineer_id
+					engineer_id: this.engineer_id
 				}
 				listOrderItem(params).then(res => {
 					console.log(res)
@@ -363,38 +363,35 @@
 						.progress-item-right {
 							flex: 1;
 							margin-left: 10rpx;
-<<<<<<< HEAD
 
-							.u-album {
-=======
 							/deep/.u-album {
->>>>>>> 404790d6cb1d621a239ec037eb92a2b5d938c58d
 								margin-top: 10rpx;
 
 								image {
 									width: 132rpx !important;
 									height: 114rpx !important;
 								}
-							}
 
-							.remark {
-								margin-top: 29rpx;
-								font-size: 24rpx;
-								font-weight: 500;
-								color: #333333;
-							}
 
-							.day {
-								font-size: 24rpx;
-								font-weight: 500;
-								color: #333333;
-							}
+								.remark {
+									margin-top: 29rpx;
+									font-size: 24rpx;
+									font-weight: 500;
+									color: #333333;
+								}
 
-							.time {
-								margin-top: 24rpx;
-								font-size: 20rpx;
-								font-weight: 500;
-								color: #666666;
+								.day {
+									font-size: 24rpx;
+									font-weight: 500;
+									color: #333333;
+								}
+
+								.time {
+									margin-top: 24rpx;
+									font-size: 20rpx;
+									font-weight: 500;
+									color: #666666;
+								}
 							}
 						}
 					}

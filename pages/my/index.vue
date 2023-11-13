@@ -40,7 +40,6 @@
 	export default {
 		data() {
 			return {
-<<<<<<< HEAD
 				information: {
 					img: '',
 					name: '张三三',
@@ -49,31 +48,27 @@
 				operates: [{
 						number: 3,
 						label: '抢单中',
-						color: '#333333'
+						color: '#333333',
+						route: '/pages/order/index?state=grab'
 					},
 					{
 						number: 1,
 						label: '进行中',
-						color: '#333333'
+						color: '#333333',
+						route: '/pages/order/index?state=being'
 					},
 					{
 						number: 56,
 						label: '已完成',
-						color: '#333333'
+						color: '#333333',
+						route: '/pages/order/index?state=completes'
 					},
 					{
 						number: 0,
 						label: '异常',
-						color: '#F37878'
+						color: '#F37878',
+						route: '/pages/order/index?state=exceptions'
 					},
-=======
-				information: { img: '', name: '张三三', phone: 15344446666 },
-				operates: [
-					{ number: 3, label: '抢单中', color: '#333333', route: '/pages/order/index?state=grab' },
-					{ number: 1, label: '进行中', color: '#333333', route: '/pages/order/index?state=being' },
-					{ number: 56, label: '已完成', color: '#333333', route: '/pages/order/index?state=completes' },
-					{ number: 0, label: '异常', color: '#F37878', route: '/pages/order/index?state=exceptions' },
->>>>>>> 404790d6cb1d621a239ec037eb92a2b5d938c58d
 				],
 				cellList: [{
 						icon: '/static/我的信息.png',
@@ -93,7 +88,7 @@
 				type: '1',
 			}
 		},
-		onLoad(){
+		onLoad() {
 			this.personageList()
 		},
 		methods: {
