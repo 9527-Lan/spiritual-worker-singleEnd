@@ -4,19 +4,24 @@
 			<view class="title">请确认您的下单信息</view>
 			<view class="form">
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
-					<u-form-item v-for="(item, index) in formList" :key="index" :label="item.label" :required="item.required" border-bottom>
+					<u-form-item v-for="(item, index) in formList" :key="index" :label="item.label"
+						:required="item.required" border-bottom>
 						<view v-if="item.fieldType == 'textarea'" class="input-container">
-							<u-textarea v-model="dataForm[item.field]" autoHeight :placeholder="item.value" :border="item.border"></u-textarea>
+							<u-textarea v-model="dataForm[item.field]" autoHeight :placeholder="item.value"
+								:border="item.border"></u-textarea>
 							<view class="click-over"></view>
 						</view>
 						<view v-else-if="item.fieldType == 'tags'" class="tags">
-							<view class="tag-item" v-for="(tagItem, tagIndex) in dataForm[item.field]" :key="tagIndex">{{ tagItem }}</view>
+							<view class="tag-item" v-for="(tagItem, tagIndex) in dataForm[item.field]" :key="tagIndex">
+								{{ tagItem }}</view>
 						</view>
 						<view v-else-if="item.fieldType == 'text'" class="input-container">
-							<u-icon :label="dataForm[item.field]" :label-color="item.color" :label-size="item.size"></u-icon>
+							<u-icon :label="dataForm[item.field]" :label-color="item.color"
+								:label-size="item.size"></u-icon>
 						</view>
 						<view v-else class="input-container">
-							<u-input v-model="dataForm[item.field]" readonly :type="item.type" :placeholder="item.value" :border="item.border"></u-input>
+							<u-input v-model="dataForm[item.field]" readonly :type="item.type" :placeholder="item.value"
+								:border="item.border"></u-input>
 						</view>
 					</u-form-item>
 				</u-form>
@@ -29,6 +34,9 @@
 </template>
 
 <script>
+	import {
+		surePre
+	} from '@/api/sub.js'
 	export default {
 		data() {
 			return {
@@ -37,6 +45,8 @@
 					address: '',
 					doorNumber: '',
 				},
+				datas: {},
+				orderId: '',
 				dataForm: {
 					1: '大厦安保',
 					2: '保安',
@@ -48,22 +58,111 @@
 					8: '2023.09.17 - 2023.09.20',
 					9: '￥3,325.00',
 				},
-				formList: [
-					{ field: '1', label: '用工标题', required: false, value: '', border: 'none' },
-					{ field: '2', label: '用工类型', required: false, value: '', border: 'none' },
-					{ field: '3', label: '用工标签', fieldType: 'tags', required: false, value: '', border: 'none' },
-					{ field: '4', label: '用工地址', required: false, value: '', border: 'none' },
-					{ field: '5', label: '详细描述', fieldType: 'textarea', required: false, value: '', border: 'none' },
-					{ field: '6', label: '用工数量', required: false, value: '', border: 'none' },
-					{ field: '7', label: '单人日薪', required: false, value: '', border: 'none' },
-					{ field: '8', label: '用工时间', required: false, value: '', border: 'none' },
-					{ field: '9', label: '合计金额', fieldType: 'text', required: false, value: '', border: 'none', size: '48rpx', color: '#3A84F0' },
+				formList: [{
+						field: '1',
+						label: '用工标题',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
+						field: '2',
+						label: '用工类型',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
+						field: '3',
+						label: '用工标签',
+						fieldType: 'tags',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
+						field: '4',
+						label: '用工地址',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
+						field: '5',
+						label: '详细描述',
+						fieldType: 'textarea',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
+						field: '6',
+						label: '用工数量',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
+						field: '7',
+						label: '单人日薪',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
+						field: '8',
+						label: '用工时间',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
+						field: '9',
+						label: '合计金额',
+						fieldType: 'text',
+						required: false,
+						value: '',
+						border: 'none',
+						size: '48rpx',
+						color: '#3A84F0'
+					},
 				],
 			}
 		},
+		onLoad(options) {
+			console.log(options);
+			this.datas = JSON.parse(options.datas)
+			this.orderId = options.orderId;
+			this.dataForm['1'] = this.datas.workTitile;
+			this.dataForm['2'] = this.datas.workType;
+			this.dataForm['3'] = [this.datas.workLabel];
+			this.dataForm['4'] = this.datas.workAddress;
+			this.dataForm['5'] = this.datas.workPlace;
+			this.dataForm['6'] = this.datas.workNum;
+			this.dataForm['7'] = this.datas.singleMoney;
+			this.dataForm['8'] = this.datas.startTime + '-' + this.datas.endTime;
+			this.dataForm['9'] = this.datas.singleMoney * this.datas.workNum;
+
+		},
 		methods: {
 			onSave() {
-				this.$toRoute('/pages/order/addSuccess')
+				surePre({
+					order_id: this.orderId,
+				}).then(res => {
+					if (res.code == '00000') {
+						uni.showToast({
+							title: "下单成功",
+							duration: 2000,
+							success: (res) => {
+								setTimeout(() => {
+									uni.navigateTo({
+										url: '/pages/order/addSuccess',
+									})
+								}, 2000)
+							},
+						})
+					}
+				})
 			},
 		},
 	}
@@ -73,12 +172,15 @@
 	page {
 		background-color: #f2f6ff;
 	}
+
 	.pages-order-confirm {
 		padding-bottom: 170rpx;
+
 		.tags {
 			padding: 15rpx 0;
 			display: flex;
 			align-items: center;
+
 			.tag-item {
 				border-radius: 5rpx;
 				font-size: 24rpx;
@@ -88,25 +190,30 @@
 				padding: 0 11rpx;
 				height: 43rpx;
 				line-height: 43rpx;
-				& + .tag-item {
+
+				&+.tag-item {
 					margin-left: 10rpx;
 				}
 			}
 		}
+
 		.title {
 			font-size: 32rpx;
 			font-weight: bold;
 			color: #333333;
 		}
+
 		.flex-center-between {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 		}
+
 		.flex-center {
 			display: flex;
 			align-items: center;
 		}
+
 		.body {
 			padding: 53rpx 36rpx 45rpx 36rpx;
 			box-sizing: border-box;
@@ -114,14 +221,17 @@
 			border-radius: 15rpx;
 			background-color: #fff;
 			position: relative;
+
 			.title {
 				margin-bottom: 50rpx;
 			}
+
 			.input-container {
 				padding: 15rpx 0;
 				width: 100%;
 				height: 100%;
 				position: relative;
+
 				.click-over {
 					position: absolute;
 					top: 0;
@@ -131,9 +241,11 @@
 					z-index: 10;
 				}
 			}
+
 			.number-container {
 				width: 100%;
 				height: 100%;
+
 				/deep/.u-number-box__input {
 					width: 100% !important;
 					background-color: #fff !important;
@@ -148,13 +260,16 @@
 				box-sizing: border-box;
 				background-color: #fef8f8;
 				padding: 28rpx 25rpx;
-				& + .authenticate {
+
+				&+.authenticate {
 					margin-top: 24rpx;
 				}
+
 				.authenticate-left {
 					display: flex;
 					align-items: center;
 					font-size: 28rpx;
+
 					.label {
 						margin-left: 24rpx;
 						font-size: 28rpx;
@@ -162,14 +277,17 @@
 						color: #f37878;
 					}
 				}
+
 				.authenticate-right {
 					height: 55rpx;
 				}
 			}
+
 			.form {
 				width: 100%;
 				margin-top: 46rpx;
 			}
+
 			.footer-tip {
 				position: absolute;
 				left: 0;
@@ -181,6 +299,7 @@
 				color: #999999;
 			}
 		}
+
 		.footer {
 			position: fixed;
 			bottom: 0;

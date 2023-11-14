@@ -2,20 +2,20 @@
 	<view class="order-item" @click="onCheckDetail">
 		<view class="body">
 			<view class="flex-center between">
-				<view class="title">{{ compData.title }}</view>
-				<view class="salary">{{ compData.salary }}</view>
+				<view class="title">{{ compData.name }}</view>
+				<view class="salary">{{ compData.price }}元/天</view>
 			</view>
 			<view class="tag-list">
 				<view class="tag-item jobs">
-					<u-icon name="account-fill" size="24rpx" color="#3A84F0" :label="`岗位量${compData.jobs}`" label-color="#3A84F0" label-size="24rpx"></u-icon>
+					<u-icon name="account-fill" size="24rpx" color="#3A84F0" :label="`岗位量${compData.orderQuantity}`" label-color="#3A84F0" label-size="24rpx"></u-icon>
 				</view>
 				<view class="tag-item" v-for="(item, index) in compData.tags" :key="index">{{ item }}</view>
 			</view>
 			<view class="body-line">
 				<u-icon name="/static/address.png" size="24rpx" color="#666666" :label="compData.address" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
-			<view class="body-line" v-if="compData.state == 'grab' || compData.state == 'being'">
-				<u-icon name="clock-fill" size="24rpx" color="#666666" :label="`${compData.startTime}-${compData.endTime}`" label-color="#666666" label-size="24rpx"></u-icon>
+			<view class="body-line" >
+				<u-icon name="clock-fill" size="24rpx" color="#666666" :label="`${compData.orderStatr}-${compData.orderEnd}`" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
 			<view class="body-line" v-if="compData.state == 'completing' || compData.state == 'completed'">
 				<u-icon name="clock-fill" size="24rpx" color="#666666" :label="`${compData.completeTime}`" label-color="#666666" label-size="24rpx"></u-icon>
@@ -23,8 +23,8 @@
 			<view class="body-line" v-if="compData.state == 'being'">
 				<u-icon name="/static/employees.png" size="24rpx" color="#666666" :label="`当前用工数：${compData.employeesNumber}`" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
-			<view class="body-line" v-if="compData.state == 'grab'">
-				<u-icon name="/static/employees.png" size="24rpx" color="#666666" :label="`当前抢单数：${compData.count}`" label-color="#666666" label-size="24rpx"></u-icon>
+			<view class="body-line" >
+				<u-icon name="/static/employees.png" size="24rpx" color="#666666" :label="`当前抢单数：${compData.successSum == null ? 0 :compData.successSum }`" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
 			<view class="progress" v-if="compData.state == 'being'">
 				<!-- <view  v-for="(item, index) in compData.progress.dateList" :key="index" class="progress-item">
@@ -47,7 +47,7 @@
 			<text v-if="compData.state == 'completing'">状态：待结算</text>
 			<text v-if="compData.state == 'completed'">状态：已结算</text>
 			<text v-if="compData.state == 'exception'">订单存在异常，若有结算争议，请联系平台客服</text>
-			<text v-if="compData.state == 'grab'">抢单成功数：{{ compData.successCount }}/{{ compData.count }}</text>
+			<text >抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{ compData.orderQuantity }}</text>
 		</view>
 	</view>
 </template>

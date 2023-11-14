@@ -85,7 +85,7 @@
 			}
 		},
 		created() {
-			this.init()
+			// this.init()
 		},
 		onLoad(options) {
 			const datas = JSON.parse(options.data);

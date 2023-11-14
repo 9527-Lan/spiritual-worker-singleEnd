@@ -8,10 +8,6 @@
 				<u-icon :label="typeList[currentType].title" label-color="#333333" labelSize="28rpx"></u-icon>
 				<u-icon size="18rpx" name="arrow-down-fill" color="#333333"></u-icon>
 			</view>
-			<view class="select-box">
-				<u-icon label="状态" label-color="#333333" labelSize="28rpx"></u-icon>
-				<u-icon size="18rpx" name="arrow-down-fill" color="#333333"></u-icon>
-			</view>
 		</view>
 		<view class="order-list">
 			<orderItem v-for="(item, index) in orderList" :key="index" :compData="item"></orderItem>
@@ -25,6 +21,7 @@
 
 <script>
 	import orderItem from './components/order-item.vue'
+	import { queryOrderbyEngId } from '@/api/sub.js'
 	export default {
 		components: {
 			orderItem,
@@ -140,6 +137,11 @@
 					break
 			}
 			this.init()
+			const ids = uni.getStorageSync("order_ids");
+			queryOrderbyEngId({id:1,type:1}).then(res =>{
+				this.orderList = res.data;
+				console.log(this.orderList);
+			})
 		},
 		onPullDownRefresh() {
 			console.log('onPullDownRefresh')

@@ -99,6 +99,11 @@
 					padding:0 11rpx;
 					height: 43rpx;
 					line-height: 43rpx;
+					  -webkit-line-clamp: 1;
+					  overflow: hidden;
+					  display: -webkit-box;
+					  text-overflow: ellipsis;
+					  -webkit-box-orient: vertical;
 					& + .tag-item {
 						margin-left: 10rpx;
 					}

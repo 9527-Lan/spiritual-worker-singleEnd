@@ -5,8 +5,8 @@
 			<view class="success-text">下单成功</view>
 			<view class="tip-text">您可以在 【我的-我的订单-报名中】 查看详细订单信息</view>
 			<view class="btns">
-				<u-button text="返回首页" color="#3A84F0" plain></u-button>
-				<u-button text="查看详情" color="#3A84F0"></u-button>
+				<u-button text="返回首页" color="#3A84F0" plain @click="routeTo"></u-button>
+				<u-button text="查看详情" color="#3A84F0" @click="pageTo"></u-button>
 			</view>
 		</view>
 	</view>
@@ -17,7 +17,18 @@
 		data() {
 			return {}
 		},
-		methods: {},
+		methods: {
+			routeTo(){
+				uni.switchTab({
+					url:'/pages/index/home'
+				})
+			},
+			pageTo(){
+				uni.navigateTo({
+					url:'/pages/order/detail/grab'
+				})
+			},
+		},
 	}
 </script>
 

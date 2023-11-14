@@ -1,19 +1,22 @@
 <template>
-	<view class="pages-order-detail-grab">
+	<view class="pages-order-detail-completing">
 		<view class="header"></view>
 		<view class="body-wrapper">
 			<view class="body-wrapper-top">
 				<view>状态：待结算</view>
 			</view>
 			<view class="body">
-				<u-grid :col="3" :border="false">
-					<u-grid-item v-for="(item, index) in orderStatistics" :key="index">
-						<view class="orderStatistic-item">
-							<view class="item-title" :style="{ color: item.color }">{{ item.title }}</view>
-							<view class="item-value" :style="{ color: item.color }">{{ compData.orderStatistics[item.field] }}</view>
-						</view>
-					</u-grid-item>
-				</u-grid>
+				<view class="orderStatistic-container">
+					<u-grid :col="3" :border="false">
+						<u-grid-item v-for="(item, index) in orderStatistics" :key="index">
+							<view class="orderStatistic-item">
+								<view class="item-title" :style="{ color: item.color }">{{ item.title }}</view>
+								<view class="item-value" :style="{ color: item.color }">{{ compData.orderStatistics[item.field] }}</view>
+							</view>
+						</u-grid-item>
+					</u-grid>
+				</view>
+
 				<template v-if="compData.employees.length > 0">
 					<view class="flex-center-between title">结算列表</view>
 					<view class="employee-list">
@@ -42,7 +45,7 @@
 								<view class="employee-item-footer flex-center-between">
 									<view class="single-complete">单人已结算：￥{{ item.complete || '0.00' }}</view>
 									<view class="edit-btn">
-										<u-button type="primary" plain text="修改" style="height: 100%"></u-button>
+										<u-button type="primary" plain text="修改" @click="onEdit(item)"></u-button>
 									</view>
 								</view>
 							</view>
@@ -65,6 +68,37 @@
 				<u-button text="全部结算" color="#3A84F0"></u-button>
 			</view>
 		</view>
+		<u-popup :show="editPopVisible" round="30rpx" mode="bottom">
+			<view class="edit-form">
+				<view class="flex-center-between">
+					<view class="title">结算修改</view>
+					<u-icon name="close-circle-fill" size="40rpx" color="#CCCCCC" @click="editPopVisible = false"></u-icon>
+				</view>
+
+				<u-form :model="editForm" label-width="180rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
+					<u-form-item label="用工对象：">
+						<view class="round-img">
+							<u-icon :name="editForm.img" size="60rpx" :label="editForm.name" label-size="28rpx" label-color="#333"></u-icon>
+						</view>
+					</u-form-item>
+					<u-form-item label="用工时间：">
+						<u-input v-model="editForm.times" border="none" readonly></u-input>
+					</u-form-item>
+					<u-form-item label="单人待结算：" readonly>
+						<u-input v-model="editForm.complete" readonly border="none"></u-input>
+					</u-form-item>
+					<u-form-item label="实际结算：" required>
+						<u-input v-model="editForm.realComplete" placeholder="请输入" border="none"></u-input>
+					</u-form-item>
+				</u-form>
+				<view class="form-footer">
+					<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx" class="page-footer"></u-icon>
+					<view class="btn-box">
+						<u-button text="确认提交" color="#3A84F0" @click="editPopVisible = false"></u-button>
+					</view>
+				</view>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -78,6 +112,14 @@
 		},
 		data() {
 			return {
+				editPopVisible: false,
+				editForm: {
+					name: '',
+					img: '',
+					times: '',
+					complete: '',
+					realComplete: '',
+				},
 				orderStatistics: [
 					{ field: 'summary', title: '订单总额（元）', color: '#333333' },
 					{ field: 'complete', title: '待结算（元）', color: '#333333' },
@@ -176,6 +218,15 @@
 				},
 			}
 		},
+		methods: {
+			onEdit(row) {
+				console.log(row)
+				this.editForm = JSON.parse(JSON.stringify(row))
+				this.editForm.times = row.progress.dateList.length + '天'
+				this.editForm.complete = '￥' + row.complete
+				this.editPopVisible = true
+			},
+		},
 	}
 </script>
 
@@ -183,7 +234,7 @@
 	page {
 		background-color: #f2f6ff;
 	}
-	.pages-order-detail-grab {
+	.pages-order-detail-completing {
 		position: relative;
 		.header {
 			background-color: #3a84f0;
@@ -194,16 +245,60 @@
 			left: 0;
 			right: 0;
 		}
-		.orderStatistic-item {
-			height: 90rpx;
-			line-height: 67rpx;
-			.item-title {
-				font-size: 24rpx;
-				font-weight: 500;
+		.title {
+			font-size: 32rpx;
+			font-weight: bold;
+			color: #333333;
+		}
+		.edit-form {
+			height: 730rpx;
+			padding: 42rpx 32rpx;
+			box-sizing: border-box;
+			position: relative;
+			.round-img {
+				image {
+					border-radius: 50%;
+				}
 			}
-			.item-value {
-				font-size: 32rpx;
-				font-weight: 800;
+			/deep/.u-form-item {
+				margin-top: 20rpx;
+			}
+			.form-footer {
+				position: absolute;
+				border-top: 1rpx solid #c0c0c0;
+				z-index: 3;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				padding: 20rpx 42rpx;
+				padding-bottom: 60rpx;
+				box-sizing: border-box;
+				background-color: #fff;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.btn-box {
+					height: 89rpx;
+					width: 521rpx;
+					.u-button {
+						height: 100%;
+					}
+				}
+			}
+		}
+		.orderStatistic-container {
+			border-bottom: 1rpx solid #f0f0f0;
+			.orderStatistic-item {
+				height: 158rpx;
+				line-height: 67rpx;
+				.item-title {
+					font-size: 24rpx;
+					font-weight: 500;
+				}
+				.item-value {
+					font-size: 32rpx;
+					font-weight: 800;
+				}
 			}
 		}
 		.empty-container {
@@ -225,12 +320,6 @@
 			font-size: 32rpx;
 			font-weight: bold;
 			color: #3a84f0;
-		}
-		.title {
-			font-size: 32rpx;
-			font-weight: bold;
-			color: #333333;
-			margin-top: 79rpx;
 		}
 		.tag-list {
 			margin-top: 24rpx;
@@ -278,6 +367,9 @@
 				font-weight: 500;
 			}
 			.body {
+				.title {
+					margin-top: 39rpx;
+				}
 				padding: 32rpx;
 				box-sizing: border-box;
 				background-color: #fff;
@@ -287,7 +379,7 @@
 						height: 82rpx;
 						line-height: 82rpx;
 						padding: 0 29rpx;
-						background-color: #f2f6ff;
+						background-color: #f9f9f9;
 						.single-complete {
 							font-size: 24rpx;
 							font-weight: bold;
@@ -295,6 +387,9 @@
 						}
 						.edit-btn {
 							height: 55rpx;
+							/deep/.u-button {
+								height: 100%;
+							}
 						}
 					}
 					/deep/.u-collapse-item {

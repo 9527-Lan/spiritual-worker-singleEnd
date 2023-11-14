@@ -24,3 +24,74 @@ export function getType (){
 		method: 'get',
 	})
 }
+
+
+// 一键下单
+
+export function submitLis (data){
+	return request({
+		url: '/LowerSingleEnd/web/casualOrder/add',
+		method: 'post',
+		data,
+	})
+}
+
+// 确认下单
+
+export function surePre (params){
+	return request({
+		url: '/LowerSingleEnd/web/casualOrder/releaseOrder',
+		method: 'get',
+		params:params,
+	})
+}
+
+// 抢单中 
+
+export function casualOrderEngineerList (params){
+	return request({
+		url: '/LowerSingleEnd/web/casualOrder/casualOrderEngineerList',
+		method: 'get',
+		params:params,
+	})
+}
+
+//任务id查询订单详情
+
+export function casualOrder (params){
+	return request({
+		url: '/LowerSingleEnd/web/casualOrder/getById',
+		method: 'get',
+		params:params,
+	})
+}
+
+//撤销订单
+
+export function cancellationOrder (params){
+	return request({
+		url: '/LowerSingleEnd/web/casualOrder/cancellationOrder',
+		method: 'get',
+		params:params,
+	})
+}
+
+// 个人中心订单
+
+export function personage (params){
+	return request({
+		url: '/LowerSingleEnd/app/my_personage',
+		method: 'get',
+		params:params,
+	})
+}
+
+// 抢单中订单
+
+export function queryOrderbyEngId (params){
+	return request({
+		url: '/LowerSingleEnd/queryOrderbyEngId',
+		method: 'get',
+		params:params,
+	})
+}

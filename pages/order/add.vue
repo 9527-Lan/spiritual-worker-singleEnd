@@ -6,7 +6,8 @@
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }"
 					:model="form">
 					<u-form-item label="用工标题" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workTitile" border="none" placeholder="张三" @change='getWorkTitile'></u--input>
+						<u--input v-model="dataForm.workTitile" border="none" placeholder="张三"
+							@change='getWorkTitile'></u--input>
 					</u-form-item>
 					<u-form-item label="用工类型" prop="userInfo.sex" borderBottom @click="showSex = !showSex; " ref="item1"
 						required>
@@ -21,16 +22,20 @@
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工地址" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workAddress" border="none" placeholder="请输入" @change='getWorkAddress'></u--input>
+						<u--input v-model="dataForm.workAddress" border="none" placeholder="请输入"
+							@change='getWorkAddress'></u--input>
 					</u-form-item>
 					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入" @change='getWorkplace'></u--input>
+						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入"
+							@change='getWorkplace'></u--input>
 					</u-form-item>
 					<u-form-item label="用工数量" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入" @change='getWorkNum'></u--input>
+						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入"
+							@change='getWorkNum'></u--input>
 					</u-form-item>
 					<u-form-item label="单人日薪" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.singleMoney" border="none" @change='getSingleMoney' placeholder="请输入"></u--input>
+						<u--input v-model="dataForm.singleMoney" border="none" @change='getSingleMoney'
+							placeholder="请输入"></u--input>
 					</u-form-item>
 					<u-form-item label="开始时间" prop="userInfo.name" borderBottom ref="item1" required
 						@click="dateShow = !dateShow;">
@@ -45,15 +50,16 @@
 			</view>
 			<view class="footer-tip">平台承诺，严格保障您的隐私安全</view>
 		</view>
-		<u-action-sheet :show="showSex" :actions="workTypeList" title="请选择类型" @close="showSex = false" @select="typeSelect">
+		<u-action-sheet :show="showSex" :actions="workTypeList" title="请选择类型" @close="showSex = false"
+			@select="typeSelect">
 		</u-action-sheet>
 		<u-action-sheet :show="showLabel" :actions="labelList" title="请选择标签" @close="showLabel = false"
 			@select="labelSelect">
 		</u-action-sheet>
-		<u-datetime-picker :show="dateShow"  mode="date" @cancel='starts'
-			@confirm="getStartTimes" :formatter="formatter" ref="startPicker"></u-datetime-picker>
-		<u-datetime-picker :show="endDateShow"  mode="date" @cancel='ends'
-			@confirm="getEndTimes" :formatter="formatter" ref="endPicker"></u-datetime-picker>
+		<u-datetime-picker :show="dateShow" mode="datetime" @cancel='starts' @confirm="getStartTimes"
+			:formatter="formatter" ref="startPicker"></u-datetime-picker>
+		<u-datetime-picker :show="endDateShow" mode="datetime" @cancel='ends' @confirm="getEndTimes"
+			:formatter="formatter" ref="endPicker"></u-datetime-picker>
 		<view class="footer">
 			<u-button text="保存" color="#3A84F0" @click="onBack"></u-button>
 		</view>
@@ -61,7 +67,11 @@
 </template>
 
 <script>
-	import { getWorkType, getType } from '@/api/sub.js'
+	import {
+		getWorkType,
+		getType,
+		submitLis
+	} from '@/api/sub.js'
 	export default {
 		data() {
 			return {
@@ -75,6 +85,9 @@
 					singleMoney: '',
 					startTime: '',
 					endTime: '',
+					workTypeId: '',
+					workLabelId: '',
+
 				},
 				workTypeList: [],
 				labelList: [],
@@ -209,19 +222,117 @@
 			}
 		},
 		created() {
-			getType().then(res =>{
-				this.workTypeList = res.data.map(item =>{
+			getType().then(res => {
+				this.workTypeList = res.data.map(item => {
 					return {
 						name: item.label,
-						value:item.value
+						value: item.value
 					}
 				});
 			})
 		},
 		methods: {
 			onBack() {
-				console.log(this.dataForm);
-				// uni.navigateBack(1)
+				if(this.dataForm.workTitile == '') {
+					uni.showToast({
+						title:'请输入用工标题',
+						icon:'none'
+					})
+					return;
+				}
+				if(this.dataForm.workTypeId == '') {
+					uni.showToast({
+						title:'请选择用工类型',
+						icon:'none'
+					})
+					return;
+				}
+				if(this.dataForm.workLabelId == '') {
+					uni.showToast({
+						title:'请选择用工标签',
+						icon:'none'
+					})
+					return;
+				}
+				if(this.dataForm.workAddress == '') {
+					uni.showToast({
+						title:'请输入用工地址',
+						icon:'none'
+					})
+					return;
+				}
+				if(this.dataForm.workPlace == '') {
+					uni.showToast({
+						title:'请输入详细描述',
+						icon:'none'
+					})
+					return;
+				}
+				if(this.dataForm.workNum == '') {
+					uni.showToast({
+						title:'请输入用工数量',
+						icon:'none'
+					})
+					return;
+				}
+				if(this.dataForm.singleMoney == '') {
+					uni.showToast({
+						title:'请输入单人日薪',
+						icon:'none'
+					})
+					return;
+				}
+				if(this.dataForm.startTime == '') {
+					uni.showToast({
+						title:'请选择开始时间',
+						icon:'none'
+					})
+					return;
+				}
+				if(this.dataForm.workPlace == '') {
+					uni.showToast({
+						title:'请输入详细描述',
+						icon:'none'
+					})
+					return;
+				}
+				if(this.dataForm.endTime == '') {
+					uni.showToast({
+						title:'请选择结束时间',
+						icon:'none'
+					})
+					return;
+				}
+				submitLis({
+					name: this.dataForm.workTitile,
+					typeId: this.dataForm.workTypeId,
+					labelIds: this.dataForm.workLabelId,
+					address: this.dataForm.workAddress,
+					addressItem: this.dataForm.workPlace,
+					orderQuantity: this.dataForm.workNum,
+					price: this.dataForm.singleMoney,
+					orderStatr: this.dataForm.startTime,
+					orderEnd: this.dataForm.endTime,
+					description: this.dataForm.workPlace
+				}).then(res => {
+					if (res.code == "00000") {
+						let ids = res.data;
+						uni.showToast({
+							title: "确认下单成功",
+							duration: 2000,
+							success: (res) => {
+								uni.setStorageSync('order_ids', ids);
+								setTimeout(() => {
+									uni.navigateTo({
+										url: '/pages/order/confirm?datas=' + JSON.stringify(this.dataForm) + '&orderId=' + ids,
+									})
+								}, 2000)
+							},
+						})
+					}
+
+				})
+
 			},
 			starts() {
 				this.dateShow = false;
@@ -239,23 +350,27 @@
 			},
 			typeSelect(e) {
 				this.dataForm.workType = e.name;
-				getWorkType({typeId:e.value}).then(res =>{
-					this.labelList = res.data.map(item =>{
+				this.dataForm.workTypeId = e.value;
+				getWorkType({
+					typeId: e.value
+				}).then(res => {
+					this.labelList = res.data.map(item => {
 						return {
-							name:item.label,
-							value:item.value
+							name: item.label,
+							value: item.value
 						}
 					})
 				})
 			},
 			labelSelect(e) {
 				this.dataForm.workLabel = e.name;
+				this.dataForm.workLabelId = e.value;
 			},
 			getWorkTitile(e) {
 				this.dataForm.workTitile = e;
 			},
 			getWorkAddress(e) {
-			    this.dataForm.workAddress = e;
+				this.dataForm.workAddress = e;
 			},
 			getWorkplace(e) {
 				this.dataForm.workPlace = e;
@@ -297,18 +412,16 @@
 				// }
 			},
 			timestampToTime(timestamp) {
-			  // 时间戳为10位需*1000，时间戳为13位不需乘1000
-			  var date = new Date(timestamp);
-			  var Y = date.getFullYear() + "-";
-			  var M =
-			    (date.getMonth() + 1 < 10
-			      ? "0" + (date.getMonth() + 1)
-			      : date.getMonth() + 1) + "-";
-			  var D = (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) + " ";
-			  var h = date.getHours() + ":";
-			  var m = date.getMinutes() + ":";
-			  var s = date.getSeconds();
-			  return Y + M + D;
+				// 时间戳为10位需*1000，时间戳为13位不需乘1000
+				let date = new Date(parseInt(timestamp));
+				let Year = date.getFullYear();
+				let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+				let Day = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
+				let Hour = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours());
+				let Minute = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+				let Sechond = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+				let GMT = Year + '-' + Moth + '-' + Day + ' ' + Hour + ':' + Minute;
+				return GMT;
 			},
 		},
 	}

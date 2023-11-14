@@ -1,13 +1,13 @@
 <template>
-	<view class="order-info">
+	<view class="order-info" :style="{borderRadius:radius,margin:margin}">
 		<view class="body">
 			<view class="flex-center between">
-				<view class="title">{{ compData.title }}</view>
+				<view class="title">{{ compData.name }}</view>
 				<view class="salary">{{ compData.salary }}</view>
 			</view>
 			<view class="tag-list">
 				<view class="tag-item jobs">
-					<u-icon name="account-fill" size="24rpx" color="#3A84F0" :label="`岗位量${compData.jobs}`" label-color="#3A84F0" label-size="24rpx"></u-icon>
+					<u-icon name="account-fill" size="24rpx" color="#3A84F0" :label="`岗位量${compData.orderQuantity}`" label-color="#3A84F0" label-size="24rpx"></u-icon>
 				</view>
 				<view class="tag-item" v-for="(item, index) in compData.tags" :key="index">{{ item }}</view>
 			</view>
@@ -15,12 +15,13 @@
 				<u-icon name="/static/address.png" size="24rpx" color="#666666" :label="compData.address" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
 			<view class="body-line">
-				<u-icon name="map-fill" size="24rpx" color="#666666" :label="compData.location" label-color="#666666" label-size="24rpx"></u-icon>
+				<u-icon name="map-fill" size="24rpx" color="#666666" :label="compData.addressItem == null ? '' : compData.addressItem " label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
-			<view class="body-line" v-if="compData.state == 'grab' || compData.state == 'being'">
-				<u-icon name="clock-fill" size="24rpx" color="#666666" :label="`${compData.startTime}-${compData.endTime}`" label-color="#666666" label-size="24rpx"></u-icon>
+			<view class="body-line" >
+				<u-icon name="clock-fill" size="24rpx" color="#666666" :label="`${compData.orderStatr}-${compData.orderEnd}`" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
 		</view>
+		<slot name="footer"></slot>
 	</view>
 </template>
 
@@ -28,6 +29,14 @@
 	export default {
 		props: {
 			compData: Object,
+			radius: {
+				type: String,
+				default: '15rpx',
+			},
+			margin: {
+				type: String,
+				default: '28rpx 0 35rpx 0',
+			},
 		},
 		data() {
 			return {}
@@ -38,10 +47,8 @@
 
 <style lang="scss">
 	.order-info {
-		margin-top: 28rpx;
 		background-color: #fff;
-		border-radius: 15rpx;
-		margin-bottom: 35rpx;
+		overflow: hidden;
 		.body {
 			box-sizing: border-box;
 			padding: 35rpx;

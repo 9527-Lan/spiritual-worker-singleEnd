@@ -207,10 +207,8 @@
 	page {
 		background-color: #f2f6ff;
 	}
-
 	.pages-order-detail-being {
 		position: relative;
-
 		.header {
 			background-color: #3a84f0;
 			color: #fff;
@@ -220,42 +218,35 @@
 			left: 0;
 			right: 0;
 		}
-
 		.empty-container {
 			height: 380rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 		}
-
 		.flex-center {
 			display: flex;
 			align-items: center;
 		}
-
 		.flex-center-between {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 		}
-
 		.salary {
 			font-size: 32rpx;
 			font-weight: bold;
 			color: #3a84f0;
 		}
-
 		.title {
 			font-size: 32rpx;
 			font-weight: bold;
 			color: #333333;
 		}
-
 		.tag-list {
 			margin-top: 24rpx;
 			display: flex;
 			align-items: center;
-
 			.tag-item {
 				display: flex;
 				align-items: center;
@@ -267,22 +258,18 @@
 				padding: 0 13rpx;
 				background-color: #eaeff4;
 				color: #333333;
-
 				&.jobs {
 					background-color: #e6f0ff !important;
 					color: #3a84f0 !important;
 				}
-
-				&+.tag-item {
+				& + .tag-item {
 					margin-left: 10rpx;
 				}
 			}
 		}
-
 		.employee-item {
 			height: 92rpx;
 		}
-
 		.body-wrapper {
 			position: absolute;
 			top: 32rpx;
@@ -292,7 +279,6 @@
 			box-sizing: border-box;
 			z-index: 1;
 			padding-bottom: 160rpx;
-
 			.body-wrapper-top {
 				display: flex;
 				justify-content: space-between;
@@ -305,17 +291,14 @@
 				font-size: 24rpx;
 				font-weight: 500;
 			}
-
 			.body {
 				padding: 32rpx;
 				box-sizing: border-box;
 				background-color: #fff;
 				border-radius: 0 0 15rpx 15rpx;
-
 				.employee-list {
 					/deep/.u-collapse-item {
 						margin-top: 40rpx;
-
 						.u-cell__body {
 							image {
 								height: 92rpx !important;
@@ -323,7 +306,6 @@
 								border-radius: 50%;
 							}
 						}
-
 						.u-cell__title-text {
 							margin-left: 38rpx;
 							font-size: 32rpx;
@@ -332,17 +314,13 @@
 						}
 					}
 				}
-
 				.progress {
 					margin-top: 50rpx;
-
 					.progress-item {
 						margin-top: 30rpx;
 						min-height: 80rpx;
-
 						.progress-item-left {
 							height: 100%;
-
 							.record-tag {
 								border: 1px solid #999999;
 								color: #999999;
@@ -352,44 +330,44 @@
 								font-weight: 500;
 								line-height: 28rpx;
 								text-align: center;
-
 								&.isRecord {
 									border: 1px solid #3a84f0;
 									color: #3a84f0;
 								}
 							}
 						}
-
 						.progress-item-right {
 							flex: 1;
 							margin-left: 10rpx;
-
-								.remark {
-									margin-top: 29rpx;
-									font-size: 24rpx;
-									font-weight: 500;
-									color: #333333;
+							/deep/.u-album {
+								margin-top: 10rpx;
+								image {
+									width: 132rpx !important;
+									height: 114rpx !important;
 								}
-
-								.day {
-									font-size: 24rpx;
-									font-weight: 500;
-									color: #333333;
-								}
-
-								.time {
-									margin-top: 24rpx;
-									font-size: 20rpx;
-									font-weight: 500;
-									color: #666666;
-								}
+							}
+							.remark {
+								margin-top: 29rpx;
+								font-size: 24rpx;
+								font-weight: 500;
+								color: #333333;
+							}
+							.day {
+								font-size: 24rpx;
+								font-weight: 500;
+								color: #333333;
+							}
+							.time {
+								margin-top: 24rpx;
+								font-size: 20rpx;
+								font-weight: 500;
+								color: #666666;
 							}
 						}
 					}
 				}
 			}
 		}
-
 		.footer {
 			position: fixed;
 			z-index: 3;
@@ -401,5 +379,5 @@
 			box-sizing: border-box;
 			background-color: #fff;
 		}
-	
+	}
 </style>

@@ -36,15 +36,59 @@
 <script>
 	import {
 		personage
-	} from "@/api/user.js"
+	} from "@/api/sub.js"
 	export default {
 		data() {
 			return {
 				id: '1',
 				type: '1',
+				information: {
+					img: '',
+					name: '张三三',
+					phone: 15344446666
+				},
+				operates: [{
+						number: 3,
+						label: '抢单中',
+						color: '#333333',
+						route: '/pages/order/index?state=grab'
+					},
+					{
+						number: 1,
+						label: '进行中',
+						color: '#333333',
+						route: '/pages/order/index?state=being'
+					},
+					{
+						number: 56,
+						label: '已完成',
+						color: '#333333',
+						route: '/pages/order/index?state=completes'
+					},
+					{
+						number: 0,
+						label: '异常',
+						color: '#F37878',
+						route: '/pages/order/index?state=exceptions'
+					},
+				],
+				cellList: [{
+						icon: '/static/我的信息.png',
+						title: '我的信息',
+						route: '/pages/my/editInfo'
+					},
+					{
+						icon: '/static/咨询客服.png',
+						title: '咨询客服'
+					},
+					{
+						icon: '/static/关于我们.png',
+						title: '关于我们'
+					},
+				],
 			}
 		},
-		onLoad() {
+		mounted() {
 			this.personageList()
 		},
 		methods: {
@@ -54,8 +98,30 @@
 					type: this.type,
 				}
 				personage(params).then(res => {
-					console.log(res)
+					const item = res.data;
+					this.operates = [{
+						number: item.qdzOrderCount,
+						label: '抢单中',
+						color: '#333333',
+						route: '/pages/order/index?state=grab'
+					}, {
+						number: item.jxzOrderCount,
+						label: '进行中',
+						color: '#333333',
+						route: '/pages/order/index?state=being'
+					}, {
+						number: item.ywcOrderCount,
+						label: '已完成',
+						color: '#333333',
+						route: '/pages/order/index?state=completes'
+					}, {
+						number: item.ycOrderCount,
+						label: '异常',
+						color: '#F37878',
+						route: '/pages/order/index?state=exceptions'
+					}, ]
 				})
+				console.log(this.operates);
 			}
 		}
 	}
