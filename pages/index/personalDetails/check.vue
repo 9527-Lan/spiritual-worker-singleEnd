@@ -14,8 +14,8 @@
 							</view>
 						</view>
 						<view class="information-tag">
-							<view class="tag-item">{{ detailData.role }}</view>
-							<view class="tag-item" v-if="detailData.experience != null">{{ detailData.experience }}</view>
+							<view class="tag-item" v-for="(item, index) in detailData.role" :key="index">{{ item }}</view>
+							<view class="tag-item" v-if="detailData.experience != null" v-for="(item, index) in detailData.experience" :key="index">{{ item }}</view>
 							<view class="tag-item" v-if="detailData.hasCertificate">持证上岗</view>
 						</view>
 					</view>
@@ -23,7 +23,18 @@
 				</view>
 				<view class="title">持有证书</view>
 				<view class="certificate">
-					<u-image :src="detailData.certificate" height="457rpx" width="615rpx"></u-image>
+					<!-- <u-image v-for="(item, index) in detailData.casualEngineerCertificate" :key = "index" :src="item" height="457rpx" width="615rpx"></u-image> -->
+					<u-swiper
+						style="width: 615rpx;"
+						:list="detailData.casualEngineerCertificate"
+						previousMargin="30"
+						nextMargin="30"
+						circular
+						height="457"
+						:autoplay="false"
+						radius="5"
+						bgColor="#ffffff"
+					></u-swiper>
 				</view>
 				<view class="flex-center-between">
 					<view class="title">Ta的用工记录</view>
@@ -38,14 +49,14 @@
 				</view>
 			</view>
 		</view>
-		<view class="footer">
+<!-- 		<view class="footer">
 			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
 				size="36rpx"></u-icon>
 			<view class="flex-center btn-box">
 				<u-button text="拒绝Ta" type="info" plain></u-button>
 				<u-button text="审核通过" color="#3A84F0"></u-button>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -88,19 +99,22 @@
 			// this.init()
 		},
 		onLoad(options) {
+			console.log(options);
 			const datas = JSON.parse(options.data);
+			console.log(datas)
 			this.detailData = {
-					img: "",
-					name: datas.engineerRealname,
-					sex: datas.engineerSexName,
-					role: datas.typeName,
-					experience: datas.cardImgPositive,
-					hasCertificate: false,
+					img: datas.img,
+					name: datas.name,
+					sex: datas.sex,
+					role: datas.role,
+					experience: datas.experience,
+					hasCertificate: datas.hasCertificate,
 					certificate: datas.cardImgPositive,
+					casualEngineerCertificate: datas.casualEngineerCertificate,
 					times: 0,
 					records: [],
 				},
-			this.id = options.id;
+			this.id = datas.id;
 			this.employmentList()
 		},
 		methods: {

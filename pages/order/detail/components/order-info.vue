@@ -12,10 +12,10 @@
 				<view class="tag-item" v-for="(item, index) in compData.tags" :key="index">{{ item }}</view>
 			</view>
 			<view class="body-line">
-				<u-icon name="/static/address.png" size="24rpx" color="#666666" :label="compData.address" label-color="#666666" label-size="24rpx"></u-icon>
+				<u-icon name="/static/address.png" size="24rpx" color="#666666" :label="compData.principalName" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
 			<view class="body-line">
-				<u-icon name="map-fill" size="24rpx" color="#666666" :label="compData.addressItem == null ? '' : compData.addressItem " label-color="#666666" label-size="24rpx"></u-icon>
+				<u-icon name="map-fill" size="24rpx" color="#666666" :label="compData.address == null ? '' : compData.address " label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
 			<view class="body-line" >
 				<u-icon name="clock-fill" size="24rpx" color="#666666" :label="`${compData.orderStatr}-${compData.orderEnd}`" label-color="#666666" label-size="24rpx"></u-icon>

@@ -1,10 +1,10 @@
 <template>
 	<view class="page-my-index">
 		<view class="information">
-			<u-avatar :src="information.img" size="120rpx"></u-avatar>
+			<u-avatar :src="avater" size="120rpx"></u-avatar>
 			<view class="information-right">
-				<view class="name">{{ information.name }}</view>
-				<view v-if="information.phone" class="phone">手机号：{{ information.phone }}</view>
+				<view class="name">{{ userInfo.name }}</view>
+				<view v-if="userInfo.mobile" class="phone">手机号：{{ userInfo.mobile }}</view>
 			</view>
 		</view>
 		<view class="operate-container">
@@ -40,13 +40,8 @@
 	export default {
 		data() {
 			return {
-				id: '1',
-				type: '1',
-				information: {
-					img: '',
-					name: '张三三',
-					phone: 15344446666
-				},
+				userInfo:{},
+				avater: '',
 				operates: [{
 						number: 3,
 						label: '抢单中',
@@ -88,17 +83,20 @@
 				],
 			}
 		},
-		mounted() {
+		onLoad() {
 			this.personageList()
 		},
 		methods: {
 			personageList() {
+				let userInfo = this.$store.state.user.userInfo
+				this.userInfo = userInfo
 				let params = {
-					id: this.id,
-					type: this.type,
+					id: userInfo.id,
+					type: this.$store.state.user.loginType,
 				}
 				personage(params).then(res => {
 					const item = res.data;
+					this.avater = item.headSculptureUrl
 					this.operates = [{
 						number: item.qdzOrderCount,
 						label: '抢单中',

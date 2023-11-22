@@ -21,7 +21,13 @@
 
 <script>
 	import orderItem from './components/order-item.vue'
-	import { queryOrderbyEngId } from '@/api/sub.js'
+	import { 
+		queryOrderbyEngId,
+		queryOrderbyJxzEngId,
+		queryOrderbyWcEngId,
+		queryOrderbyYcEngId
+	 } from '@/api/sub.js'
+	import { toChineseBig } from '@/utils/utils.js'
 	export default {
 		components: {
 			orderItem,
@@ -30,11 +36,12 @@
 			return {
 				bgColor: '#f2f6ff',
 				currentType: 0,
+				currentValue: '',
 				typeList: [
 					{ title: '进行中', value: 0 },
-					{ title: '抢单中', value: 1 },
-					{ title: '已完成', value: 2 },
-					{ title: '异常订单', value: 3 },
+					{ title: '抢单中', value: 0 },
+					{ title: '已完成', value: 0 },
+					{ title: '异常订单', value: 0 },
 				],
 				typePickerVisble: false,
 				orderList: [],
@@ -119,33 +126,14 @@
 				],
 			}
 		},
-		onLoad(event) {
-			switch (event.state) {
-				case 'being':
-					this.currentType = 0
-					break
-				case 'grab':
-					this.currentType = 1
-					break
-				case 'completes':
-					this.currentType = 2
-					break
-				case 'exceptions':
-					this.currentType = 3
-					break
-				default:
-					break
-			}
-			this.init()
-			const ids = uni.getStorageSync("order_ids");
-			queryOrderbyEngId({id:1,type:1}).then(res =>{
-				this.orderList = res.data;
-				console.log(this.orderList);
-			})
+		async onLoad(event) {
+			let state = event.state
+			this.currentValue = state
+			console.log("state", state);
+			this.switchStatus()
 		},
 		onPullDownRefresh() {
-			console.log('onPullDownRefresh')
-			this.init()
+			this.switchStatus()
 		},
 		methods: {
 			onBack() {
@@ -161,28 +149,105 @@
 				console.log('onTypePickConfirm', event)
 				this.currentType = event.indexs[0]
 				this.typePickerVisble = false
-				switch (event.indexs[0]) {
-					case 0:
-						this.orderList = JSON.parse(JSON.stringify(this.being))
+				// switch (event.indexs[0]) {
+				// 	case 0:
+				// 		this.orderList = JSON.parse(JSON.stringify(this.being))
+				// 		break
+				// 	case 1:
+				// 		this.orderList = JSON.parse(JSON.stringify(this.grab))
+				// 		break
+				// 	case 2:
+				// 		this.orderList = JSON.parse(JSON.stringify(this.completes))
+				// 		break
+				// 	case 3:
+				// 		this.orderList = JSON.parse(JSON.stringify(this.exceptions))
+				// 		break
+				// 	default:
+				// 		break
+				// }
+			},
+			switchStatus() {
+				let userInfo = this.$store.state.user.userInfo
+				let userId = userInfo.id
+				let loginType = this.$store.state.user.loginType
+				
+				switch (this.currentValue) {
+					case 'being':
+						this.currentType = 0
+						this.getBeingList(userId, loginType)
 						break
-					case 1:
-						this.orderList = JSON.parse(JSON.stringify(this.grab))
+					case 'grab':
+						this.currentType = 1
+						this.getGrabList(userId, loginType)
 						break
-					case 2:
-						this.orderList = JSON.parse(JSON.stringify(this.completes))
+					case 'completes':
+						this.currentType = 2
+						this.getCompletesList(userId, loginType)
 						break
-					case 3:
-						this.orderList = JSON.parse(JSON.stringify(this.exceptions))
+					case 'exceptions':
+						this.currentType = 3;
+						this.getExceptionsList(userId, loginType)
 						break
 					default:
 						break
 				}
 				uni.stopPullDownRefresh()
 			},
-			init() {
-				this.orderList = []
-				const params = { indexs: [this.currentType] }
-				this.onTypePickConfirm(params)
+			async getGrabList(userId, loginType) {
+				let res = await queryOrderbyEngId({id: userId,type: loginType})
+				console.log(res);
+				if(res.data.length) {
+					let data = res.data.map(el =>  {return {
+						...el,
+						state: this.currentValue
+					}});
+					this.orderList = data
+				}
+			},
+			async getBeingList(userId, loginType) {
+				let res = await queryOrderbyJxzEngId({id: userId,type: loginType})
+				if(res.data.length) {
+					let data = res.data.map(el =>  {
+						let dateList = el.casualOrderRecords.map((el, index) => {
+							let big = toChineseBig(index + 1)
+							return {
+								day: '第' + big + '天',
+								time: el.order_date
+							}
+						})
+						let sign = el.casualOrderRecords.filter(el => {return el.sign})
+						return {
+							...el,
+							state: this.currentValue,
+							progress: {
+								current: sign.length - 1,
+								dateList: dateList,
+							}
+						}
+					});
+					this.orderList = data
+					console.log('BeingList', this.orderList)
+				}
+			},
+			async getCompletesList(userId, loginType) {
+				let res = await queryOrderbyWcEngId({id: userId,type: loginType})
+				if(res.data.length) {
+					let data = res.data.map(el =>  {return {
+						...el,
+						state: this.currentValue
+					}});
+					this.orderList = data
+				}
+			},
+			async getExceptionsList(userId, loginType) {
+				let res = await queryOrderbyYcEngId({id: userId,type: loginType})
+				if(res.data.length) {
+					let data = res.data.map(el =>  {return {
+						...el,
+						state: this.currentValue
+					}});
+					this.orderList = data
+				}
 			},
 		},
 	}

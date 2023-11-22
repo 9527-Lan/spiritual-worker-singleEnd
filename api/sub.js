@@ -2,7 +2,7 @@ import request from '@/utils/request'
 // 首页列表渲染
 export function employmentPerson (params){
 	return request({
-		url: '/LowerSingleEnd/app/employment_records',
+		url: '/app/employment_records',
 		method: 'get',
 		params:params,
 	})
@@ -30,7 +30,7 @@ export function getType (){
 
 export function submitLis (data){
 	return request({
-		url: '/LowerSingleEnd/web/casualOrder/add',
+		url: '/web/casualOrder/add',
 		method: 'post',
 		data,
 	})
@@ -40,7 +40,7 @@ export function submitLis (data){
 
 export function surePre (params){
 	return request({
-		url: '/LowerSingleEnd/web/casualOrder/releaseOrder',
+		url: '/web/casualOrder/releaseOrder',
 		method: 'get',
 		params:params,
 	})
@@ -50,7 +50,7 @@ export function surePre (params){
 
 export function casualOrderEngineerList (params){
 	return request({
-		url: '/LowerSingleEnd/web/casualOrder/casualOrderEngineerList',
+		url: '/web/casualOrder/casualOrderEngineerList',
 		method: 'get',
 		params:params,
 	})
@@ -60,7 +60,7 @@ export function casualOrderEngineerList (params){
 
 export function casualOrder (params){
 	return request({
-		url: '/LowerSingleEnd/web/casualOrder/getById',
+		url: '/web/casualOrder/getById',
 		method: 'get',
 		params:params,
 	})
@@ -70,7 +70,7 @@ export function casualOrder (params){
 
 export function cancellationOrder (params){
 	return request({
-		url: '/LowerSingleEnd/web/casualOrder/cancellationOrder',
+		url: '/web/casualOrder/cancellationOrder',
 		method: 'get',
 		params:params,
 	})
@@ -80,18 +80,44 @@ export function cancellationOrder (params){
 
 export function personage (params){
 	return request({
-		url: '/LowerSingleEnd/app/my_personage',
+		url: '/app/my_personage',
 		method: 'get',
 		params:params,
 	})
 }
 
 // 抢单中订单
-
 export function queryOrderbyEngId (params){
 	return request({
-		url: '/LowerSingleEnd/queryOrderbyEngId',
+		url: '/queryOrderbyEngId',
 		method: 'get',
 		params:params,
+	})
+}
+
+// 进行中订单
+export function queryOrderbyJxzEngId(params) {
+	return request({
+		url: '/queryOrderbyJxzEngId',
+		method: 'get',
+		params:params
+	})
+}
+
+// 已完成订单
+export function queryOrderbyWcEngId(params) {
+	return request({
+		url: '/queryOrderbyWcEngId',
+		method: 'get',
+		params:params
+	})
+}
+
+// 异常订单
+export function queryOrderbyYcEngId(params) {
+	return request({
+		url: '/queryOrderbyYcEngId',
+		method: 'get',
+		params:params
 	})
 }

@@ -4,27 +4,31 @@
 import request from '@/utils/request'
 
 
-// H5/Android/IOS 手机短信验证码登录
-export function login( mobile,code) {
+
+// 企业登录
+export function firmLogin(data) {
 	return request({
-		url: '/youlai-auth/oauth/token',
+		url: '/entrepreneurLogin',
 		method: 'post',
-		params: {
-			mobile: mobile,
-			code: code,
-			grant_type: 'sms_code'
-		},
-		headers: {
-			'Authorization': 'Basic bWFsbC1hcHA6MTIzNDU2' // 客户端信息Base64加密，明文：mall-app:123456
-		}
+		data: data
 	})
 }
+// 个人登录
+export function personLogin(data) {
+	return request({
+		url: '/personageLogin',
+		method: 'post',
+		data: data
+	})
+}
+
+
 
 // 任务订单新增
 export function casualOrderAdd(){
 	return request({
 		url: '/web/casualOrder/add',
-		method: 'post',
+		method: 'post'
 	})
 }
 //ta的用工记录
