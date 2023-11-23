@@ -20,8 +20,8 @@
 		</view>
 		<view>
 			<!-- /pages/index/personalDetails/index -->
-			<listItem v-for="(item, index) in pageList" :key="index" :compData="item"
-				@onClick="pageTo(item,index)"></listItem>
+			<listItem v-for="(item, index) in pageList" :key="item.id" :compData="item"
+				@onClick="pageTo(item)"></listItem>
 		</view>
 	</view>
 </template>
@@ -44,19 +44,7 @@
 					'https://cdn.uviewui.com/uview/swiper/swiper2.png',
 					'https://cdn.uviewui.com/uview/swiper/swiper3.png',
 				],
-				tabList: [{
-					name: '推荐'
-				}, {
-					name: '保安'
-				}, {
-					name: '保洁'
-				}, {
-					name: '电工'
-				}, {
-					name: '环卫'
-				}, {
-					name: '物业'
-				}],
+				tabList: [],
 				// {
 				// 		img: 'https://cdn.uviewui.com/uview/album/1.jpg',
 				// 		name: '张三三',
@@ -69,7 +57,7 @@
 				pageList: [],					
 				pageNum: 1,
 				pageSize: 10,
-				typeId: 1,
+				typeId: null,
 				personData: "",
 			}
 		},
@@ -81,9 +69,9 @@
 					url:`/pages/index/search`
 				})
 			},
-			pageTo(e,i) {
+			pageTo(item) {
 				uni.navigateTo({
-					url:'/pages/index/personalDetails/check?id=' + e.id + '&data=' + JSON.stringify(this.personData[i])
+					url:'/pages/index/personalDetails/check?data=' + encodeURIComponent(JSON.stringify(item))
 				})
 			},
 			// 首页列表渲染
@@ -97,13 +85,15 @@
 					console.log(res)					
 					const dataList = res.data.list.map(item => {
 						return {
-							img: item.cardImgPositive,
+							img: item.headSculptureUrl,
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
-							role: item.typeName,
-							experience: item.labelName,
+							role: item.typeName.split(','),
+							experience: item.labelName.split(','),
 							times: item.employmentNumber,
 							id: item.id,
+							hasCertificate: item.casualEngineerCertificate.length,
+							casualEngineerCertificate: item.casualEngineerCertificate
 						}			
 					})
 					const data = res.data.list;
@@ -113,26 +103,31 @@
 			},
 	
 		// 首页tab栏渲染
-		casualServiceTypeList(){
-			casualServiceType().then(res=>{
-				console.log(res)
-				this.tabList=res.data.map(item=>{
-					return {
-						name:item.label,
-						value:item.value
-					}
-					
-					this.typeIds=res.data[0].value
-					this.findCasualEngineerList()
-				})
+		async casualServiceTypeList(){
+			let res = await casualServiceType();
+			console.log(res)
+			let data = res.data.map(item=>{
+				return {
+					name:item.label,
+					value:item.value
+				}
 			})
+			
+			let list = [
+				{
+					name: '推荐',
+					value: null,
+				}
+			]
+			list.push(...data)
+			this.tabList = list
 		},
 		// 改变tab栏
 		changeTabList(e){
 			this.pageNum = 1
 			this.pageList = []
 			this.typeId = this.tabList[e.index].value
-			console.log(this.typeId)
+			console.log("this.typeId", this.typeId)
 			this.findCasualEngineerList()
 		},
 		},

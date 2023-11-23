@@ -4,41 +4,44 @@
 		<view class="body-wrapper">
 			<view class="body-wrapper-top">
 				<view>状态：进行中</view>
-				<view>当前用工数：{{ compData.employees.length }}</view>
+				<view>当前用工数：{{ employees.length }}</view>
 				<view></view>
 			</view>
 			<view class="body">
-				<template v-if="compData.employees.length > 0">
+				<template v-if="employees.length > 0">
 					<view class="flex-center-between">
 						<view class="title">用工列表</view>
 						<!-- <view class="salary">{{ compData.salary }}</view> -->
 					</view>
-					<view class="employee-list">
-						<u-collapse :border="false">
-							<u-collapse-item v-for="(item, index) in compData.employees" :icon="item.img"
-								:title="item.name" :key="index">
-								<view class="progress">
-									<u-steps :current="item.progress.current" direction="column" dot>
-										<u-steps-item v-for="(pItem, pIndex) in item.progress.dateList" :key="pIndex">
-											<view slot="desc" class="progress-item flex-center">
-												<view class="progress-item-left">
-													<view v-if="pItem.isRecord" class="record-tag isRecord">已记录</view>
-													<view v-else class="record-tag">待记录</view>
+					<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-y" @scrolltoupper="upper"
+						@scrolltolower="lower" @scroll="scroll">
+						<view class="employee-list">
+							<u-collapse @change="change" @open="open" accordion :border="false">
+								<u-collapse-item v-for="(item, index) in employees" :icon="item.headSculptureUrl"
+									:title="item.engineerName" :key="index">
+									<view class="progress">
+										<u-steps :current="progress.current" direction="column" dot>
+											<u-steps-item v-for="(pItem, pIndex) in progress.dateList" :key="pIndex">
+												<view slot="desc" class="progress-item flex-center">
+													<view class="progress-item-left">
+														<view v-if="pItem.isRecord" class="record-tag isRecord">已记录</view>
+														<view v-else class="record-tag">待记录</view>
+													</view>
+													<view class="progress-item-right">
+														<view class="day">{{ pItem.day }}</view>
+														<view class="remark">{{ pItem.remark }}</view>
+														<u-album v-if="pItem.imgs && pItem.imgs.length > 0" :rowCount="3"
+															:urls="pItem.imgs"></u-album>
+														<view class="time">{{ pItem.time }}</view>
+													</view>
 												</view>
-												<view class="progress-item-right">
-													<view class="day">{{ pItem.day }}</view>
-													<view class="remark">{{ pItem.remark }}</view>
-													<u-album v-if="pItem.imgs && pItem.imgs.length > 0" :rowCount="3"
-														:urls="pItem.imgs"></u-album>
-													<view class="time">{{ pItem.time }}</view>
-												</view>
-											</view>
-										</u-steps-item>
-									</u-steps>
-								</view>
-							</u-collapse-item>
-						</u-collapse>
-					</view>
+											</u-steps-item>
+										</u-steps>
+									</view>
+								</u-collapse-item>
+							</u-collapse>
+						</view>
+					</scroll-view>
 				</template>
 				<template v-else>
 					<view class="empty-container">
@@ -47,8 +50,8 @@
 				</template>
 			</view>
 
-			<orderInfo :compData="compData"></orderInfo>
-			<orderDescription :compData="compData"></orderDescription>
+			<orderInfo :compData="resData"></orderInfo>
+			<orderDescription :compData="resData"></orderDescription>
 		</view>
 		<view class="footer">
 			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
@@ -83,117 +86,91 @@
 					startTime: '2023.09.18',
 					endTime: '2023.09.20',
 					// title: '用工列表',
-					count: 9,
-					employees: [{
-							name: '张三三',
-							img: 'https://cdn.uviewui.com/uview/album/1.jpg',
-							progress: {
-								current: 1,
-								dateList: [{
-										day: '第一天',
-										isRecord: true,
-										time: '2023.09.17 10:25:30',
-										remark: '备注：已完成安保工作',
-										imgs: [
-											'https://cdn.uviewui.com/uview/album/1.jpg',
-											'https://cdn.uviewui.com/uview/album/2.jpg',
-											'https://cdn.uviewui.com/uview/album/3.jpg',
-										],
-									},
-									{
-										day: '第二天',
-										time: '2023.09.18',
-										isRecord: true
-									},
-									{
-										day: '第三天',
-										time: '2023.09.19'
-									},
-								],
-							},
+					count: 9
+				},
+				resData: {},
+				employees: [],
+				progress: {
+					current: 1,
+					dateList: [{
+							day: '第一天',
+							isRecord: true,
+							time: '2023.09.17 10:25:30',
+							remark: '备注：已完成安保工作',
+							imgs: [
+								'https://cdn.uviewui.com/uview/album/1.jpg',
+								'https://cdn.uviewui.com/uview/album/2.jpg',
+								'https://cdn.uviewui.com/uview/album/3.jpg',
+							],
 						},
 						{
-							name: '李林',
-							img: 'https://cdn.uviewui.com/uview/album/2.jpg',
-							progress: {
-								current: 0,
-								dateList: [{
-										day: '第一天',
-										isRecord: true,
-										time: '2023.09.17 10:25:30',
-										remark: '备注：已完成安保工作',
-										imgs: [
-											'https://cdn.uviewui.com/uview/album/4.jpg',
-											'https://cdn.uviewui.com/uview/album/5.jpg',
-											'https://cdn.uviewui.com/uview/album/6.jpg',
-										],
-									},
-									{
-										day: '第二天',
-										time: '2023.09.18'
-									},
-									{
-										day: '第三天',
-										time: '2023.09.19'
-									},
-								],
-							},
+							day: '第二天',
+							time: '2023.09.18',
+							isRecord: true
 						},
 						{
-							name: '肖国运',
-							img: 'https://cdn.uviewui.com/uview/album/3.jpg',
-							progress: {
-								current: -1,
-								dateList: [{
-										day: '第一天',
-										time: '2023.09.17 10:25:30',
-									},
-									{
-										day: '第二天',
-										time: '2023.09.18'
-									},
-									{
-										day: '第三天',
-										time: '2023.09.19'
-									},
-								],
-							},
+							day: '第三天',
+							time: '2023.09.19'
 						},
 					],
-					description: '对公司的项目进行临时安保工作<br /><br />一、工作地点:<br />可根据个人意愿就近分配工作，如有环境不适应可申请调换。<br />二、任职资格:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br /><br />三、岗位职责:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br />',
 				},
 				id: "1",
 				OrderId: '1',
 				order_id: '10',
 				engineer_id: '1',
+				scrollTop: 0,
+				old: {
+					scrollTop: 0
+				}
 			}
 		},
-		onLoad() {
-			this.casualOrderList()
-			this.getorderItemsList()
-			this.listOrderItemList()
+		async onLoad(option) {
+			let orderItem = JSON.parse(option.orderItem)
+			console.log("being",orderItem)
+			if(orderItem) {
+				this.resData = orderItem
+				console.log("resData",this.resData)
+				await this.getorderItemsList()
+			}
+			
 		},
 		methods: {
-			casualOrderList() {
-				let params = {
-					order_id: this.id
-				}
-				casualOrder(params).then(res => {
-					console.log(res)
-				})
+			upper(e) {
+				console.log(e)
 			},
-			getorderItemsList() {
-				let params = {
-					order_id: this.OrderId
-				}
-				getorderItems(params).then(res => {
-					console.log(res)
-				})
+			lower(e) {
+				console.log(e)
 			},
-			listOrderItemList() {
+			scroll(e) {
+				console.log(e)
+				this.old.scrollTop = e.detail.scrollTop
+			},
+			async getorderItemsList() {
+				let res = await getorderItems({order_id: this.resData.id})
+				if(res.data.length) {
+					let list = res.data
+					this.employees = list
+					console.log("emloyees", this.employees);
+				}
+			},
+			open(e) {
+				console.log(e);
+			},
+			change(e) {
+				console.log(e);
+				let openList = e.filter(el => {return el.status === 'open'})
+				if(openList.length) {
+					let open = openList[0]
+					let index = open.name
+					let item = this.employees[index]
+					console.log(item);
+					this.listOrderItemList(this.resData.id, item.id)
+				}
+			},
+			listOrderItemList(orderId, engineerId) {
 				let params = {
-					order_id: this.order_id,
-					engineer_id: this.engineer_id
+					order_id: orderId,
+					engineer_id: engineerId
 				}
 				listOrderItem(params).then(res => {
 					console.log(res)
@@ -266,6 +243,9 @@
 					margin-left: 10rpx;
 				}
 			}
+		}
+		.scroll-y {
+			height: 624rpx;
 		}
 		.employee-item {
 			height: 92rpx;

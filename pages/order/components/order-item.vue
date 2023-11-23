@@ -21,10 +21,10 @@
 				<u-icon name="clock-fill" size="24rpx" color="#666666" :label="`${compData.completeTime}`" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
 			<view class="body-line" v-if="compData.state == 'being'">
-				<u-icon name="/static/employees.png" size="24rpx" color="#666666" :label="`当前用工数：${compData.employeesNumber}`" label-color="#666666" label-size="24rpx"></u-icon>
+				<u-icon name="/static/employees.png" size="24rpx" color="#666666" :label="`当前用工数：${compData.successSum}`" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
-			<view class="body-line" >
-				<u-icon name="/static/employees.png" size="24rpx" color="#666666" :label="`当前抢单数：${compData.successSum == null ? 0 :compData.successSum }`" label-color="#666666" label-size="24rpx"></u-icon>
+			<view class="body-line" v-if="compData.state == 'grab'">
+				<u-icon name="/static/employees.png" size="24rpx" color="#666666" :label="`当前抢单数：${compData.haveRegistered == null ? 0 : compData.haveRegistered }`" label-color="#666666" label-size="24rpx"></u-icon>
 			</view>
 			<view class="progress" v-if="compData.state == 'being'">
 				<!-- <view  v-for="(item, index) in compData.progress.dateList" :key="index" class="progress-item">
@@ -47,7 +47,7 @@
 			<text v-if="compData.state == 'completing'">状态：待结算</text>
 			<text v-if="compData.state == 'completed'">状态：已结算</text>
 			<text v-if="compData.state == 'exception'">订单存在异常，若有结算争议，请联系平台客服</text>
-			<text >抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{ compData.orderQuantity }}</text>
+			<text v-if="compData.state == 'grab'">抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{ compData.orderQuantity }}</text>
 		</view>
 	</view>
 </template>
@@ -63,8 +63,9 @@
 		},
 		methods: {
 			onCheckDetail() {
-				this.$toRoute(`/pages/order/detail/${this.compData.state}`)
-			},
+				let compData = this.compData
+				this.$toRoute(`/pages/order/detail/${compData.state}?orderItem=` + encodeURIComponent(JSON.stringify(compData)))
+			}
 		},
 	}
 </script>

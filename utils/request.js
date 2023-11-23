@@ -5,6 +5,7 @@ axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // create an axios instance
 const service = axios.create({
 	 // baseURL: "https://t44o902052.zicp.fun", //  线上接口地址(微信、HBX内置浏览器)
+	//  baseURL: "http://192.168.1.116:9999/LowerSingleEnd", //  线上接口地址(微信、HBX内置浏览器)
 	// baseURL: "http://app.youlai.tech/prod-api", // 线上接口地址(谷歌等有跨域限制浏览器)
 	baseURL: "http://192.168.1.112:9999", // 本地开发环境地址
 	withCredentials: true, // send cookies when cross-domain requests
@@ -67,7 +68,7 @@ service.interceptors.response.use(({
 		config,
 		data
 	}) => {
-		console.log('请求响应错误结果:', data);
+		console.log('请求响应结果:', data);
 		return data
 	},
 	error => {

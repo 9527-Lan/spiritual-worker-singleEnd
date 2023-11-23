@@ -4,7 +4,7 @@
 		<view class="body-wrapper">
 			<view class="body-wrapper-top">
 				<view>状态：{{ resData.statusText }}</view>
-				<view>抢单数：{{ resData.orderQuantity == null ? 0  : resData.orderQuantity}}</view>
+				<view>抢单数：{{ resData.haveRegistered == null ? 0  : resData.haveRegistered}}</view>
 				<view>
 					抢单成功数：{{ resData.successSum == null ? 0 : resData.successSum  }}/{{ resData.orderQuantity == null ? 0 : resData.orderQuantity }}
 				</view>
@@ -18,12 +18,12 @@
 						<view class="employee-item flex-center-between" v-for="(item, index) in compData.employees"
 							:key="index">
 							<view class="flex-center">
-								<u-avatar :src="item.img" size="92rpx"></u-avatar>
+								<u-avatar :src="item.headSculptureUrl" size="92rpx"></u-avatar>
 								<view class="name">{{ item.engineerRealname }}</view>
 							</view>
-							<view v-if="item.status === 0" class="grab-failed">抢单失败</view>
-							<view v-else-if="item.status === 1" class="grab-success">抢单成功</view>
-							<view v-else class="flex-center review-btn">
+							<view v-if="item.status === 3" class="grab-failed">抢单失败</view>
+							<view v-else-if="item.status === 2" class="grab-success">抢单成功</view>
+							<view v-else-if="item.status === 1" class="flex-center review-btn">
 								<u-button text="抢单失败" type="info" plain></u-button>
 								<u-button text="抢单成功" color="#3A84F0"></u-button>
 							</view>
@@ -126,23 +126,26 @@
 				imageUrl: '/static/shareBg.png',
 			}
 		},
-		onLoad() {
-			this.orderID = uni.getStorageSync('order_ids');
-			casualOrderEngineerList({
-				order_id: this.orderID
-			}).then(res => {
-				if (res.code == '00000') {
-					this.compData.employees = res.data;
-				}
-			})
-
-			casualOrder({
-				id: this.orderID
-			}).then(res => {
-				this.resData = res.data;
-			})
+		onLoad(option) {
+			let orderItem = JSON.parse(option.orderItem)
+			console.log("grab",orderItem)
+			if(orderItem) {
+				this.resData = orderItem
+				console.log("resData",this.resData)
+				this.getInfo()
+			}
+			
 		},
 		methods: {
+			getInfo() {
+				casualOrderEngineerList({
+					order_id: this.resData.id
+				}).then(res => {
+					if (res.code == '00000') {
+						this.compData.employees = res.data;
+					}
+				})
+			},
 			onCancelOrder() {
 				this.cancelModalVisible = true
 			},
@@ -151,7 +154,7 @@
 			},
 			sureOdrder() {
 				cancellationOrder({
-					order_id: this.orderID
+					order_id: this.resData.id
 				}).then(res => {
 					if (res.code == '00000') {
 						uni.showToast({
