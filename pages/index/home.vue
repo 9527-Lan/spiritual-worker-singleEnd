@@ -1,7 +1,14 @@
 <template>
 	<view class="page-index">
 		<u-navbar :bgColor="bgColor" >
-			<view slot="left" class="search-box" >
+			<!-- 小程序 -->
+			<!-- <view slot="left" class="search-box" >
+				<u-search :showAction="false" placeholder="搜索用工类型信息..." bgColor="#fff" style="width: 100%" disabled
+					@click="toSearch" ></u-search>
+			</view> -->
+			
+			<!-- h5 -->
+			<view slot="left" class="search-box-h5" >
 				<u-search :showAction="false" placeholder="搜索用工类型信息..." bgColor="#fff" style="width: 100%" disabled
 					@click="toSearch" ></u-search>
 			</view>
@@ -81,8 +88,7 @@
 					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				}
-				findCasualEngineer(params).then(res => {
-					console.log(res)					
+				findCasualEngineer(params).then(res => {			
 					const dataList = res.data.list.map(item => {
 						return {
 							img: item.headSculptureUrl,
@@ -105,7 +111,7 @@
 		// 首页tab栏渲染
 		async casualServiceTypeList(){
 			let res = await casualServiceType();
-			console.log(res)
+			console.log(res,'res')
 			let data = res.data.map(item=>{
 				return {
 					name:item.label,
@@ -150,11 +156,17 @@
 
 	.page-index {
 		padding: 0 32rpx;
-		padding-top: 88px;
+		padding-top: 103rpx;
 		width: 100%;
 
 		.search-box {
+			margin-top: 20rpx;
 			width: 480rpx;
+			height: 64rpx;
+		}
+		.search-box-h5 {
+				margin-top: 20rpx;
+			width: 100%;
 			height: 64rpx;
 		}
 
@@ -178,5 +190,12 @@
 		}
 
 		.body {}
+	}
+	::v-deep .u-navbar__content__left{
+		width: 100%;
+	}
+	::v-deep .u-search__content{
+		height: 64rpx;
+
 	}
 </style>

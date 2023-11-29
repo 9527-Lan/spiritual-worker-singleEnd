@@ -1,6 +1,7 @@
 <template>
 	<view class="pages-order-add">
 		<view class="body">
+
 			<view class="title">完善下单信息</view>
 			<view class="form">
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }"
@@ -33,6 +34,13 @@
 						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入"
 							@change='getWorkNum'></u--input>
 					</u-form-item>
+					
+					<u-form-item label="抢单人数" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="dataForm.qdQuantity" border="none" placeholder="请输入"
+							@change='getworkpeople'></u--input>
+					</u-form-item>
+					
+					
 					<u-form-item label="单人日薪" prop="userInfo.name" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.singleMoney" border="none" @change='getSingleMoney'
 							placeholder="请输入"></u--input>
@@ -72,10 +80,15 @@
 		getType,
 		submitLis
 	} from '@/api/sub.js'
+	import {
+		mapstate
+	} from 'vuex';
 	export default {
 		data() {
 			return {
 				dataForm: {
+					principal:'',
+					principalType:'',
 					workTitile: '',
 					workType: '',
 					workLabel: '',
@@ -87,6 +100,7 @@
 					endTime: '',
 					workTypeId: '',
 					workLabelId: '',
+					qdQuantity:''
 
 				},
 				workTypeList: [],
@@ -222,6 +236,8 @@
 			}
 		},
 		created() {
+			this.principalType=this.$store.state.user.loginType
+		this.principal=this.$store.state.user.userInfo.id
 			getType().then(res => {
 				this.workTypeList = res.data.map(item => {
 					return {
@@ -313,7 +329,9 @@
 					price: this.dataForm.singleMoney,
 					orderStatr: this.dataForm.startTime,
 					orderEnd: this.dataForm.endTime,
-					description: this.dataForm.workPlace
+					description: this.dataForm.workPlace,
+					principal:this.principal,
+					principalType:this.principalType
 				}).then(res => {
 					if (res.code == "00000") {
 						let ids = res.data;
@@ -377,6 +395,9 @@
 			},
 			getWorkNum(e) {
 				this.dataForm.workNum = e;
+			},
+			getworkpeople(e){
+				this.dataForm.qdQuantity = e;
 			},
 			getSingleMoney(e) {
 				this.dataForm.singleMoney = e;

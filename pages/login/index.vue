@@ -113,7 +113,7 @@
 							this.firmLogin()
 						} 
 						if(this.radiovalue1 === '个人') {
-							
+							this.personLogin()
 						}
 					}).catch(errors => {
 						// uni.$u.toast('校验失败')
@@ -152,7 +152,22 @@
 				});
 			},
 			personLogin() {
-				
+				this.logining = true;
+				let data = this.form
+				this.$store.dispatch('user/personLogin',data).then(res=>{
+					const pages = getCurrentPages();
+					if (pages.length > 1) {
+						uni.navigateBack()
+					} else {
+						// 跳转首页
+						uni.switchTab({
+							url: '/pages/index/home'
+						});
+					}
+					this.logining = false;
+				}).then((err)=>{
+					this.logining=false
+				})
 			}
 		},
 		onReady() {

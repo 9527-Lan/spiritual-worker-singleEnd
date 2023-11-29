@@ -87,6 +87,21 @@ const actions = {
 			})
 		})
 	},
+	personLogin({commit},data){
+		return new Promise((resolve,reject)=>{
+			personLogin(data).then(response=>{
+				console.log(response.data);
+				let data = response.data
+				let userInfo = data
+				uni.setStorageSync('userInfo', userInfo)
+				commit('SET_LOGIN_TYPE', 2)
+				commit('SET_USER_INFO', userInfo)
+				resolve()
+			}).catch(error=>{
+				reject(error)
+			})
+		})
+	}
 }
 
 export default {

@@ -15,7 +15,14 @@
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				id:''
+			}
+		},
+		onLoad(options) {
+			console.log(options,'options');
+			this.id=options.id
+		
 		},
 		methods: {
 			routeTo(){
@@ -25,7 +32,7 @@
 			},
 			pageTo(){
 				uni.navigateTo({
-					url:'/pages/order/detail/grab'
+					url:'/pages/order/detail/grab?id='+this.id
 				})
 			},
 		},

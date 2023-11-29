@@ -4,9 +4,10 @@
 		<view class="body-wrapper">
 			<view class="body-wrapper-top">
 				<view>状态：{{ resData.statusText }}</view>
-				<view>抢单数：{{ resData.haveRegistered == null ? 0  : resData.haveRegistered}}</view>
+				<view>抢单数：{{ resData.haveRegistered == null ? 0 : resData.haveRegistered }}</view>
 				<view>
-					抢单成功数：{{ resData.successSum == null ? 0 : resData.successSum  }}/{{ resData.orderQuantity == null ? 0 : resData.orderQuantity }}
+					抢单成功数：{{ resData.successSum == null ? 0 : resData.successSum }}/{{ resData.orderQuantity == null ? 0 :
+						resData.orderQuantity }}
 				</view>
 			</view>
 			<view class="body">
@@ -17,15 +18,14 @@
 					<view class="employee-list">
 						<view class="employee-item flex-center-between" v-for="(item, index) in compData.employees"
 							:key="index">
-							<view class="flex-center">
+							<view class="flex-center" @click="tourl(item)">
 								<u-avatar :src="item.headSculptureUrl" size="92rpx"></u-avatar>
 								<view class="name">{{ item.engineerRealname }}</view>
 							</view>
 							<view v-if="item.status === 3" class="grab-failed">抢单失败</view>
-							<view v-else-if="item.status === 2" class="grab-success">抢单成功</view>
+							<view v-if="item.status === 2" class="grab-success">抢单成功</view>
 							<view v-else-if="item.status === 1" class="flex-center review-btn">
-								<u-button text="抢单失败" type="info" plain></u-button>
-								<u-button text="抢单成功" color="#3A84F0"></u-button>
+								<u-button text="抢单成功" @click="success(item)" color="#3A84F0"></u-button>
 							</view>
 						</view>
 					</view>
@@ -57,393 +57,456 @@
 </template>
 
 <script>
-	import orderInfo from './components/order-info.vue'
-	import orderDescription from './components/order-description.vue'
-	import {
-		casualOrderEngineerList,
-		casualOrder,
-		cancellationOrder
-	} from '@/api/sub.js'
-	export default {
-		components: {
-			orderInfo,
-			orderDescription,
+import orderInfo from './components/order-info.vue'
+import orderDescription from './components/order-description.vue'
+import {
+	casualOrderEngineerList,
+	casualOrder,
+	cancellationOrder,
+	getcasualOrderList,
+	getcasualOrder,
+	getEngineerdetail,
+	successBtn
+} from '@/api/sub.js'
+import { firmLogin } from '../../../api/user'
+export default {
+	components: {
+		orderInfo,
+		orderDescription,
+	},
+	data() {
+		return {
+			cancelModalVisible: false,
+			engineer_ids: '',//订单id
+			compData: {
+				state: 'being',
+				title: '临时电工',
+				salary: '300元/天',
+				jobs: 9,
+				tags: ['中级电工证'],
+				address: '长沙湘银物业有限公司',
+				location: '长沙市岳麓区洋湖街道湘江时代写字楼A1栋',
+				startTime: '2023.09.18',
+				endTime: '2023.09.20',
+				// title: '用工列表',
+				tags: ['退伍军人', '1米8以上'],
+				count: 9,
+				employeesCopy: [],
+				employees: [
+					// {
+					// 	name: '张三三',
+					// 	state: '',
+					// 	img: 'https://cdn.uviewui.com/uview/album/1.jpg',
+					// 	progress: {
+					// 		current: -1,
+					// 		dateList: []
+					// 	},
+					// },
+					// {
+					// 	name: '李林',
+					// 	state: 0, //失败
+					// 	img: 'https://cdn.uviewui.com/uview/album/2.jpg',
+					// 	progress: {
+					// 		current: -1,
+					// 		dateList: []
+					// 	},
+					// },
+					// {
+					// 	name: '肖国运',
+					// 	state: 1, //成功
+					// 	img: 'https://cdn.uviewui.com/uview/album/3.jpg',
+					// 	progress: {
+					// 		current: -1,
+					// 		dateList: []
+					// 	},
+					// },
+				],
+				description: '对公司的项目进行临时安保工作<br /><br />一、工作地点:<br />可根据个人意愿就近分配工作，如有环境不适应可申请调换。<br />二、任职资格:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br /><br />三、岗位职责:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br />',
+			},
+			resData: {},
+		}
+	},
+	onShareAppMessage: function (options) {
+		return {
+			title: this.compData.title + ',' + this.compData.salary,
+			path: '/pages/order/detail/grab',
+			imageUrl: '/static/shareBg.png',
+		}
+	},
+	onLoad(option) {
+
+		let obj = JSON.parse(option.orderItem)
+		let id = obj.id
+		this.engineer_ids = id
+		getcasualOrderList(id).then((res) => {
+			console.log(res, 'res')
+			this.compData.employees = res.data
+
+		})
+		getcasualOrder(id).then((res) => {
+			res.data.labelName = res.data?.labelName.split(','),
+			this.resData = res.data
+		})
+		// let orderItem = JSON.parse(option.orderItem)
+		// console.log("grab",orderItem)
+		// if(orderItem) {
+		// 	this.resData = orderItem
+		// 	console.log("resData",this.resData)
+		// 	this.getInfo()
+		// }
+
+	},
+	methods: {
+		getInfo() {
+			casualOrderEngineerList({
+				order_id: this.resData.id
+			}).then(res => {
+				if (res.code == '00000') {
+					this.compData.employees = res.data;
+				}
+			})
 		},
-		data() {
-			return {
-				cancelModalVisible: false,
-				compData: {
-					state: 'being',
-					title: '临时电工',
-					salary: '300元/天',
-					jobs: 9,
-					tags: ['中级电工证'],
-					address: '长沙湘银物业有限公司',
-					location: '长沙市岳麓区洋湖街道湘江时代写字楼A1栋',
-					startTime: '2023.09.18',
-					endTime: '2023.09.20',
-					// title: '用工列表',
-					tags: ['退伍军人', '1米8以上'],
-					count: 9,
-					employeesCopy: [],
-					employees: [{
-							name: '张三三',
-							state: '',
-							img: 'https://cdn.uviewui.com/uview/album/1.jpg',
-							progress: {
-								current: -1,
-								dateList: []
-							},
-						},
-						{
-							name: '李林',
-							state: 0, //失败
-							img: 'https://cdn.uviewui.com/uview/album/2.jpg',
-							progress: {
-								current: -1,
-								dateList: []
-							},
-						},
-						{
-							name: '肖国运',
-							state: 1, //成功
-							img: 'https://cdn.uviewui.com/uview/album/3.jpg',
-							progress: {
-								current: -1,
-								dateList: []
-							},
-						},
-					],
-					description: '对公司的项目进行临时安保工作<br /><br />一、工作地点:<br />可根据个人意愿就近分配工作，如有环境不适应可申请调换。<br />二、任职资格:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br /><br />三、岗位职责:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br />',
+		onCancelOrder() {
+			this.cancelModalVisible = true
+		},
+		cancelOdrer() {
+			this.cancelModalVisible = false;
+		},
+		sureOdrder() {
+			cancellationOrder({
+				order_id: this.resData.id
+			}).then(res => {
+				if (res.code == '00000') {
+					uni.showToast({
+						title: '撤销成功',
+						icon: 'success',
+						duration: 2000,
+						success: () => {
+							this.cancelModalVisible = false;
+							setTimeout(() => {
+								uni.switchTab({
+									url: '/pages/index/home'
+								})
+							}, 2000)
+						}
+					})
+				}
+			})
+		},
+		shareToWx() {
+			uni.share({
+				provider: "weixin",
+				scene: "WXSceneSession",
+				type: 0,
+				href: "http://uniapp.dcloud.io/",
+				title: "uni-app分享",
+				summary: "我正在使用HBuilderX开发uni-app，赶紧跟我一起来体验！",
+				imageUrl: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni@2x.png",
+				success: function (res) {
+					console.log("success:" + JSON.stringify(res));
 				},
-				resData: {},
-			}
+				fail: function (err) {
+					console.log("fail:" + JSON.stringify(err));
+				}
+			});
 		},
-		onShareAppMessage: function(options) {
-			return {
-				title: this.compData.title + ',' + this.compData.salary,
-				path: '/pages/order/detail/grab',
-				imageUrl: '/static/shareBg.png',
-			}
-		},
-		onLoad(option) {
-			let orderItem = JSON.parse(option.orderItem)
-			console.log("grab",orderItem)
-			if(orderItem) {
-				this.resData = orderItem
-				console.log("resData",this.resData)
-				this.getInfo()
-			}
-			
-		},
-		methods: {
-			getInfo() {
-				casualOrderEngineerList({
-					order_id: this.resData.id
-				}).then(res => {
-					if (res.code == '00000') {
-						this.compData.employees = res.data;
-					}
+		// 工人详情
+		tourl(item) {
+			getEngineerdetail(item.id).then((res) => {
+				let arr = res.data.casualEngineerCertificateList.map((item) => {
+					return item.certificateImgUrl
 				})
-			},
-			onCancelOrder() {
-				this.cancelModalVisible = true
-			},
-			cancelOdrer() {
-				this.cancelModalVisible = false;
-			},
-			sureOdrder() {
-				cancellationOrder({
-					order_id: this.resData.id
-				}).then(res => {
-					if (res.code == '00000') {
-						uni.showToast({
-							title: '撤销成功',
-							icon:'success',
-							duration: 2000,
-							success: () => {
-								this.cancelModalVisible = false;
-								setTimeout(() => {
-									uni.switchTab({
-										url: '/pages/index/home'
-									})
-								}, 2000)
-							}
-						})
-					}
+				let data = {
+					img: res.data.headSculptureUrl,
+					name: res.data.engineerRealname,
+					sex: res.data.engineerSexName,
+					role: res.data?.typeName.split(','),
+					experience: res.data.labelName.split(','),
+					times: res.data.employmentNumber,
+					id: res.data.id,
+					hasCertificate: res.data.casualEngineerCertificate.length,
+					casualEngineerCertificate: arr
+				}
+				uni.navigateTo({
+					url: '/pages/index/personalDetails/check?data=' + encodeURIComponent(JSON.stringify(data))
 				})
-			},
-			shareToWx() {
-				uni.share({
-					provider: "weixin",
-					scene: "WXSceneSession",
-					type: 0,
-					href: "http://uniapp.dcloud.io/",
-					title: "uni-app分享",
-					summary: "我正在使用HBuilderX开发uni-app，赶紧跟我一起来体验！",
-					imageUrl: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni@2x.png",
-					success: function(res) {
-						console.log("success:" + JSON.stringify(res));
-					},
-					fail: function(err) {
-						console.log("fail:" + JSON.stringify(err));
-					}
-				});
-			},
+			})
+
 		},
-	}
+		// 抢单成功
+		success(item) {
+			successBtn({
+				order_id: this.engineer_ids,
+				engineer_ids: item.id
+			}).then((res) => {
+				if (res.code === '00000') {
+					uni.showToast({
+						title: '抢单成功',
+						icon: 'success',
+						duration: 2000,
+						success: () => {
+							getcasualOrderList(this.engineer_ids).then((res) => {
+								this.compData.employees = res.data
+							})
+						}
+					})
+				}
+			})
+		}
+	},
+}
 </script>
 
 <style lang="scss">
-	page {
-		background-color: #f2f6ff;
+page {
+	background-color: #f2f6ff;
+}
+
+.pages-order-detail-grab {
+	position: relative;
+
+	.cancel-modal-btns {
+		padding-top: 80rpx;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		/deep/.u-button {
+			height: 73rpx !important;
+			width: 207rpx !important;
+		}
 	}
 
-	.pages-order-detail-grab {
-		position: relative;
+	.header {
+		background-color: #3a84f0;
+		color: #fff;
+		height: 340rpx;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+	}
 
-		.cancel-modal-btns {
-			padding-top: 80rpx;
-			width: 100%;
+	.empty-container {
+		height: 380rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.flex-center {
+		display: flex;
+		align-items: center;
+	}
+
+	.flex-center-between {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.salary {
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #3a84f0;
+	}
+
+	.title {
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #333333;
+	}
+
+	.tag-list {
+		margin-top: 24rpx;
+		display: flex;
+		align-items: center;
+
+		.tag-item {
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
-
-			/deep/.u-button {
-				height: 73rpx !important;
-				width: 207rpx !important;
-			}
-		}
-
-		.header {
-			background-color: #3a84f0;
-			color: #fff;
-			height: 340rpx;
-			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-		}
-
-		.empty-container {
-			height: 380rpx;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-
-		.flex-center {
-			display: flex;
-			align-items: center;
-		}
-
-		.flex-center-between {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-		}
-
-		.salary {
-			font-size: 32rpx;
-			font-weight: bold;
-			color: #3a84f0;
-		}
-
-		.title {
-			font-size: 32rpx;
-			font-weight: bold;
+			height: 43rpx;
+			line-height: 43rpx;
+			border-radius: 5rpx;
+			font-size: 24rpx;
+			font-weight: 500;
+			padding: 0 13rpx;
+			background-color: #eaeff4;
 			color: #333333;
-		}
 
-		.tag-list {
-			margin-top: 24rpx;
+			&.jobs {
+				background-color: #e6f0ff !important;
+				color: #3a84f0 !important;
+			}
+
+			&+.tag-item {
+				margin-left: 10rpx;
+			}
+		}
+	}
+
+	.body-wrapper {
+		position: absolute;
+		top: 32rpx;
+		left: 0;
+		right: 0;
+		padding: 0 32rpx;
+		box-sizing: border-box;
+		z-index: 1;
+		padding-bottom: 160rpx;
+
+		.body-wrapper-top {
 			display: flex;
-			align-items: center;
-
-			.tag-item {
-				display: flex;
-				align-items: center;
-				height: 43rpx;
-				line-height: 43rpx;
-				border-radius: 5rpx;
-				font-size: 24rpx;
-				font-weight: 500;
-				padding: 0 13rpx;
-				background-color: #eaeff4;
-				color: #333333;
-
-				&.jobs {
-					background-color: #e6f0ff !important;
-					color: #3a84f0 !important;
-				}
-
-				&+.tag-item {
-					margin-left: 10rpx;
-				}
-			}
+			justify-content: space-between;
+			color: #3a84f0;
+			background-color: #e6f0ff;
+			height: 78rpx;
+			line-height: 78rpx;
+			border-radius: 15rpx 15rpx 0 0;
+			padding: 0 36rpx;
+			font-size: 24rpx;
+			font-weight: 500;
 		}
 
-		.body-wrapper {
-			position: absolute;
-			top: 32rpx;
-			left: 0;
-			right: 0;
-			padding: 0 32rpx;
-			box-sizing: border-box;
-			z-index: 1;
-			padding-bottom: 160rpx;
-
-			.body-wrapper-top {
-				display: flex;
-				justify-content: space-between;
-				color: #3a84f0;
-				background-color: #e6f0ff;
-				height: 78rpx;
-				line-height: 78rpx;
-				border-radius: 15rpx 15rpx 0 0;
-				padding: 0 36rpx;
-				font-size: 24rpx;
-				font-weight: 500;
-			}
-
-			.body {
-				padding: 32rpx;
-				box-sizing: border-box;
-				background-color: #fff;
-				border-radius: 0 0 15rpx 15rpx;
-
-				.employee-list {
-					margin-top: 20rpx;
-
-					.employee-item {
-						box-sizing: border-box;
-						padding: 21rpx 10rpx;
-
-						.review-btn {
-							height: 55rpx;
-							font-size: 24rpx;
-
-							.u-button {
-								height: 100%;
-
-								&+.u-button {
-									margin-left: 18rpx;
-								}
-							}
-						}
-
-						.name {
-							margin-left: 38rpx;
-							font-size: 32rpx;
-							font-weight: bold;
-							color: #333333;
-						}
-					}
-
-					.grab-success {
-						font-size: 24rpx;
-						font-weight: bold;
-						color: #3a84f0;
-					}
-
-					.grab-failed {
-						font-size: 24rpx;
-						font-weight: bold;
-						color: #999999;
-					}
-				}
-
-				.progress {
-					margin-top: 50rpx;
-
-					.progress-item {
-						margin-top: 30rpx;
-						min-height: 80rpx;
-
-						.progress-item-left {
-							height: 100%;
-
-							.record-tag {
-								border: 1px solid #999999;
-								color: #999999;
-								border-radius: 3rpx;
-								padding: 5rpx 10rpx;
-								font-size: 20rpx;
-								font-weight: 500;
-								line-height: 28rpx;
-								text-align: center;
-
-								&.isRecord {
-									border: 1px solid #3a84f0;
-									color: #3a84f0;
-								}
-							}
-						}
-
-						.progress-item-right {
-							flex: 1;
-							margin-left: 10rpx;
-
-							.u-album {
-								margin-top: 10rpx;
-
-								image {
-									width: 132rpx !important;
-									height: 114rpx !important;
-								}
-							}
-
-							.remark {
-								margin-top: 29rpx;
-								font-size: 24rpx;
-								font-weight: 500;
-								color: #333333;
-							}
-
-							.day {
-								font-size: 24rpx;
-								font-weight: 500;
-								color: #333333;
-							}
-
-							.time {
-								margin-top: 24rpx;
-								font-size: 20rpx;
-								font-weight: 500;
-								color: #666666;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		.footer {
-			position: fixed;
-			z-index: 3;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			height: 173rpx;
-			padding: 20rpx 42rpx;
+		.body {
+			padding: 32rpx;
 			box-sizing: border-box;
 			background-color: #fff;
-			display: flex;
-			align-items: center;
+			border-radius: 0 0 15rpx 15rpx;
 
-			.btn-box {
-				flex: 1;
-				height: 89rpx;
-				margin-left: 47rpx;
+			.employee-list {
+				margin-top: 20rpx;
 
-				.u-button {
-					height: 100%;
+				.employee-item {
+					box-sizing: border-box;
+					padding: 21rpx 10rpx;
 
-					&+.u-button {
-						margin-left: 20rpx;
+					.review-btn {
+						height: 55rpx;
+						font-size: 24rpx;
+
+						.u-button {
+							height: 100%;
+
+							&+.u-button {
+								margin-left: 18rpx;
+							}
+						}
+					}
+
+					.name {
+						margin-left: 38rpx;
+						font-size: 32rpx;
+						font-weight: bold;
+						color: #333333;
+					}
+				}
+
+				.grab-success {
+					font-size: 24rpx;
+					font-weight: bold;
+					color: #3a84f0;
+				}
+
+				.grab-failed {
+					font-size: 24rpx;
+					font-weight: bold;
+					color: #999999;
+				}
+			}
+
+			.progress {
+				margin-top: 50rpx;
+
+				.progress-item {
+					margin-top: 30rpx;
+					min-height: 80rpx;
+
+					.progress-item-left {
+						height: 100%;
+
+						.record-tag {
+							border: 1px solid #999999;
+							color: #999999;
+							border-radius: 3rpx;
+							padding: 5rpx 10rpx;
+							font-size: 20rpx;
+							font-weight: 500;
+							line-height: 28rpx;
+							text-align: center;
+
+							&.isRecord {
+								border: 1px solid #3a84f0;
+								color: #3a84f0;
+							}
+						}
+					}
+
+					.progress-item-right {
+						flex: 1;
+						margin-left: 10rpx;
+
+						.u-album {
+							margin-top: 10rpx;
+
+							image {
+								width: 132rpx !important;
+								height: 114rpx !important;
+							}
+						}
+
+						.remark {
+							margin-top: 29rpx;
+							font-size: 24rpx;
+							font-weight: 500;
+							color: #333333;
+						}
+
+						.day {
+							font-size: 24rpx;
+							font-weight: 500;
+							color: #333333;
+						}
+
+						.time {
+							margin-top: 24rpx;
+							font-size: 20rpx;
+							font-weight: 500;
+							color: #666666;
+						}
 					}
 				}
 			}
 		}
 	}
+
+	.footer {
+		position: fixed;
+		z-index: 3;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 173rpx;
+		padding: 20rpx 42rpx;
+		box-sizing: border-box;
+		background-color: #fff;
+		display: flex;
+		align-items: center;
+
+		.btn-box {
+			flex: 1;
+			height: 89rpx;
+			margin-left: 47rpx;
+
+			.u-button {
+				height: 100%;
+
+				&+.u-button {
+					margin-left: 20rpx;
+				}
+			}
+		}
+	}
+}
 </style>

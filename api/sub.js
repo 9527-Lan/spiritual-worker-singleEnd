@@ -29,6 +29,7 @@ export function getType (){
 // 一键下单
 
 export function submitLis (data){
+	console.log('data',data)
 	return request({
 		url: '/web/casualOrder/add',
 		method: 'post',
@@ -119,5 +120,64 @@ export function queryOrderbyYcEngId(params) {
 		url: '/queryOrderbyYcEngId',
 		method: 'get',
 		params:params
+	})
+}
+// 下单端-抢单中工程师列表
+export function getcasualOrderList(id){
+	return request({
+		url:"/web/casualOrder/casualOrderEngineerList",
+		method:'get',
+		params:{order_id:id}
+	})
+}
+// 任务订单根据id查询
+export function getcasualOrder(id){
+	return request({
+		url:"/web/casualOrder/getById",
+		method:'get',
+		params:{id:id}
+	})
+}
+
+// 根据id查工人详情
+export function getEngineerdetail(id){
+	return request({
+		url: '/web/casualEngineer/querybyId',
+		method: 'get',
+		params:{id:id}
+	})
+}
+// 抢单成功
+export function successBtn(params){
+	return request({
+		url:'/web/casualOrder/orderItemAdd',
+		method:'get',
+		params:params
+	})
+}
+
+// 已完成订单详情
+export function listOrderSetbtn(id){
+	return request({
+		url:'/web/casualOrder/listOrderSettlementItem',
+		method:'get',
+		params:{order_id:id}
+	})
+}
+// 订单结算保存
+export function submit (data){
+	console.log('data',data)
+	return request({
+		url: '/payOrder',
+		method: 'post',
+		data,
+	})
+}
+// 订单审核
+export function examine (data){
+	return request({
+		url: '/examine',
+		method: 'get',
+		params:data,
 	})
 }

@@ -130,8 +130,9 @@
 			}
 		},
 		onLoad(options) {
-			console.log(options);
+			
 			this.datas = JSON.parse(options.datas)
+			console.log(options.orderId,'1111111');
 			this.orderId = options.orderId;
 			this.dataForm['1'] = this.datas.workTitile;
 			this.dataForm['2'] = this.datas.workType;
@@ -150,13 +151,14 @@
 					order_id: this.orderId,
 				}).then(res => {
 					if (res.code == '00000') {
+						let id=res.data
 						uni.showToast({
 							title: "下单成功",
 							duration: 2000,
 							success: (res) => {
 								setTimeout(() => {
 									uni.navigateTo({
-										url: '/pages/order/addSuccess',
+										url: '/pages/order/addSuccess?id='+id,
 									})
 								}, 2000)
 							},

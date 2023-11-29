@@ -21,6 +21,7 @@
 									:title="item.engineerName" :key="index">
 									<view class="progress">
 										<u-steps :current="progress.current" direction="column" dot>
+											
 											<u-steps-item v-for="(pItem, pIndex) in progress.dateList" :key="pIndex">
 												<view slot="desc" class="progress-item flex-center">
 													<view class="progress-item-left">
@@ -92,26 +93,7 @@
 				employees: [],
 				progress: {
 					current: 1,
-					dateList: [{
-							day: '第一天',
-							isRecord: true,
-							time: '2023.09.17 10:25:30',
-							remark: '备注：已完成安保工作',
-							imgs: [
-								'https://cdn.uviewui.com/uview/album/1.jpg',
-								'https://cdn.uviewui.com/uview/album/2.jpg',
-								'https://cdn.uviewui.com/uview/album/3.jpg',
-							],
-						},
-						{
-							day: '第二天',
-							time: '2023.09.18',
-							isRecord: true
-						},
-						{
-							day: '第三天',
-							time: '2023.09.19'
-						},
+					dateList: [
 					],
 				},
 				id: "1",
@@ -126,6 +108,7 @@
 		},
 		async onLoad(option) {
 			let orderItem = JSON.parse(option.orderItem)
+			orderItem.labelName = orderItem?.labelName.split(','),
 			console.log("being",orderItem)
 			if(orderItem) {
 				this.resData = orderItem
@@ -163,17 +146,34 @@
 					let open = openList[0]
 					let index = open.name
 					let item = this.employees[index]
-					console.log(item);
-					this.listOrderItemList(this.resData.id, item.id)
+						this.listOrderItemList(this.resData.id, item.engineerId)
+					this.$nextTick(()=>{
+						
+					})
+					
 				}
 			},
-			listOrderItemList(orderId, engineerId) {
+			async listOrderItemList(orderId, engineerId) {
 				let params = {
 					order_id: orderId,
 					engineer_id: engineerId
 				}
-				listOrderItem(params).then(res => {
-					console.log(res)
+				await listOrderItem(params).then(res => {
+					if(res.data.length) {
+						let dateList = res.data.map((el, index) => {
+							let big = index + 1
+							return {
+								day: '第' + big + '天',
+								time: el.orderDate,
+								remark:el.orderDesc,
+								imgs:el.orderImgUrl
+							}
+						})
+					this.progress.dateList=dateList
+			
+					
+					console.log('BeingList', this.progress.dateList)
+				}
 				})
 			}
 		}

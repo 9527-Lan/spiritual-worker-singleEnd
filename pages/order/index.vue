@@ -10,8 +10,11 @@
 			</view>
 		</view>
 		<view class="order-list">
+		
 			<orderItem v-for="(item, index) in orderList" :key="index" :compData="item"></orderItem>
+			
 		</view>
+		
 		<view class="page-footer">
 			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx" class="page-footer"></u-icon>
 		</view>
@@ -127,9 +130,10 @@
 			}
 		},
 		async onLoad(event) {
+			console.log(event.state,'event')
 			let state = event.state
 			this.currentValue = state
-			console.log("state", state);
+			console.log("this.currentValue", this.currentValue);
 			this.switchStatus()
 		},
 		onPullDownRefresh() {
@@ -170,7 +174,6 @@
 				let userInfo = this.$store.state.user.userInfo
 				let userId = userInfo.id
 				let loginType = this.$store.state.user.loginType
-				
 				switch (this.currentValue) {
 					case 'being':
 						this.currentType = 0
@@ -231,11 +234,13 @@
 			},
 			async getCompletesList(userId, loginType) {
 				let res = await queryOrderbyWcEngId({id: userId,type: loginType})
+				console.log(res,'res');
 				if(res.data.length) {
 					let data = res.data.map(el =>  {return {
 						...el,
-						state: this.currentValue
+						state: el.settlementStatusText==='已结算'?'completed':el.settlementStatusText==='未结算'?'completing':''
 					}});
+					console.log(data,'22222');
 					this.orderList = data
 				}
 			},

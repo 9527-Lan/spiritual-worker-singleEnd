@@ -3,13 +3,13 @@
 		<view class="body">
 			<view class="flex-center between">
 				<view class="title">{{ compData.name }}</view>
-				<view class="salary">{{ compData.salary }}</view>
+				<view class="salary">{{ compData.price }}/天</view>
 			</view>
 			<view class="tag-list">
 				<view class="tag-item jobs">
 					<u-icon name="account-fill" size="24rpx" color="#3A84F0" :label="`岗位量${compData.orderQuantity}`" label-color="#3A84F0" label-size="24rpx"></u-icon>
 				</view>
-				<view class="tag-item" v-for="(item, index) in compData.tags" :key="index">{{ item }}</view>
+				<view class="tag-item" v-for="(item, index) in compData.labelName" :key="index">{{ item }}</view>
 			</view>
 			<view class="body-line">
 				<u-icon name="/static/address.png" size="24rpx" color="#666666" :label="compData.principalName" label-color="#666666" label-size="24rpx"></u-icon>
