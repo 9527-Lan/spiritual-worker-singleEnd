@@ -136,6 +136,7 @@
 			console.log("this.currentValue", this.currentValue);
 			this.switchStatus()
 		},
+
 		onPullDownRefresh() {
 			this.switchStatus()
 		},
@@ -143,6 +144,7 @@
 			onBack() {
 				uni.navigateBack(1)
 			},
+
 			onTypePickShow() {
 				this.typePickerVisble = true
 			},
@@ -187,7 +189,7 @@
 						this.currentType = 2
 						this.getCompletesList(userId, loginType)
 						break
-					case 'exceptions':
+					case 'exception':
 						this.currentType = 3;
 						this.getExceptionsList(userId, loginType)
 						break

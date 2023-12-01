@@ -156,7 +156,7 @@ export function successBtn(params){
 	})
 }
 
-// 已完成订单详情
+//  已完成订单详情-待结算
 export function listOrderSetbtn(id){
 	return request({
 		url:'/web/casualOrder/listOrderSettlementItem',
@@ -179,5 +179,22 @@ export function examine (data){
 		url: '/examine',
 		method: 'get',
 		params:data,
+	})
+}
+
+// 已完成支付明细
+export function listOrderPay (id){
+	return request({
+		url: '/web/casualOrder/listOrderPay',
+		method: 'get',
+		params:{order_id:id},
+	})
+}
+// 已结算订单查询人员详情
+export function settlementSubmission (id){
+	return request({
+		url: '/web/casualOrder/listOrderPay',
+		method: 'get',
+		params:{order_id:id},
 	})
 }

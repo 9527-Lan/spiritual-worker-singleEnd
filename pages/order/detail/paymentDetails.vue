@@ -8,7 +8,7 @@
 						<u-grid-item v-for="(item, index) in orderStatistics" :key="index">
 							<view class="orderStatistic-item">
 								<view class="item-title" :style="{ color: item.color }">{{ item.title }}</view>
-								<view class="item-value" :style="{ color: item.color }">{{ compData.orderStatistics[item.field] }}</view>
+								<view class="item-value" :style="{ color: item.color }">{{ orderStatisticsf[item.field] }}</view>
 							</view>
 						</u-grid-item>
 					</u-grid>
@@ -16,7 +16,7 @@
 			</orderInfo>
 			<view class="payment-list">
 				<view class="title">支付明细</view>
-				<view class="payment-item" v-for="(item, index) in compData.employees" :key="index">
+				<view class="payment-item" v-for="(item, index) in employees" :key="index">
 					<view class="payment-left flex-center">
 						<u-avatar :src="item.img" size="92rpx"></u-avatar>
 						<view class="name">{{ item.name }}</view>
@@ -37,6 +37,7 @@
 
 <script>
 	import orderInfo from './components/order-info.vue'
+	import { listOrderPay } from '@/api/sub.js'
 	export default {
 		components: {
 			orderInfo,
@@ -56,12 +57,13 @@
 					{ field: 'complete', title: '待结算（元）', color: '#333333' },
 					{ field: 'Remain', title: '结余（元）', color: '#3A84F0' },
 				],
-				compData: {
-					orderStatistics: {
+				orderStatisticsf: {
 						summary: '3,600.00',
 						complete: '3,600.00',
 						Remain: '0.00',
 					},
+				compData: {
+					
 					state: 'being',
 					title: '临时电工',
 					salary: '300元/天',
@@ -75,88 +77,61 @@
 					tags: ['退伍军人', '1米8以上'],
 					count: 9,
 					employeesCopy: [],
-					employees: [
+				
+					description:
+						'对公司的项目进行临时安保工作<br /><br />一、工作地点:<br />可根据个人意愿就近分配工作，如有环境不适应可申请调换。<br />二、任职资格:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br /><br />三、岗位职责:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br />',
+				},
+				employees: [
 						{
 							name: '张三三',
 							complete: '1200.00',
 							spendTime: '2023.09.18 12:05:14',
 							img: 'https://cdn.uviewui.com/uview/album/1.jpg',
-							progress: {
-								current: 1,
-								dateList: [
-									{
-										day: '第一天',
-										isRecord: true,
-										time: '2023.09.17 10:25:30',
-										remark: '备注：已完成安保工作',
-										imgs: [
-											'https://cdn.uviewui.com/uview/album/1.jpg',
-											'https://cdn.uviewui.com/uview/album/2.jpg',
-											'https://cdn.uviewui.com/uview/album/3.jpg',
-										],
-									},
-									{ day: '第二天', time: '2023.09.18 10:25:30', isRecord: true, imgs: ['https://cdn.uviewui.com/uview/album/1.jpg'] },
-									{
-										day: '第三天',
-										time: '2023.09.19 10:25:30',
-										isRecord: true,
-										imgs: ['https://cdn.uviewui.com/uview/album/3.jpg'],
-									},
-								],
-							},
+						
 						},
 						{
 							name: '李林',
 							complete: '1200.00',
 							spendTime: '2023.09.18 12:05:14',
 							img: 'https://cdn.uviewui.com/uview/album/2.jpg',
-							progress: {
-								current: 0,
-								dateList: [
-									{
-										day: '第一天',
-										isRecord: true,
-										time: '2023.09.17 10:25:30',
-										remark: '备注：已完成安保工作',
-										imgs: [
-											'https://cdn.uviewui.com/uview/album/4.jpg',
-											'https://cdn.uviewui.com/uview/album/5.jpg',
-											'https://cdn.uviewui.com/uview/album/6.jpg',
-										],
-									},
-									{ day: '第二天', time: '2023.09.18' },
-									{ day: '第三天', time: '2023.09.19' },
-								],
-							},
+					
 						},
 						{
 							name: '肖国运',
 							complete: '1200.00',
 							spendTime: '2023.09.18 12:05:14',
 							img: 'https://cdn.uviewui.com/uview/album/3.jpg',
-							progress: {
-								current: -1,
-								dateList: [
-									{
-										day: '第一天',
-										time: '2023.09.17 10:25:30',
-									},
-									{ day: '第二天', time: '2023.09.18' },
-									{ day: '第三天', time: '2023.09.19' },
-								],
-							},
+						
 						},
 					],
-					description:
-						'对公司的项目进行临时安保工作<br /><br />一、工作地点:<br />可根据个人意愿就近分配工作，如有环境不适应可申请调换。<br />二、任职资格:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br /><br />三、岗位职责:<br />1、年龄18-55周岁;身高180cm以上有无经验均可。<br />2、积极向上者优先考虑。<br />3、退伍军人优先，应届生，农村待业青年，下岗职工等。<br />',
-				},
 			}
 		},
 		methods: {
-			toDetail() {
-				this.$toRoute('/pages/order/detail/paymentDetails')
-			},
+	getdetail(id){
+		listOrderPay(id).then((res)=>{
+			this.orderStatisticsf = {
+					summary: res.data.orderMoney,
+					complete: res.data.settlementMoney,
+					Remain: res.data.orderMoney - res.data.settlementMoney,
+				}
+				this.employees=res.data.casualOrderPaymentRecordItems.map((item)=>{
+					return {
+						name:item.engineerRealname,
+						complete:item.settlementMoney,
+						spendTime:item.createTime,
+						img:item.headSculptureUrl
+					}
+				})
+		})
+	}
 		},
+		onLoad(option){
+	let obj= JSON.parse(option.compData)
+
+			console.log(obj,'obj')
+			this.getdetail(obj.id)
+			this.compData=obj
+		}
 	}
 </script>
 

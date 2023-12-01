@@ -3,7 +3,7 @@
 		<view class="body">
 			<view class="flex-center between">
 				<view class="title">{{ compData.name }}</view>
-				<view class="salary">{{ compData.price }}/天</view>
+				<view class="salary">{{ compData.price }}元/天</view>
 			</view>
 			<view class="tag-list">
 				<view class="tag-item jobs">

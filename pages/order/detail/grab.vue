@@ -134,16 +134,15 @@ export default {
 		}
 	},
 	onLoad(option) {
-
+		
 		let obj = JSON.parse(option.orderItem)
-		let id = obj.id
-		this.engineer_ids = id
-		getcasualOrderList(id).then((res) => {
+		this.engineer_ids = obj.id
+		getcasualOrderList(this.engineer_ids).then((res) => {
 			console.log(res, 'res')
 			this.compData.employees = res.data
 
 		})
-		getcasualOrder(id).then((res) => {
+		getcasualOrder(this.engineer_ids).then((res) => {
 			res.data.labelName = res.data?.labelName.split(','),
 			this.resData = res.data
 		})

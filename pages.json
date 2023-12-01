@@ -59,6 +59,14 @@
 			}
 		},
 		{
+			"path": "pages/my/callMe/callMe",
+			"style": {
+				"navigationBarTitleText": "关于我们",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/my/authenticate/uploadIDCard",
 			"style": {
 				"navigationBarTitleText": "上传身份证",

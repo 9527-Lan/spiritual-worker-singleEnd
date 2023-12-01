@@ -21,7 +21,7 @@
 		<view class="cell-container">
 			<u-cell-group :border="false">
 				<u-cell :border="false" v-for="(item, index) in cellList" :key="index" isLink
-					@click="$toRoute(item.route)">
+					@click="toBtn(item)">
 					<view slot="title" class="title">
 						<u-icon :name="item.icon" size="35rpx"></u-icon>
 						<view class="label">{{ item.title }}</view>
@@ -29,6 +29,7 @@
 					</view>
 				</u-cell>
 			</u-cell-group>
+			<u-modal :show="show" :title="title" :content='content' :showCancelButton='true' @confirm="closeCard" @cancel="del"></u-modal>
 		</view>
 	</view>
 </template>
@@ -37,11 +38,17 @@
 	import {
 		personage
 	} from "@/api/sub.js"
+	import {
+		tomerService
+	} from "@/api/user.js"
 	export default {
 		data() {
 			return {
 				userInfo:{},
 				avater: '',
+				show:false,
+				content:"",
+				title:'拨打客服电话进行咨询',
 				operates: [{
 						number: 3,
 						label: '抢单中',
@@ -64,7 +71,7 @@
 						number: 0,
 						label: '异常',
 						color: '#F37878',
-						route: '/pages/order/index?state=exceptions'
+						route: '/pages/order/index?state=exception'
 					},
 				],
 				cellList: [{
@@ -78,14 +85,20 @@
 					},
 					{
 						icon: '/static/关于我们.png',
-						title: '关于我们'
+						title: '关于我们',
+						route: '/pages/my/callMe/callMe'
 					},
 				],
 			}
 		},
 		onLoad() {
-			this.personageList()
+	
 		},
+		onShow() {
+			this.personageList()
+    // 执行页面刷新的操作
+    // ...
+},
 		methods: {
 			personageList() {
 				let userInfo = this.$store.state.user.userInfo
@@ -116,11 +129,33 @@
 						number: item.ycOrderCount,
 						label: '异常',
 						color: '#F37878',
-						route: '/pages/order/index?state=exceptions'
+						route: '/pages/order/index?state=exception'
 					}, ]
 				})
+				tomerService().then((res)=>{
+					this.content=res.data
+				})
 				console.log(this.operates);
-			}
+			},
+			toBtn(item){
+				if(item.title==='咨询客服'){
+					this.show=true
+				}else{
+					$toRoute(item.route)
+				}
+			},
+			closeCard(){
+				uni.makePhoneCall({
+					phoneNumber: this.content //仅为示例
+				});
+				 this.show = false;
+			},
+			del(){
+				this.show = false;
+			},
+		},
+		mounted(){
+			this.personageList()
 		}
 	}
 </script>

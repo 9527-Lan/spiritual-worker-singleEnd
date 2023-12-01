@@ -63,7 +63,7 @@
 				// 	},
 				pageList: [],					
 				pageNum: 1,
-				pageSize: 10,
+				pageSize: 5,
 				typeId: null,
 				personData: "",
 			}
@@ -71,7 +71,6 @@
 		methods: {
 			onTabClick() {},
 			toSearch(){
-				console.log('111')
 				uni.navigateTo({
 					url:`/pages/index/search`
 				})
@@ -86,6 +85,7 @@
 				let params = {
 					typeId: this.typeId,
 					pageNum: this.pageNum,
+					status:2,
 					pageSize: this.pageSize
 				}
 				findCasualEngineer(params).then(res => {			
@@ -94,8 +94,8 @@
 							img: item.headSculptureUrl,
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
-							role: item.typeName.split(','),
-							experience: item.labelName.split(','),
+							role: item.typeName?.split(','),
+							experience: item.labelName?.split(','),
 							times: item.employmentNumber,
 							id: item.id,
 							hasCertificate: item.casualEngineerCertificate.length,
@@ -105,6 +105,7 @@
 					const data = res.data.list;
 					this.personData = data;
 					this.pageList=this.pageList.concat(dataList)
+					console.log(this.pageList,'000000');
 				})				
 			},
 	
@@ -133,7 +134,6 @@
 			this.pageNum = 1
 			this.pageList = []
 			this.typeId = this.tabList[e.index].value
-			console.log("this.typeId", this.typeId)
 			this.findCasualEngineerList()
 		},
 		},
@@ -158,6 +158,7 @@
 		padding: 0 32rpx;
 		padding-top: 103rpx;
 		width: 100%;
+		padding-bottom: 12rpx;
 
 		.search-box {
 			margin-top: 20rpx;

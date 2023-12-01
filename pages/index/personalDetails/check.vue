@@ -12,9 +12,9 @@
 									:color="colorFilter[detailData.sex]"
 									:label-color="colorFilter[detailData.sex]"></u-icon>
 							</view>
-						</view>
+						</view>     
 						<view class="information-tag">
-							<view class="tag-item" v-for="(item, index) in detailData.role" :key="index">{{ item }}</view>
+							<view class="tag-item" v-for="(item, index) in detailData.role" >{{ item }}</view>
 							<view class="tag-item" v-if="detailData.experience != null" v-for="(item, index) in detailData.experience" :key="index">{{ item }}</view>
 							<view class="tag-item" v-if="detailData.hasCertificate">持证上岗</view>
 						</view>
@@ -299,6 +299,7 @@
 						margin-top: 24rpx;
 						display: flex;
 						align-items: center;
+						flex-wrap: wrap;
 
 						.tag-item {
 							border-radius: 5rpx;
@@ -309,10 +310,13 @@
 							padding: 0 11rpx;
 							height: 43rpx;
 							line-height: 43rpx;
+							margin-right: 10rpx;
+								margin-bottom: 10rpx;
 
-							&+.tag-item {
-								margin-left: 10rpx;
-							}
+							// &+.tag-item {
+							// 	margin-right: 10rpx;
+							// 	margin-bottom: 10rpx;
+							// }
 						}
 					}
 				}

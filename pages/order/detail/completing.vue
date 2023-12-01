@@ -68,7 +68,7 @@
 			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
 				size="36rpx"></u-icon>
 			<view class="flex-center btn-box">
-				<u-button text="划入异常" type="primary" plain></u-button>
+				<!-- <u-button text="划入异常" type="primary" plain></u-button> -->
 				<u-button text="全部结算" color="#3A84F0" @click="submitbtn"></u-button>
 			</view>
 		</view>
@@ -201,7 +201,7 @@ export default {
 				this.compData.orderStatistics = {
 					summary: res.data.orderMoney,
 					complete: res.data.settlementMoney,
-					Remain: res.data.orderMoney - res.data.settlementMoney,
+					Remain: Math.abs(res.data.orderMoney - res.data.settlementMoney),
 				}
 				this.compData.employees = res.data.casualOrderSettlementItemVoList
 			})
@@ -217,7 +217,7 @@ export default {
 			})
 			this.compData.orderStatistics.complete = sum
 			this.compData.orderStatistics.Remain = this.compData.orderStatistics.summary - this.compData.orderStatistics.complete
-			console.log(this.compData.orderStatistics, '结算')
+			this.editForm.realComplete=''
 
 
 		},
@@ -260,7 +260,8 @@ export default {
 				casualOrderPaymentRecordItems:this.compData.employees,
 				cashSurplusMoney:this.compData.orderStatistics.Remain,
 				orderMoney:this.compData.orderStatistics.summary,
-				settlementMoney:this.compData.orderStatistics.complete
+				settlementMoney:this.compData.orderStatistics.complete,
+				id:Number(this.id)
 			}
 			submit(obj).then((res) => {
 				if(res.code==='00000'){
@@ -268,9 +269,14 @@ export default {
 						businessId:Number(this.id),
 						businessType:'1'
 					}).then((res)=>{
-						if(res.code === '00000'){
-							
-						}
+						if (res.code === '00000') {
+					uni.showToast({
+						title: res.data,
+						icon: 'success',
+						duration: 2000,
+					
+					})
+				}
 					})
 				}
 			})

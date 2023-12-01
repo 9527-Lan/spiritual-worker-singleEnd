@@ -6,28 +6,126 @@
 
 			<view class="title2">01. 上传身份证人像面</view>
 			<view class="image-box">
+				<u-upload :fileList="frontList" @afterRead="aftFront" @delete="delFront" name="6" multiple :maxCount="1"
+					width="370rpx" height="242rpx">
 				<u-image src="/static/uploadHeader.png" height="242rpx" width="370rpx"></u-image>
+				
 				<view class="click-text">点击上传</view>
+				</u-upload>
 			</view>
 			<view class="title2">02. 上传身份证国徽面</view>
 			<view class="image-box">
-				<u-image src="/static/uploadEmblem.png" height="242rpx" width="370rpx"></u-image>
+
+
+				<u-upload :fileList="contraryList" @afterRead="aftContrary" @delete="delContrary" name="6" multiple :maxCount="1"
+					width="370rpx" height="242rpx">
+					<u-image src="/static/uploadEmblem.png" height="242rpx" width="370rpx"></u-image>
 				<view class="click-text">点击上传</view>
+				</u-upload>
+				
 			</view>
 
 			<view class="tip footer">平台承诺，严格保障您的隐私安全</view>
 		</view>
 		<view class="footer-btn">
-			<u-button text="上传" color="#3A84F0"></u-button>
+			<u-button text="上传" color="#3A84F0" @click="add"></u-button>
 		</view>
 	</view>
 </template>
 
 <script>
+	import service from '@/utils/request.js'
 	export default {
 		data() {
-			return {}
+			return {
+				frontList: [],
+				contraryList: [],
+			}
 		},
+		methods:{
+			async aftFront(event) {
+				let lists = [].concat(event.file)
+				let fileListLen = this.frontList.length
+				lists.map((item) => {
+					this.frontList.push({
+						...item,
+						status: 'uploading',
+						message: '上传中'
+					})
+				})
+				for (let i = 0; i < lists.length; i++) {
+					const result = await this.uploadFilePromise(lists[i].url)
+					let item = this.frontList[fileListLen]
+					this.frontList.splice(fileListLen, 1, Object.assign(item, {
+						status: 'success',
+						message: '',
+						url: JSON.parse(result).data.fileUrl,
+						id: JSON.parse(result).data.id,
+					}))
+					fileListLen++
+				}
+				console.log(this.frontList,'jjjjj');
+			},
+			delFront(file, lists, name) {
+				this.frontList = []
+			},
+			async aftContrary(event) {
+				let lists = [].concat(event.file)
+				let fileListLen = this.contraryList.length
+				lists.map((item) => {
+					this.contraryList.push({
+						...item,
+						status: 'uploading',
+						message: '上传中'
+					})
+				})
+				for (let i = 0; i < lists.length; i++) {
+					const result = await this.uploadFilePromise(lists[i].url)
+					let item = this.contraryList[fileListLen]
+					this.contraryList.splice(fileListLen, 1, Object.assign(item, {
+						status: 'success',
+						message: '',
+						url: JSON.parse(result).data.fileUrl,
+						id: JSON.parse(result).data.id,
+					}))
+					fileListLen++
+				}
+			},
+			delContrary(file, lists, name) {
+				this.contraryList = []
+			},
+			uploadFilePromise(url) {
+				return new Promise((resolve, reject) => {
+					let a = uni.uploadFile({
+						url: 'http://39.108.59.181:9001' + '/file/upload', 
+						filePath: url,
+						name: 'file',
+						formData: {
+							user: 'test'
+						},
+						success: (res) => {
+							setTimeout(() => {
+								resolve(res.data)
+							}, 1000)
+						}
+					});
+				})
+			},
+			add() {
+				let parmas = {
+					cardImgNegative: this.frontList[0].id,
+					cardImgPositive: this.contraryList[0].id,
+					id: uni.getStorageSync('engineer_id')
+				}
+				this.$store.state.user.userCard.delegateImgGh=this.contraryList[0].id
+				this.$store.state.user.userCard.delegateImgRx=this.frontList[0].id,
+				
+				console.log(parmas,'parmas');
+				uni.navigateBack(1)
+			
+			}
+		
+		}
 	}
 </script>
 
@@ -55,11 +153,13 @@
 				color: #333333;
 			}
 			.image-box {
+				margin: auto;
 				margin-top: 62rpx;
 				width: 100%;
 				display: flex;
 				justify-content: center;
 				position: relative;
+	
 				.click-text {
 					position: absolute;
 					top: 0;
@@ -73,6 +173,9 @@
 					font-weight: bold;
 					color: #3A84F0;
 				}
+				::v-deep .u-upload__wrap{
+		margin: 0 auto;
+	}
 			}
 			.tip {
 				font-size: 24rpx;

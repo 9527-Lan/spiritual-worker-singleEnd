@@ -7,7 +7,7 @@
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }"
 					:model="form">
 					<u-form-item label="用工标题" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workTitile" border="none" placeholder="张三"
+						<u--input v-model="dataForm.workTitile" border="none" placeholder="请输入"
 							@change='getWorkTitile'></u--input>
 					</u-form-item>
 					<u-form-item label="用工类型" prop="userInfo.sex" borderBottom @click="showSex = !showSex; " ref="item1"
@@ -18,8 +18,12 @@
 					</u-form-item>
 					<u-form-item label="用工标签" prop="userInfo.sex" borderBottom @click="showLabel = !showSex; "
 						ref="item1" required>
-						<u--input v-model="dataForm.workLabel" disabled disabledColor="#ffffff" placeholder="请选择"
-							border="none"></u--input>
+						<u--textarea  v-model="dataForm.workLabel" disabled disabledColor="#ffffff" placeholder="请选择"
+							border="none" autoHeight></u--textarea>
+
+
+						<!-- <u--textarea v-model="dataForm.workLabel" disabled disabledColor="#ffffff" placeholder="请选择"
+							border="none"></u--textarea> -->
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工地址" prop="userInfo.name" borderBottom ref="item1" required>
@@ -58,16 +62,23 @@
 			</view>
 			<view class="footer-tip">平台承诺，严格保障您的隐私安全</view>
 		</view>
+		<qianziyu-select :show="showLabel" type="checkbox" name="label" :showSearch="false"
+					:dataLists="labelList" popupTitle="请选择服务类型" @cancel="showLabel=false" @submit="labelSelect" />
+
+
 		<u-action-sheet :show="showSex" :actions="workTypeList" title="请选择类型" @close="showSex = false"
 			@select="typeSelect">
 		</u-action-sheet>
-		<u-action-sheet :show="showLabel" :actions="labelList" title="请选择标签" @close="showLabel = false"
+		<!-- <u-action-sheet :show="showLabel" :actions="labelList" title="请选择标签" @close="showLabel = false"
 			@select="labelSelect">
-		</u-action-sheet>
+		</u-action-sheet> -->
 		<u-datetime-picker :show="dateShow" mode="datetime" @cancel='starts' @confirm="getStartTimes"
-			:formatter="formatter" ref="startPicker"></u-datetime-picker>
+			v-model="value1" :formatter="formatter" ref="startPicker"></u-datetime-picker>
 		<u-datetime-picker :show="endDateShow" mode="datetime" @cancel='ends' @confirm="getEndTimes"
 			:formatter="formatter" ref="endPicker"></u-datetime-picker>
+
+
+			
 		<view class="footer">
 			<u-button text="保存" color="#3A84F0" @click="onBack"></u-button>
 		</view>
@@ -83,9 +94,14 @@
 	import {
 		mapstate
 	} from 'vuex';
+	import qianziyuSelect from "@/pages/index/components/qianziyu-select.vue"
 	export default {
+		components: {
+			qianziyuSelect
+		},
 		data() {
 			return {
+				value1:Number(new Date()),
 				dataForm: {
 					principal:'',
 					principalType:'',
@@ -319,6 +335,7 @@
 					})
 					return;
 				}
+				console.log(this.dataForm,'222222');
 				submitLis({
 					name: this.dataForm.workTitile,
 					typeId: this.dataForm.workTypeId,
@@ -328,6 +345,7 @@
 					orderQuantity: this.dataForm.workNum,
 					price: this.dataForm.singleMoney,
 					orderStatr: this.dataForm.startTime,
+					qdQuantity:this.dataForm.qdQuantity,
 					orderEnd: this.dataForm.endTime,
 					description: this.dataForm.workPlace,
 					principal:this.principal,
@@ -372,17 +390,22 @@
 				getWorkType({
 					typeId: e.value
 				}).then(res => {
-					this.labelList = res.data.map(item => {
-						return {
-							name: item.label,
-							value: item.value
-						}
-					})
+					this.labelList = res.data
 				})
 			},
+			
+
+
+
 			labelSelect(e) {
-				this.dataForm.workLabel = e.name;
-				this.dataForm.workLabelId = e.value;
+				console.log(e,'22222');
+				this.showLabel = false
+				this.dataForm.workLabelId = e.length ? e.map(el => el.value).toString() : ''
+				this.dataForm.workLabel = e.length ? e.map(el => el.label).toString() : ''
+
+
+				// this.dataForm.workLabel = e.name;
+				// this.dataForm.workLabelId = e.value;
 			},
 			getWorkTitile(e) {
 				this.dataForm.workTitile = e;
@@ -505,6 +528,9 @@
 			background-color: #fff;
 			height: 173rpx;
 			padding: 19rpx 42rpx;
+		}
+		::v-deep .u-textarea--disabled{
+			background-color: #ffffff ;
 		}
 	}
 </style>

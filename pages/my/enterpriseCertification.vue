@@ -3,9 +3,49 @@
 		<view class="body">
 			<view class="title">完善企业信息</view>
 			<view class="form">
-				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
-					<u-form-item v-for="(item, index) in formList" :key="index" :label="item.label" :required="item.required" border-bottom>
-						<u-input v-if="item.fieldType == 'picker'" readonly :placeholder="item.placeholder" :border="item.border">
+				<u-form label-width="145rpx" :model="form"
+					:label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
+					<u-form-item label="企业名称" borderBottom required>
+						<u--input border="none" v-model="dataForm.name" placeholder="请输入"
+							@change='getname'></u--input>
+					</u-form-item>
+					<u-form-item label="法人" borderBottom required>
+						<u--input border="none" v-model="dataForm.delegate" placeholder="请输入"
+							@change='getworkpeople'></u--input>
+					</u-form-item>
+					<u-form-item label="法人身份证件号码" borderBottom required>
+						<u--input v-model="dataForm.idCard" type='number' disabledColor="#ffffff" placeholder="请输入"
+							border="none" @change='getnumber'></u--input>
+
+					</u-form-item>
+					<u-form-item label="社会统一信用代码" borderBottom required>
+						<u--input v-model="dataForm.taxNo" type='number' placeholder="请输入" disabledColor="#ffffff"
+							border="none" @change="getdm"></u--input>
+
+						<!-- </view> -->
+					</u-form-item>
+					<u-form-item label="法人身份证件照片" borderBottom required>
+						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" border="none"></u--input>
+
+						<view class="imgdelegate" v-if="dataForm.delegateImgGhUrl&&dataForm.delegateImgGhUrl">
+							<u-image  :src="dataForm.delegateImgGhUrl" height="150rpx" width="200rpx"  style="margin-right: 20px;"></u-image>
+						   <u-image  :src="dataForm.delegateImgRxUrl" height="150rpx" width="200rpx"></u-image>
+						</view>
+						
+						<u-tag v-else :text="dataForm.delegateImgGh&&dataForm.delegateImgRx?'去查看':'去认证'" shape="circle" plain="true" size="mini"
+							@click="handleClick('uploadIDCard')"></u-tag>
+						<!-- </view> -->
+					</u-form-item>
+	
+					<u-form-item label="营业执照" borderBottom required>
+						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" border="none"></u--input>
+						<u-image v-if="dataForm.licenseImgUrl" :src="dataForm.licenseImgUrl" height="200rpx" width="200rpx"></u-image>
+						<u-tag v-else :text="dataForm.licenseImg?'去查看':'去认证'" shape="circle" plain="true" size="mini"
+							@click="handleClick('uploadLicense')"></u-tag>
+						<!-- </view> -->
+					</u-form-item>
+					<!-- <u-form-item :label="item.label" :required="item.required" border-bottom>
+						<u-input readonly :placeholder="item.placeholder" :border="item.border" v-model="item.values">
 							<view slot="suffix">
 								<u-icon v-if="item.suffix && item.suffix.type == 'icon'" :name="item.suffix.name" :size="item.suffix.size"></u-icon>
 								<u-tag
@@ -17,128 +57,199 @@
 									@click="handleClick(item.clickEvent)"></u-tag>
 							</view>
 						</u-input>
-						<u-input v-else v-model="dataForm[item.field]" :type="item.type" :placeholder="item.placeholder" :border="item.border"></u-input>
-					</u-form-item>
+						<u-input  :type="item.type" :placeholder="item.placeholder" :border="item.border"></u-input>
+					</u-form-item> -->
 				</u-form>
 			</view>
 			<view class="footer-tip">平台承诺，严格保障您的隐私安全</view>
 		</view>
 		<view class="footer">
-			<u-button text="保存" color="#3A84F0" @click="onBack"></u-button>
+			<u-button text="保存" color="#3A84F0" @click="sumbit"></u-button>
 		</view>
 	</view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				dataForm: {},
-				formList: [
-					{ field: '', label: '企业名称', required: true, placeholder: '湖南湘银物业有限责任公司', border: 'none' },
-					{
-						field: '',
-						fieldType: 'picker',
-						options: [],
-						label: '法人',
-						required: true,
-						placeholder: '请输入',
-						border: 'none',
-					},
-					{ field: '', label: '法人身份证件号码', required: true, placeholder: '请输入', border: 'none' },
-					{
-						field: '',
-						fieldType: 'picker',
-						options: [],
-						label: '法人身份证件照片',
-						required: true,
-						placeholder: '',
-						border: 'none',
-						suffix: { type: 'tag', text: '去上传', shape: 'circle', plain: true },
-						clickEvent: 'uploadIDCard',
-					},
-					{ field: '', label: '社会统一信用代码', required: true, placeholder: '请输入', border: 'none' },
-					{
-						field: '',
-						fieldType: 'picker',
-						options: [],
-						label: '营业执照',
-						required: true,
-						placeholder: '',
-						border: 'none',
-						suffix: { type: 'tag', text: '去上传', shape: 'circle', plain: true },
-						clickEvent: 'uploadLicense',
-					},
-				],
+import {
+	getuser,
+	casuaEdit
+} from '@/api/user.js'
+export default {
+	data() {
+		return {
+			dataForm: {
+				name: '',
+				delegate: '',//法人
+				idCard: '',//身份证号码
+				taxNo: '',//社会统一信用代码
+				delegateImgGh: '',//身份证国徽
+				delegateImgRx: '',//身份证人像
+			},
+			formList: [
+				{ field: '', label: '企业名称', required: true, placeholder: '湖南湘银物业有限责任公司', border: 'none' },
+				{
+					field: '',
+					fieldType: 'picker',
+					options: [],
+					label: '法人',
+					required: true,
+					placeholder: '请输入',
+					border: 'none',
+				},
+				{ field: '', label: '法人身份证件号码', required: true, placeholder: '请输入', border: 'none' },
+				{
+					field: '',
+					fieldType: 'picker',
+					options: [],
+					label: '法人身份证件照片',
+					required: true,
+					placeholder: '',
+					border: 'none',
+					suffix: { type: 'tag', text: '去上传', shape: 'circle', plain: true },
+					clickEvent: 'uploadIDCard',
+				},
+				{ field: '', label: '社会统一信用代码', required: true, placeholder: '请输入', border: 'none' },
+				{
+					field: '',
+					fieldType: 'picker',
+					options: [],
+					label: '营业执照',
+					required: true,
+					placeholder: '',
+					border: 'none',
+					suffix: { type: 'tag', text: '去上传', shape: 'circle', plain: true },
+					clickEvent: 'uploadLicense',
+				},
+			],
+		}
+	},
+	methods: {
+		onBack() {
+			uni.navigateBack(1)
+		},
+		// 保存
+		sumbit(){
+			this.dataForm.id=this.$store.state.user.userInfo.id
+			this.dataForm.delegateImgGh=this.$store.state.user.userCard.delegateImgGh
+			this.dataForm.delegateImgRx=this.$store.state.user.userCard.delegateImgRx
+			this.dataForm.licenseImg=this.$store.state.user.userCard.licenseImg
+			console.log(this.dataForm,'222222');
+			casuaEdit(this.dataForm).then((res)=>{
+				console.log(res,'2222');
+			})
+		},
+
+		handleClick(event) {
+			switch (event) {
+				case 'enterpriseCertification':
+					console.log('handleClick')
+					this.$toRoute('/pages/my/enterpriseCertification')
+					break
+				case 'uploadLicense':
+					this.$toRoute('/pages/my/authenticate/uploadLicense')
+					break
+				case 'uploadIDCard':
+					this.$toRoute('/pages/my/authenticate/uploadIDCard')
+					break
+				default:
+					break
 			}
 		},
-		methods: {
-			onBack() {
-				uni.navigateBack(1)
-			},
-			handleClick(event) {
-				switch (event) {
-					case 'enterpriseCertification':
-						console.log('handleClick')
-						this.$toRoute('/pages/my/enterpriseCertification')
-						break
-					case 'uploadLicense':
-						this.$toRoute('/pages/my/authenticate/uploadLicense')
-						break
-					case 'uploadIDCard':
-						this.$toRoute('/pages/my/authenticate/uploadIDCard')
-						break
-					default:
-						break
-				}
-			},
+		// 企业名称
+		getname(e){
+			this.dataForm.name = e;
 		},
+		// 法人
+		getworkpeople(e){
+			this.dataForm.getworkpeople=e
+		},
+		// 身份证号码
+		getnumber(e){
+			this.dataForm.idCard=e
+		},
+		//社会统一信用代码
+		getdm(e){
+			this.dataForm.taxNo=e
+		}
+
+	},
+	onLoad(options) {
+		
+	},
+	mounted() {
+
+		getuser(Number(this.$store.state.user.userInfo.id)).then((res) => {
+			// this.dataForm.name = res.data.name
+			// this.dataForm.delegate = res.data.delegate
+			// this.dataForm.idCard = res.data.idCard
+			// this.dataForm.taxNo = res.data.taxNo
+			this.dataForm=res.data
+			this.$store.state.user.userCard.licenseImgUrl=res.data.licenseImgUrl
+			console.log(this.dataForm, '939939399');
+
+		})
 	}
+}
 </script>
 
 <style lang="scss">
-	page {
-		background-color: #f2f6ff;
-	}
-	.page-my-enterpriseCertification {
-		.body {
-			padding: 53rpx 36rpx 45rpx 36rpx;
-			box-sizing: border-box;
-			margin: 38rpx 32rpx;
-			border-radius: 15rpx;
-			background-color: #fff;
-			height: calc(100vh - 230rpx);
-			position: relative;
-			.title {
-				font-size: 32rpx;
-				font-weight: bold;
-				color: #333333;
-				margin-bottom: 50rpx;
-			}
-			.form {
-				width: 100%;
-				margin-top: 46rpx;
-			}
-			.footer-tip {
-				position: absolute;
-				left: 0;
-				right: 0;
-				bottom: 43rpx;
-				text-align: center;
-				font-size: 24rpx;
-				font-weight: 500;
-				color: #999999;
-			}
+page {
+	background-color: #f2f6ff;
+}
+
+.page-my-enterpriseCertification {
+	.body {
+		padding: 53rpx 36rpx 45rpx 36rpx;
+		box-sizing: border-box;
+		margin: 38rpx 32rpx;
+		border-radius: 15rpx;
+		background-color: #fff;
+		height: calc(100vh - 230rpx);
+		position: relative;
+
+		.title {
+			font-size: 32rpx;
+			font-weight: bold;
+			color: #333333;
+			margin-bottom: 50rpx;
 		}
-		.footer {
-			position: fixed;
-			bottom: 0;
+
+		.form {
+			width: 100%;
+			margin-top: 46rpx;
+		}
+
+		::v-deep .u-form-item__body__left {
+			width: 78px !important;
+
+		}
+
+		.footer-tip {
+			position: absolute;
 			left: 0;
 			right: 0;
-			z-index: 1;
-			background-color: #fff;
-			height: 173rpx;
-			padding: 19rpx 42rpx;
+			bottom: 43rpx;
+			text-align: center;
+			font-size: 24rpx;
+			font-weight: 500;
+			color: #999999;
 		}
 	}
-</style>
+
+	.footer {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 1;
+		background-color: #fff;
+		height: 173rpx;
+		padding: 19rpx 42rpx;
+	}
+	.imgdelegate{
+		display: flex;
+	}
+	::v-deep .u-image{
+		height: 150rpx;
+	}
+}</style>

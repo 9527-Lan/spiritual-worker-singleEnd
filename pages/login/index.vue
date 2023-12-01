@@ -8,7 +8,7 @@
 				<u-form-item label="类型" labelWidth="120rpx" prop="password" ref="item1">
 					<u-radio-group v-model="radiovalue1" size="35" labelSize="50" placement="row" @change="groupChange">
 						<u-radio 
-							:customStyle="{marginLeft: '16rpx'}" 
+							:customStyle="{marginLeft: '16rpx',fontSize:'24rpx'}" 
 							v-for="(item, index) in radiolist1" 
 							:key="index"
 							:label="item.name" 
@@ -106,7 +106,6 @@
 				this.agree = !this.agree
 			},
 			onLogin() {
-				console.log(this.isAgree);
 				if (this.agree) {
 					this.$refs.uForm.validate().then(res => {
 						if(this.radiovalue1 === '企业') {
@@ -155,6 +154,7 @@
 				this.logining = true;
 				let data = this.form
 				this.$store.dispatch('user/personLogin',data).then(res=>{
+					console.log(res);
 					const pages = getCurrentPages();
 					if (pages.length > 1) {
 						uni.navigateBack()
@@ -268,6 +268,11 @@
 				height: 72rpx;
 				border-radius: 10rpx;
 			}
+		}
+	}
+	::v-deep .u-radio__text{
+		span{
+			font-size: 24rpx;
 		}
 	}
 </style>

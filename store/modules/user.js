@@ -12,12 +12,21 @@ const state = {
 	loginType: null, // 1企业 2个人
 	memberId: '',
 	userInfo:{},
-	userInfoItem: {}
+	userInfoItem: {},
+	userCard:{
+		delegateImgGh:'',//身份证国徽id
+		delegateImgRx:'',//身份证人像id
+		licenseImg:'',//营业执照id
+		licenseImgUrl:'',//营业执照url
+	}
 }
 
 const mutations = {
 	SET_USER_INFO: (state, userInfo) => {
 		state.userInfo = userInfo
+	},
+	SET_USER_CAED:(state,data)=>{
+state.userCard=data
 	},
 	SET_USER_INFO_ITEM: (state, userInfoItem) => {
 		state.userInfoItem = userInfoItem
@@ -70,6 +79,7 @@ const actions = {
 	firmLogin({
 		commit
 	}, data) {
+		console.log(data,'data');
 		return new Promise((resolve, reject) => {
 			firmLogin(data).then(response => {
 				console.log(response.data);

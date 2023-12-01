@@ -57,6 +57,7 @@
 					7: '300.00 元/日',
 					8: '2023.09.17 - 2023.09.20',
 					9: '￥3,325.00',
+
 				},
 				formList: [{
 						field: '1',
@@ -103,6 +104,13 @@
 						border: 'none'
 					},
 					{
+						field: '10',
+						label: '抢工人数',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
 						field: '7',
 						label: '单人日薪',
 						required: false,
@@ -143,6 +151,7 @@
 			this.dataForm['7'] = this.datas.singleMoney;
 			this.dataForm['8'] = this.datas.startTime + '-' + this.datas.endTime;
 			this.dataForm['9'] = this.datas.singleMoney * this.datas.workNum;
+			this.dataForm['10']=this.datas.qdQuantity
 
 		},
 		methods: {

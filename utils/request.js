@@ -5,9 +5,10 @@ axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // create an axios instance
 const service = axios.create({
 	 // baseURL: "https://t44o902052.zicp.fun", //  线上接口地址(微信、HBX内置浏览器)
-	//  baseURL: "http://192.168.1.116:9999/LowerSingleEnd", //  线上接口地址(微信、HBX内置浏览器)
+	//  baseURL: "http://39.108.59.181:9001/LowerSingleEnd", //  线上接口地址(微信、HBX内置浏览器)
 	// baseURL: "http://app.youlai.tech/prod-api", // 线上接口地址(谷歌等有跨域限制浏览器)
-	baseURL: "https://t44o902052.zicp.fun/LowerSingleEnd", // 本地开发环境地址
+	// baseURL: "https://t44o902052.zicp.fun/LowerSingleEnd", // 本地开发环境地址
+	baseURL: "http://39.108.59.181:9001/LowerSingleEnd", 
 	withCredentials: true, // send cookies when cross-domain requests
 	timeout: 10000 // request timeout
 })

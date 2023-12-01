@@ -31,8 +31,11 @@
 				})
 			},
 			pageTo(){
+				let orderItem={
+					id:this.id
+				}
 				uni.navigateTo({
-					url:'/pages/order/detail/grab?id='+this.id
+					url:'/pages/order/detail/grab?orderItem='+JSON.stringify(orderItem)
 				})
 			},
 		},

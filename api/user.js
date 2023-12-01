@@ -79,3 +79,45 @@ export function listOrderItem(params){
 		params:params
 	})
 }
+// 子账户修改
+export function updateItem(data) {
+	return request({
+		url: '/updateItem',
+		method: 'post',
+		data: data
+	})
+}
+// 子账户修改
+export function getuser(data) {
+	console.log(data,'data');
+	return request({
+		url: '/getByIdEntrepreneur?id='+data,
+		method: 'post',
+	})
+}
+//企业用户修改
+export function casuaEdit(data) {
+	console.log(data,'data');
+	return request({
+		url: '/web/casualEntrepreneur/edit',
+		method: 'post',
+		data: data
+	})
+}
+//工程师端-关于我们
+export function engineerEndAboutUs(params) {
+	return request({
+		url: '/aboutUs',
+		method: 'get',
+		params: params,
+	})
+}
+
+// 联系客服
+export function tomerService(params) {
+	return request({
+		url: '/consultCustomerService',
+		method: 'get',
+		params: params,
+	})
+}

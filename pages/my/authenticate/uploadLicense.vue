@@ -5,14 +5,28 @@
 			<view class="tip">仅支持在有效期内的中国大陆工商局监督管理局颁发的工 商营业执照:必须是原件照片、扫描件或者复印件加盖企业 公章后的扫描件。</view>
 
 			<view class="image-box">
-				<u-image src="/static/uploadLicense.png" height="242rpx" width="370rpx"></u-image>
+				<u-upload :fileList="frontList" @afterRead="aftFront" @delete="delFront" name="6" multiple :maxCount="1"
+					width="370rpx" height="242rpx">
+					
+					<view v-if="url">
+						<u-image :src="url" height="242rpx" width="370rpx"></u-image>
+					</view>
+					<view v-else>
+						<u-image src="/static/uploadLicense.png" height="242rpx" width="370rpx"></u-image>
 				<view class="click-text">点击上传</view>
+					</view>
+					
+					
+				</u-upload>
+
+
+				
 			</view>
 
 			<view class="tip footer">平台承诺，严格保障您的隐私安全</view>
 		</view>
 		<view class="footer-btn">
-			<u-button text="上传" color="#3A84F0"></u-button>
+			<u-button text="上传" color="#3A84F0" @click="add"></u-button>
 		</view>
 	</view>
 </template>
@@ -20,8 +34,70 @@
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				frontList:[],
+				url:''
+			}
 		},
+		methods:{
+			async aftFront(event) {
+				let lists = [].concat(event.file)
+				let fileListLen = this.frontList.length
+				lists.map((item) => {
+					this.frontList.push({
+						...item,
+						status: 'uploading',
+						message: '上传中'
+					})
+				})
+				for (let i = 0; i < lists.length; i++) {
+					const result = await this.uploadFilePromise(lists[i].url)
+					let item = this.frontList[fileListLen]
+					this.frontList.splice(fileListLen, 1, Object.assign(item, {
+						status: 'success',
+						message: '',
+						url: JSON.parse(result).data.fileUrl,
+						id: JSON.parse(result).data.id,
+					}))
+					fileListLen++
+				}
+				console.log(this.frontList,'jjjjj');
+			},
+			delFront(file, lists, name) {
+				this.frontList = []
+			},
+			uploadFilePromise(url) {
+				return new Promise((resolve, reject) => {
+					let a = uni.uploadFile({
+						url: 'http://39.108.59.181:9001' + '/file/upload', 
+						filePath: url,
+						name: 'file',
+						formData: {
+							user: 'test'
+						},
+						success: (res) => {
+							setTimeout(() => {
+								resolve(res.data)
+							}, 1000)
+						}
+					});
+				})
+			},
+			add(){
+				this.url=this.$store.state.user.userCard.licenseImg=this.frontList[0].id
+				console.log(this.$store.state.user.userCard);
+				uni.navigateBack(1)
+			}
+		},
+		mounted(){
+			console.log(this.$store.state.user.userCard.licenseImgUrl,'22222');
+			this.url=this.$store.state.user.userCard.licenseImgUrl
+			this.frontList[0].id=this.$store.state.user.userCard.licenseImg
+			console.log(this.frontList[0]);
+		},
+		created(){
+
+		}
 	}
 </script>
 
@@ -76,6 +152,9 @@
 					font-weight: bold;
 					color: #3a84f0;
 				}
+				::v-deep .u-upload__wrap{
+		margin: 0 auto;
+	}
 			}
 			.tip {
 				font-size: 24rpx;
