@@ -3,7 +3,7 @@
 		<view class="body">
 			<view class="title">完善企业信息</view>
 			<view class="form">
-				<u-form label-width="145rpx" :model="form"
+				<u-form label-width="145rpx" :model="dataForm"
 					:label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
 					<u-form-item label="企业名称" borderBottom required>
 						<u--input border="none" v-model="dataForm.name" placeholder="请输入"
@@ -32,7 +32,7 @@
 						   <u-image  :src="dataForm.delegateImgRxUrl" height="150rpx" width="200rpx"></u-image>
 						</view>
 						
-						<u-tag v-else :text="dataForm.delegateImgGh&&dataForm.delegateImgRx?'去查看':'去认证'" shape="circle" plain="true" size="mini"
+						<u-tag v-else :text="dataForm.delegateImgGh&&dataForm.delegateImgRx?'去查看':'去认证'" shape="circle" plain size="mini"
 							@click="handleClick('uploadIDCard')"></u-tag>
 						<!-- </view> -->
 					</u-form-item>
@@ -40,7 +40,7 @@
 					<u-form-item label="营业执照" borderBottom required>
 						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" border="none"></u--input>
 						<u-image v-if="dataForm.licenseImgUrl" :src="dataForm.licenseImgUrl" height="200rpx" width="200rpx"></u-image>
-						<u-tag v-else :text="dataForm.licenseImg?'去查看':'去认证'" shape="circle" plain="true" size="mini"
+						<u-tag v-else :text="dataForm.licenseImg?'去查看':'去认证'" shape="circle" plain size="mini"
 							@click="handleClick('uploadLicense')"></u-tag>
 						<!-- </view> -->
 					</u-form-item>

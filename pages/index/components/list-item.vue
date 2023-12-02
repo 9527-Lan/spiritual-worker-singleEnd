@@ -1,6 +1,6 @@
 <template>
 	<view class="list-item" @click="onClick">
-		<u-avatar :src="compData.img" size="92rpx"></u-avatar>
+		<u-avatar :src="compData.headSculptureUrl" size="92rpx"></u-avatar>
 		<view class="information" >
 			<view class="information-top">
 				<view class="flex-center">

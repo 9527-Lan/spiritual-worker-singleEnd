@@ -8,9 +8,9 @@
 			</view> -->
 			
 			<!-- h5 -->
-			<view slot="left" class="search-box-h5" >
-				<u-search :showAction="false" placeholder="搜索用工类型信息..." bgColor="#fff" style="width: 100%" disabled
-					@click="toSearch" ></u-search>
+			<view slot="left" class="search-box-h5" @click="toSearch">
+				<u-search :showAction="false" placeholder="搜索工程师..." bgColor="#fff" style="width: 100%" disabled
+	></u-search>
 			</view>
 		</u-navbar>
 		<view class="swiper-box">
@@ -27,7 +27,7 @@
 		</view>
 		<view>
 			<!-- /pages/index/personalDetails/index -->
-			<listItem v-for="(item, index) in pageList" :key="item.id" :compData="item"
+			<listItem v-for="(item, index) in pageList" :key="index" :compData="item"
 				@onClick="pageTo(item)"></listItem>
 		</view>
 	</view>

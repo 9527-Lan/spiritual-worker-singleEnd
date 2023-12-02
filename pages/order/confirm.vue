@@ -104,8 +104,8 @@
 						border: 'none'
 					},
 					{
-						field: '10',
-						label: '抢工人数',
+						field: '11',
+						label: '报名人数',
 						required: false,
 						value: '',
 						border: 'none'
@@ -119,13 +119,20 @@
 					},
 					{
 						field: '8',
-						label: '用工时间',
+						label: '用工天数',
 						required: false,
 						value: '',
 						border: 'none'
 					},
 					{
 						field: '9',
+						label: '用工时间',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
+						field: '10',
 						label: '合计金额',
 						fieldType: 'text',
 						required: false,
@@ -149,9 +156,10 @@
 			this.dataForm['5'] = this.datas.workPlace;
 			this.dataForm['6'] = this.datas.workNum;
 			this.dataForm['7'] = this.datas.singleMoney;
-			this.dataForm['8'] = this.datas.startTime + '-' + this.datas.endTime;
-			this.dataForm['9'] = this.datas.singleMoney * this.datas.workNum;
-			this.dataForm['10']=this.datas.qdQuantity
+			this.dataForm['8'] = this.datas.employmentDay;
+			this.dataForm['9'] = this.datas.startTime + '-' + this.datas.endTime;
+			this.dataForm['10'] = (this.datas.singleMoney * this.datas.workNum * this.datas.employmentDay).toFixed(2);
+			this.dataForm['11']=this.datas.qdQuantity
 
 		},
 		methods: {

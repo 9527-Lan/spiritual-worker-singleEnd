@@ -2,7 +2,7 @@
 	<view class="page-index-search">
 		<u-search :showAction="false" :placeholder="searchPlaceholder" bgColor="#fff" v-model='value' @search="getValue"></u-search>
 		<view>
-			<listItem v-for="(item, index) in pageList"  @onClick="pageTo(item)" :key="index" :compData="item"></listItem>
+			<listItem v-for="(item, index) in pageList" :key="index" @onClick="pageTo(item)"  :compData="item"></listItem>
 		</view>
 	</view>
 </template>
@@ -79,6 +79,7 @@
 	}
 
 	.page-index-search {
+		background: #F2F6FF;
 		padding: 38rpx 32rpx;
 	}
 		::v-deep .u-search__content{

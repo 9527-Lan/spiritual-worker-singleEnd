@@ -21,15 +21,13 @@
 				</view>
 			</view> -->
 			<view class="form">
-				<u-form label-width="145rpx" :model="form"
+				<u-form label-width="145rpx" :model="dataForm"
 					:label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
 					<u-form-item label="姓名" borderBottom required>
-						<u--input border="none" v-model="dataForm.accountName" placeholder="请输入"
-							@change='getworkpeople'></u--input>
+						<u--input border="none" v-model="dataForm.accountName" placeholder="请输入"></u--input>
 					</u-form-item>
 					<u-form-item label="电话" borderBottom>
-						<u--input border="none" v-model="dataForm.mobile" type='number' placeholder="请输入"
-							@change='getworkpeople'></u--input>
+						<u--input border="none" v-model="dataForm.mobile" type='number' placeholder="请输入"></u--input>
 					</u-form-item>
 					<u-form-item label="类型" borderBottom required @click="showSex = false;">
 						<u--input v-model="dataForm.type" disabled disabledColor="#ffffff" placeholder="请选择"
@@ -38,13 +36,13 @@
 					</u-form-item>
 					<u-form-item label="企业认证" borderBottom required>
 						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" border="none"></u--input>
-						<u-tag text="去认证" shape="circle" plain="true" size="mini"
+						<u-tag text="去认证" shape="circle" plain size="mini"
 							@click="handleClick('enterpriseCertification')"></u-tag>
 						<!-- </view> -->
 					</u-form-item>
 					<u-form-item label="签署合同" borderBottom required>
 						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" border="none"></u--input>
-						<u-tag text="去签署" shape="circle" plain="true" size="mini"
+						<u-tag text="去签署" shape="circle" plain size="mini"
 							@click="handleClick('signContract')"></u-tag>
 						<!-- </view> -->
 					</u-form-item>

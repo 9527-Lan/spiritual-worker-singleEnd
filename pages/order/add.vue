@@ -7,18 +7,18 @@
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }"
 					:model="form">
 					<u-form-item label="用工标题" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workTitile" border="none" placeholder="请输入"
+						<u--input v-model="dataForm.workTitile" border="none" placeholder="请输入用工标题"
 							@change='getWorkTitile'></u--input>
 					</u-form-item>
-					<u-form-item label="用工类型" prop="userInfo.sex" borderBottom @click="showSex = !showSex; " ref="item1"
+					<u-form-item label="用工类型" prop="userInfo.workType" borderBottom @click="showSex = !showSex; " ref="item1"
 						required>
-						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" placeholder="请选择"
+						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" placeholder="请选择用工类型"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工标签" prop="userInfo.sex" borderBottom @click="showLabel = !showSex; "
 						ref="item1" required>
-						<u--textarea  v-model="dataForm.workLabel" disabled disabledColor="#ffffff" placeholder="请选择"
+						<u--textarea  v-model="dataForm.workLabel" disabled disabledColor="#ffffff" placeholder="请选择用工标签"
 							border="none" autoHeight></u--textarea>
 
 
@@ -27,37 +27,40 @@
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工地址" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workAddress" border="none" placeholder="请输入"
+						<u--input v-model="dataForm.workAddress" border="none" placeholder="请输入用工地址"
 							@change='getWorkAddress'></u--input>
 					</u-form-item>
-					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入"
-							@change='getWorkplace'></u--input>
-					</u-form-item>
 					<u-form-item label="用工数量" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入"
+						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入用工数量"
 							@change='getWorkNum'></u--input>
 					</u-form-item>
 					
-					<u-form-item label="抢单人数" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.qdQuantity" border="none" placeholder="请输入"
+					<u-form-item label="报名人数" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="dataForm.qdQuantity" border="none" placeholder="请输入报名人数"
 							@change='getworkpeople'></u--input>
 					</u-form-item>
 					
 					
-					<u-form-item label="单人日薪" prop="userInfo.name" borderBottom ref="item1" required>
+					<u-form-item label="单人日薪" prop="userInfo.singleMoney" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.singleMoney" border="none" @change='getSingleMoney'
-							placeholder="请输入"></u--input>
+							placeholder="请输入单人日薪"></u--input>
 					</u-form-item>
-					<u-form-item label="开始时间" prop="userInfo.name" borderBottom ref="item1" required
+					<u-form-item label="用工天数" prop="userInfo.employmentDay" borderBottom ref="item1" required>
+						<u--input v-model="dataForm.employmentDay" border="none"
+							placeholder="请输入用工天数"></u--input>
+					</u-form-item>
+					<u-form-item label="开始时间" prop="userInfo.startTime" borderBottom ref="item1" required
 						@click="dateShow = !dateShow;">
-						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择"></u--input>
+						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择开始时间"></u--input>
 					</u-form-item>
-					<u-form-item label="结束时间" prop="userInfo.name" borderBottom ref="item1" required
+					<u-form-item label="结束时间" prop="userInfo.endTime" borderBottom ref="item1" required
 						@click="endDateShow = !endDateShow;">
-						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择"></u--input>
+						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择结束时间"></u--input>
 					</u-form-item>
-
+					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入详细描述"
+							@change='getWorkplace'></u--input>
+					</u-form-item>
 				</u-form>
 			</view>
 			<view class="footer-tip">平台承诺，严格保障您的隐私安全</view>
@@ -75,7 +78,7 @@
 		<u-datetime-picker :show="dateShow" mode="datetime" @cancel='starts' @confirm="getStartTimes"
 			v-model="value1" :formatter="formatter" ref="startPicker"></u-datetime-picker>
 		<u-datetime-picker :show="endDateShow" mode="datetime" @cancel='ends' @confirm="getEndTimes"
-			:formatter="formatter" ref="endPicker"></u-datetime-picker>
+			v-model="value2" :formatter="formatter" ref="endPicker"></u-datetime-picker>
 
 
 			
@@ -102,6 +105,7 @@
 		data() {
 			return {
 				value1:Number(new Date()),
+				value2:Number(new Date()),
 				dataForm: {
 					principal:'',
 					principalType:'',
@@ -116,7 +120,8 @@
 					endTime: '',
 					workTypeId: '',
 					workLabelId: '',
-					qdQuantity:''
+					qdQuantity:'',
+					employmentDay:''
 
 				},
 				workTypeList: [],
@@ -293,16 +298,16 @@
 					})
 					return;
 				}
-				if(this.dataForm.workPlace == '') {
+				if(this.dataForm.workNum == '') {
 					uni.showToast({
-						title:'请输入详细描述',
+						title:'请输入用工数量',
 						icon:'none'
 					})
 					return;
 				}
-				if(this.dataForm.workNum == '') {
+				if(this.dataForm.qdQuantity == '') {
 					uni.showToast({
-						title:'请输入用工数量',
+						title:'请输入报名人数',
 						icon:'none'
 					})
 					return;
@@ -314,6 +319,13 @@
 					})
 					return;
 				}
+				if(this.dataForm.employmentDay == '') {
+					uni.showToast({
+						title:'请输入用工天数',
+						icon:'none'
+					})
+					return;
+				}
 				if(this.dataForm.startTime == '') {
 					uni.showToast({
 						title:'请选择开始时间',
@@ -321,16 +333,16 @@
 					})
 					return;
 				}
-				if(this.dataForm.workPlace == '') {
+				if(this.dataForm.endTime == '') {
 					uni.showToast({
-						title:'请输入详细描述',
+						title:'请选择结束时间',
 						icon:'none'
 					})
 					return;
 				}
-				if(this.dataForm.endTime == '') {
+				if(this.dataForm.workPlace == '') {
 					uni.showToast({
-						title:'请选择结束时间',
+						title:'请输入详细描述',
 						icon:'none'
 					})
 					return;
@@ -349,7 +361,8 @@
 					orderEnd: this.dataForm.endTime,
 					description: this.dataForm.workPlace,
 					principal:this.principal,
-					principalType:this.principalType
+					principalType:this.principalType,
+					employmentDay: this.dataForm.employmentDay
 				}).then(res => {
 					if (res.code == "00000") {
 						let ids = res.data;

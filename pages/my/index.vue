@@ -141,7 +141,7 @@
 				if(item.title==='咨询客服'){
 					this.show=true
 				}else{
-					$toRoute(item.route)
+					this.$toRoute(item.route)
 				}
 			},
 			closeCard(){
