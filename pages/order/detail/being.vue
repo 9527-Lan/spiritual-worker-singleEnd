@@ -16,23 +16,25 @@
 					<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-y" @scrolltoupper="upper"
 						@scrolltolower="lower" @scroll="scroll">
 						<view class="employee-list">
-							<u-collapse @change="change" @open="open" accordion :border="false">
-								<u-collapse-item v-for="(item, index) in employees" :icon="item.headSculptureUrl"
-									:title="item.engineerName" :key="index">
+							<u-collapse @change="change" ref="collapse" clickable @open="open" accordion
+								:border="false">
+								<u-collapse-item v-for="(item, index) in employees" :name="index"
+									:icon="item.headSculptureUrl" :title="item.engineerName" :key="index">
 									<view class="progress">
 										<u-steps :current="progress.current" direction="column" dot>
-											
+
 											<u-steps-item v-for="(pItem, pIndex) in progress.dateList" :key="pIndex">
 												<view slot="desc" class="progress-item flex-center">
 													<view class="progress-item-left">
-														<view v-if="pItem.isRecord" class="record-tag isRecord">已记录</view>
+														<view v-if="pItem.isRecord" class="record-tag isRecord">已记录
+														</view>
 														<view v-else class="record-tag">待记录</view>
 													</view>
 													<view class="progress-item-right">
 														<view class="day">{{ pItem.day }}</view>
 														<view class="remark">{{ pItem.remark }}</view>
-														<u-album v-if="pItem.imgs && pItem.imgs.length > 0" :rowCount="3"
-															:urls="pItem.imgs"></u-album>
+														<u-album v-if="pItem.imgs && pItem.imgs.length > 0"
+															:rowCount="3" :urls="pItem.imgs"></u-album>
 														<view class="time">{{ pItem.time }}</view>
 													</view>
 												</view>
@@ -93,8 +95,7 @@
 				employees: [],
 				progress: {
 					current: 1,
-					dateList: [
-					],
+					dateList: [],
 				},
 				id: "1",
 				OrderId: '1',
@@ -109,13 +110,18 @@
 		async onLoad(option) {
 			let orderItem = JSON.parse(option.orderItem)
 			orderItem.labelName = orderItem?.labelName.split(','),
-			console.log("being",orderItem)
-			if(orderItem) {
+				console.log("being", orderItem)
+			if (orderItem) {
 				this.resData = orderItem
-				console.log("resData",this.resData)
+				console.log("resData", this.resData)
 				await this.getorderItemsList()
 			}
-			
+
+		},
+		onShow() {
+			setTimeout(() => {
+				this.$refs.collapse.init();
+			}, 500); //500往上也可以
 		},
 		methods: {
 			upper(e) {
@@ -129,29 +135,30 @@
 				this.old.scrollTop = e.detail.scrollTop
 			},
 			async getorderItemsList() {
-				let res = await getorderItems({order_id: this.resData.id})
-				if(res.data.length) {
+				let res = await getorderItems({
+					order_id: this.resData.id
+				})
+				if (res.data.length) {
 					let list = res.data
 					this.employees = list
 					console.log("emloyees", this.employees);
 				}
 			},
-			open(e) {
-				console.log(e);
+			open(index) {
+				let item = this.employees[index]
+				this.listOrderItemList(this.resData.id, item.engineerId)
 			},
 			change(e) {
-				console.log(e);
-				let openList = e.filter(el => {return el.status === 'open'})
-				if(openList.length) {
-					let open = openList[0]
-					let index = open.name
-					let item = this.employees[index]
-						this.listOrderItemList(this.resData.id, item.engineerId)
-					this.$nextTick(()=>{
-						
-					})
-					
+				let openList = e.filter(el => el.status === 'open')
+				if (openList.length) {
+					let item = openList[0]
+					let index = item.name
+					setTimeout(() => {
+						this.$refs.collapse.children[index].queryRect()
+					}, 100);
+
 				}
+
 			},
 			async listOrderItemList(orderId, engineerId) {
 				let params = {
@@ -159,21 +166,21 @@
 					engineer_id: engineerId
 				}
 				await listOrderItem(params).then(res => {
-					if(res.data.length) {
+					if (res.data.length) {
 						let dateList = res.data.map((el, index) => {
 							let big = index + 1
 							return {
 								day: '第' + big + '天',
 								time: el.orderDate,
-								remark:el.orderDesc,
-								imgs:el.orderImgUrl
+								remark: el.orderDesc,
+								imgs: el.orderImgUrl
 							}
 						})
-					this.progress.dateList=dateList
-			
-					
-					console.log('BeingList', this.progress.dateList)
-				}
+						this.progress.dateList = dateList
+
+
+						console.log('BeingList', this.progress.dateList)
+					}
 				})
 			}
 		}
@@ -184,8 +191,10 @@
 	page {
 		background-color: #f2f6ff;
 	}
+
 	.pages-order-detail-being {
 		position: relative;
+
 		.header {
 			background-color: #3a84f0;
 			color: #fff;
@@ -195,35 +204,42 @@
 			left: 0;
 			right: 0;
 		}
+
 		.empty-container {
 			height: 380rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 		}
+
 		.flex-center {
 			display: flex;
 			align-items: center;
 		}
+
 		.flex-center-between {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 		}
+
 		.salary {
 			font-size: 32rpx;
 			font-weight: bold;
 			color: #3a84f0;
 		}
+
 		.title {
 			font-size: 32rpx;
 			font-weight: bold;
 			color: #333333;
 		}
+
 		.tag-list {
 			margin-top: 24rpx;
 			display: flex;
 			align-items: center;
+
 			.tag-item {
 				display: flex;
 				align-items: center;
@@ -235,21 +251,26 @@
 				padding: 0 13rpx;
 				background-color: #eaeff4;
 				color: #333333;
+
 				&.jobs {
 					background-color: #e6f0ff !important;
 					color: #3a84f0 !important;
 				}
-				& + .tag-item {
+
+				&+.tag-item {
 					margin-left: 10rpx;
 				}
 			}
 		}
+
 		.scroll-y {
 			height: 624rpx;
 		}
+
 		.employee-item {
 			height: 92rpx;
 		}
+
 		.body-wrapper {
 			position: absolute;
 			top: 32rpx;
@@ -259,6 +280,7 @@
 			box-sizing: border-box;
 			z-index: 1;
 			padding-bottom: 160rpx;
+
 			.body-wrapper-top {
 				display: flex;
 				justify-content: space-between;
@@ -271,14 +293,17 @@
 				font-size: 24rpx;
 				font-weight: 500;
 			}
+
 			.body {
 				padding: 32rpx;
 				box-sizing: border-box;
 				background-color: #fff;
 				border-radius: 0 0 15rpx 15rpx;
+
 				.employee-list {
 					/deep/.u-collapse-item {
 						margin-top: 40rpx;
+
 						.u-cell__body {
 							image {
 								height: 92rpx !important;
@@ -286,6 +311,7 @@
 								border-radius: 50%;
 							}
 						}
+
 						.u-cell__title-text {
 							margin-left: 38rpx;
 							font-size: 32rpx;
@@ -294,13 +320,17 @@
 						}
 					}
 				}
+
 				.progress {
 					margin-top: 50rpx;
+
 					.progress-item {
 						margin-top: 30rpx;
 						min-height: 80rpx;
+
 						.progress-item-left {
 							height: 100%;
+
 							.record-tag {
 								border: 1px solid #999999;
 								color: #999999;
@@ -310,33 +340,40 @@
 								font-weight: 500;
 								line-height: 28rpx;
 								text-align: center;
+
 								&.isRecord {
 									border: 1px solid #3a84f0;
 									color: #3a84f0;
 								}
 							}
 						}
+
 						.progress-item-right {
 							flex: 1;
 							margin-left: 10rpx;
+
 							/deep/.u-album {
 								margin-top: 10rpx;
+
 								image {
 									width: 132rpx !important;
 									height: 114rpx !important;
 								}
 							}
+
 							.remark {
 								margin-top: 29rpx;
 								font-size: 24rpx;
 								font-weight: 500;
 								color: #333333;
 							}
+
 							.day {
 								font-size: 24rpx;
 								font-weight: 500;
 								color: #333333;
 							}
+
 							.time {
 								margin-top: 24rpx;
 								font-size: 20rpx;
@@ -348,6 +385,7 @@
 				}
 			}
 		}
+
 		.footer {
 			position: fixed;
 			z-index: 3;
