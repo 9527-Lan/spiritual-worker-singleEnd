@@ -14,7 +14,7 @@
 							</view>
 						</view>     
 						<view class="information-tag">
-							<view class="tag-item" v-for="(item, index) in detailData.role" >{{ item }}</view>
+							<view class="tag-item" v-for="(item, index) in detailData.role" :key="index">{{ item }}</view>
 							<view class="tag-item" v-if="detailData.experience != null" v-for="(item, index) in detailData.experience" :key="index">{{ item }}</view>
 							<view class="tag-item" v-if="detailData.hasCertificate">持证上岗</view>
 						</view>

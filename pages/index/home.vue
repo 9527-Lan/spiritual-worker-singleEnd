@@ -47,9 +47,12 @@
 			return {
 				bgColor: '#f2f6ff',
 				swiperList: [
-					'https://cdn.uviewui.com/uview/swiper/swiper1.png',
-					'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-					'https://cdn.uviewui.com/uview/swiper/swiper3.png',
+					'/static/shareBg.png',
+					'/static/shareBg.png',
+					'/static/shareBg.png',
+					// 'https://cdn.uviewui.com/uview/swiper/swiper1.png',
+					// 'https://cdn.uviewui.com/uview/swiper/swiper2.png',
+					// 'https://cdn.uviewui.com/uview/swiper/swiper3.png',
 				],
 				tabList: [],
 				// {

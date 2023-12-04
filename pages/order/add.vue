@@ -36,8 +36,13 @@
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工地址" prop="userInfo.name" borderBottom ref="item1" @click="addressPopVisible = !addressPopVisible; " required>
-						<u--input v-model="dataForm.workAddress" border="none" placeholder="请输入用工地址"
-							@change='getWorkAddress'></u--input>
+						<u--input v-model="dataForm.workAddress" border="none" placeholder="请选择用工地址"
+							></u--input>
+						<u-icon slot="right" name="arrow-right"></u-icon>
+					</u-form-item>
+					<u-form-item label="详细地址" prop="userInfo.name" borderBottom ref="item1" @click="addressPopVisible = !addressPopVisible; " required>
+						<u--input v-model="dataForm.addressItem" border="none" placeholder="请选择用工详细地址"
+							></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工数量" prop="userInfo.name" borderBottom ref="item1" required>
@@ -106,19 +111,19 @@
 					<u-button type="primary" shape="square" text="在地图上选择地址 >" plain @click="openMap"></u-button>
 				</view>
 				<u-form :model="addressForm" label-width="100rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
-					<u-form-item label="门牌号" prop="address" :required="true" v-if="addressForm.address">
-						<u-input v-model="addressForm.address" placeholder="请选择地址" border="none">
+					<u-form-item label="地址" prop="address" :required="true" v-if="addressForm.address">
+						<u-input v-model="addressForm.name" placeholder="请选择地址" border="none">
 							<u-icon slot="suffix" label="重新选择" label-color="#3A84F0" label-size="28rpx" @click="openMap"></u-icon>
 						</u-input>
 					</u-form-item>
-					<u-form-item prop="doorNumber" label="门牌号" :required="true">
-						<u-input v-model="addressForm.doorNumber" placeholder="请输入详细地址，例1层101室" border="none"></u-input>
+					<u-form-item prop="doorNumber" label="详细地址" :required="true">
+						<u-input v-model="addressForm.address" placeholder="请输入详细地址，例1层101室" border="none"></u-input>
 					</u-form-item>
 				</u-form>
 				<view class="form-footer">
 					<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx" class="page-footer"></u-icon>
 					<view class="btn-box">
-						<u-button text="确认提交" color="#3A84F0"></u-button>
+						<u-button @click="addressConfirm" text="确认提交" color="#3A84F0"></u-button>
 					</view>
 				</view>
 			</view>
@@ -143,10 +148,7 @@
 		data() {
 			return {
 				addressPopVisible: false,
-				addressForm: {
-					address: '',
-					doorNumber: '',
-				},
+				addressForm: {},
 				value1:Number(new Date()),
 				value2:Number(new Date()),
 				dataForm: {
@@ -312,6 +314,15 @@
 			})
 		},
 		methods: {
+			addressConfirm() {
+				
+				let addressForm = this.addressForm
+				this.dataForm.workAddress = addressForm.name
+				this.dataForm.addressItem = addressForm.address
+				this.dataForm.longitude = addressForm.longitude
+				this.dataForm.latitude = addressForm.latitude
+				this.addressPopVisible = false
+			},
 			onBack() {
 				if(this.dataForm.workTitile == '') {
 					uni.showToast({
@@ -396,7 +407,9 @@
 					typeId: this.dataForm.workTypeId,
 					labelIds: this.dataForm.workLabelId,
 					address: this.dataForm.workAddress,
-					addressItem: this.dataForm.workPlace,
+					addressItem: this.dataForm.addressItem,
+					longitude: this.dataForm.longitude,
+					latitude: this.dataForm.latitude,
 					orderQuantity: this.dataForm.workNum,
 					price: this.dataForm.singleMoney,
 					orderStatr: this.dataForm.startTime,
@@ -457,7 +470,7 @@
 				uni.chooseLocation({
 					success: (res) => {
 						console.log(res)
-						this.addressForm.address = res.address
+						this.addressForm = res
 						// this.getRegionFn(res);
 					},
 					fail: () => {
@@ -597,6 +610,7 @@
 	}
 
 	.pages-order-add {
+		padding-bottom: 173rpx;;
 		.address-form {
 			height: 630rpx;
 			padding: 42rpx 32rpx;
@@ -642,7 +656,7 @@
 			margin: 38rpx 32rpx;
 			border-radius: 15rpx;
 			background-color: #fff;
-			height: calc(100vh - 230rpx);
+			height: auto;
 			position: relative;
 
 			.number-container {
@@ -691,6 +705,7 @@
 			.form {
 				width: 100%;
 				margin-top: 46rpx;
+				margin-bottom: 60rpx;
 			}
 
 			.footer-tip {
