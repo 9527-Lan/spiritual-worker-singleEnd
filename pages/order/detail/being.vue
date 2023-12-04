@@ -18,7 +18,7 @@
 						<view class="employee-list">
 							<u-collapse @change="change" ref="collapse" clickable @open="open" accordion
 								:border="false">
-								<u-collapse-item v-for="(item, index) in employees" :name="index"
+								<u-collapse-item ref="collapseItem" v-for="(item, index) in employees" :name="index"
 									:icon="item.headSculptureUrl" :title="item.engineerName" :key="index">
 									<view class="progress">
 										<u-steps :current="progress.current" direction="column" dot>
@@ -119,9 +119,9 @@
 
 		},
 		onShow() {
-			setTimeout(() => {
-				this.$refs.collapse.init();
-			}, 500); //500往上也可以
+			// setTimeout(() => {
+			// 	this.$refs.collapse.init();
+			// }, 500); //500往上也可以
 		},
 		methods: {
 			upper(e) {
@@ -148,17 +148,13 @@
 				let item = this.employees[index]
 				this.listOrderItemList(this.resData.id, item.engineerId)
 			},
-			change(e) {
-				let openList = e.filter(el => el.status === 'open')
-				if (openList.length) {
-					let item = openList[0]
-					let index = item.name
-					setTimeout(() => {
-						this.$refs.collapse.children[index].queryRect()
-					}, 100);
-
-				}
-
+			change(v) {
+				const index = v.findIndex(el => el.status === 'open');
+				if (index === -1) return;
+			
+				setTimeout(() => {
+					this.$refs.collapseItem[index].setContentAnimate();
+				}, 500);
 			},
 			async listOrderItemList(orderId, engineerId) {
 				let params = {
@@ -177,7 +173,6 @@
 							}
 						})
 						this.progress.dateList = dateList
-
 
 						console.log('BeingList', this.progress.dateList)
 					}
@@ -264,7 +259,7 @@
 		}
 
 		.scroll-y {
-			height: 624rpx;
+			min-height: 624rpx;
 		}
 
 		.employee-item {
@@ -303,6 +298,10 @@
 				.employee-list {
 					/deep/.u-collapse-item {
 						margin-top: 40rpx;
+
+						// .u-collapse-item__content {
+						// 	height: auto !important;
+						// }
 
 						.u-cell__body {
 							image {
