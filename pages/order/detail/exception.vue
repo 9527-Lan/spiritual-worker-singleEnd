@@ -15,7 +15,7 @@
 						@scrolltolower="lower" @scroll="scroll">
 						<view class="employee-list">
 							<u-collapse @change="change" @open="open" accordion :border="false">
-								<u-collapse-item ref="collapseItem" v-for="(item, index) :name="index" in employees"
+								<u-collapse-item ref="collapseItem" :name="index" v-for="(item, index) in employees"
 									:icon="item.headSculptureUrl" :title="item.engineerName" :key="index">
 									<view class="progress">
 										<u-steps :current="progress.current" direction="column" dot>
@@ -178,7 +178,8 @@
 								day: '第' + big + '天',
 								time: el.orderDate,
 								remark: el.orderDesc,
-								imgs: el.orderImgUrl
+								imgs: el.orderImgUrl,
+								isRecord: el.orderImgUrl.length
 							}
 						})
 						this.progress.dateList = dateList

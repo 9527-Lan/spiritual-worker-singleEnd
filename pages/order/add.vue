@@ -78,7 +78,7 @@
 					</u-form-item>
 				</u-form>
 			</view>
-<!-- 			<view class="footer-tip">平台承诺，严格保障您的隐私安全</view> -->
+			<view class="footer-tip">平台承诺，严格保障您的隐私安全</view>
 		</view>
 		<qianziyu-select :show="showLabel" type="checkbox" name="label" :showSearch="false"
 					:dataLists="labelList" popupTitle="请选择服务类型" @cancel="showLabel=false" @submit="labelSelect" />
@@ -610,6 +610,7 @@
 	}
 
 	.pages-order-add {
+		padding-bottom: 173rpx;;
 		.address-form {
 			height: 630rpx;
 			padding: 42rpx 32rpx;
@@ -655,7 +656,7 @@
 			margin: 38rpx 32rpx;
 			border-radius: 15rpx;
 			background-color: #fff;
-			height: calc(100vh - 230rpx);
+			height: auto;
 			position: relative;
 
 			.number-container {
@@ -704,6 +705,7 @@
 			.form {
 				width: 100%;
 				margin-top: 46rpx;
+				margin-bottom: 60rpx;
 			}
 
 			.footer-tip {
