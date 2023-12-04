@@ -14,23 +14,24 @@
 					<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-y" @scrolltoupper="upper"
 						@scrolltolower="lower" @scroll="scroll">
 						<view class="employee-list">
-							<u-collapse @change="change" accordion :border="false">
-								<u-collapse-item v-for="(item, index) in employees" :icon="item.headSculptureUrl"
-									:title="item.engineerName" :key="index">
+							<u-collapse @change="change" @open="open" accordion :border="false">
+								<u-collapse-item ref="collapseItem" v-for="(item, index) :name="index" in employees"
+									:icon="item.headSculptureUrl" :title="item.engineerName" :key="index">
 									<view class="progress">
 										<u-steps :current="progress.current" direction="column" dot>
-											
+
 											<u-steps-item v-for="(pItem, pIndex) in progress.dateList" :key="pIndex">
 												<view slot="desc" class="progress-item flex-center">
 													<view class="progress-item-left">
-														<view v-if="pItem.isRecord" class="record-tag isRecord">已记录</view>
+														<view v-if="pItem.isRecord" class="record-tag isRecord">已记录
+														</view>
 														<view v-else class="record-tag">待记录</view>
 													</view>
 													<view class="progress-item-right">
 														<view class="day">{{ pItem.day }}</view>
 														<view class="remark">{{ pItem.remark }}</view>
-														<u-album v-if="pItem.imgs && pItem.imgs.length > 0" :rowCount="3"
-															:urls="pItem.imgs"></u-album>
+														<u-album v-if="pItem.imgs && pItem.imgs.length > 0"
+															:rowCount="3" :urls="pItem.imgs"></u-album>
 														<view class="time">{{ pItem.time }}</view>
 													</view>
 												</view>
@@ -73,7 +74,8 @@
 			<orderDescription :compData="compData"></orderDescription>
 		</view>
 		<view class="footer">
-			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"></u-icon>
+			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
+				size="36rpx"></u-icon>
 		</view>
 	</view>
 </template>
@@ -81,7 +83,10 @@
 <script>
 	import orderInfo from './components/order-info.vue'
 	import orderDescription from './components/order-description.vue'
-	import { getorderItems,listOrderItem} from '@/api/user.js'
+	import {
+		getorderItems,
+		listOrderItem
+	} from '@/api/user.js'
 
 	export default {
 		components: {
@@ -90,13 +95,12 @@
 		},
 		data() {
 			return {
-				id:'',
+				id: '',
 				scrollTop: 0,
 				old: {
 					scrollTop: 0
 				},
-				employees: [
-					{
+				employees: [{
 						name: '张三三',
 						state: '',
 						img: 'https://cdn.uviewui.com/uview/album/1.jpg',
@@ -125,64 +129,71 @@
 					},
 				],
 				progress: {
-						current: 3,
-						dateList: [
-							
-						],
-					},
-				compData: {
-					
+					current: 3,
+					dateList: [
+
+					],
 				},
-				
+				compData: {
+
+				},
+
 
 			}
 		},
-		methods:{
-			getdetail(params){
-				getorderItems(params).then((res)=>{
-					this.employees=res.data
+		methods: {
+			getdetail(params) {
+				getorderItems(params).then((res) => {
+					this.employees = res.data
 				})
 			},
 			scroll(e) {
 				console.log(e)
 				this.old.scrollTop = e.detail.scrollTop
 			},
-			change(e) {
-			let openList = e.filter(el => { return el.status === 'open' })
-			if (openList.length) {
-				let open = openList[0]
-				let index = open.name
+			open(index) {
+				console.log("index", index);
 				let item = this.employees[index]
 				this.listOrderItemList(this.id, item.engineerId)
-			}
-		},
-		listOrderItemList(orderId, engineerId) {
-			let params = {
-				order_id: orderId,
-				engineer_id: engineerId
-			}
-			listOrderItem(params).then(res => {
-				if (res.data.length) {
-					let dateList = res.data.map((el, index) => {
-						let big = index + 1
-						return {
-							day: '第' + big + '天',
-							time: el.orderDate,
-							remark: el.orderDesc,
-							imgs: el.orderImgUrl
-						}
-					})
-					this.progress.dateList = dateList
+			},
+			// 获取u-collapse数据
+			change(v) {
+				const index = v.findIndex(el => el.status === 'open');
+				if (index === -1) return;
+
+				setTimeout(() => {
+					this.$refs.collapseItem[index].setContentAnimate();
+				}, 500);
+			},
+			listOrderItemList(orderId, engineerId) {
+				let params = {
+					order_id: orderId,
+					engineer_id: engineerId
 				}
+				listOrderItem(params).then(res => {
+					if (res.data.length) {
+						let dateList = res.data.map((el, index) => {
+							let big = index + 1
+							return {
+								day: '第' + big + '天',
+								time: el.orderDate,
+								remark: el.orderDesc,
+								imgs: el.orderImgUrl
+							}
+						})
+						this.progress.dateList = dateList
+					}
+				})
+			},
+		},
+		onLoad(option) {
+			let obj = JSON.parse(option.orderItem)
+			this.id = obj.id
+			obj.labelName = obj.labelName.split(',')
+			this.compData = obj
+			this.getdetail({
+				order_id: this.compData.id
 			})
-		},
-		},
-		onLoad(option){
-			let obj=JSON.parse(option.orderItem)
-			this.id=obj.id
-			obj.labelName=obj.labelName.split(',')
-			this.compData=obj
-			this.getdetail({order_id:this.compData.id})
 		}
 	}
 </script>
@@ -191,8 +202,10 @@
 	page {
 		background-color: #f2f6ff;
 	}
+
 	.pages-order-detail-exception {
 		position: relative;
+
 		.header {
 			background-color: #3a84f0;
 			color: #fff;
@@ -202,22 +215,27 @@
 			left: 0;
 			right: 0;
 		}
+
 		.empty-container {
 			height: 380rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 		}
+
 		.progress {
 			border-top: 1rpx solid #f0f0f0;
 			margin: 0 35rpx;
 			padding: 29rpx 0;
 			box-sizing: border-box;
+
 			.progress-item {
 				min-height: 80rpx;
 				padding-bottom: 30rpx;
+
 				.progress-item-left {
 					height: 100%;
+
 					.record-tag {
 						border-radius: 3rpx;
 						padding: 5rpx 10rpx;
@@ -225,30 +243,36 @@
 						font-weight: 500;
 						line-height: 28rpx;
 						text-align: center;
+
 						&.isRecord {
 							border: 1px solid #3a84f0;
 							color: #3a84f0;
 						}
+
 						&.noRecord {
 							border: 1px solid #f37878;
 							color: #f37878;
 						}
 					}
 				}
+
 				.progress-item-right {
 					flex: 1;
 					height: 100%;
 					margin-left: 10rpx;
 					display: flex;
 					flex-wrap: wrap;
+
 					/deep/.u-album {
 						width: 100%;
 						margin-bottom: 10rpx;
+
 						image {
 							width: 132rpx !important;
 							height: 114rpx !important;
 						}
 					}
+
 					.remark {
 						width: 100%;
 						font-size: 24rpx;
@@ -256,6 +280,7 @@
 						color: #333333;
 						margin-bottom: 10rpx;
 					}
+
 					.day {
 						font-size: 24rpx;
 						font-weight: 500;
@@ -263,6 +288,7 @@
 						margin-right: 10rpx;
 						margin-bottom: 10rpx;
 					}
+
 					.time {
 						font-size: 20rpx;
 						font-weight: 500;
@@ -276,25 +302,30 @@
 			display: flex;
 			align-items: center;
 		}
+
 		.flex-center-between {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 		}
+
 		.salary {
 			font-size: 32rpx;
 			font-weight: bold;
 			color: #3a84f0;
 		}
+
 		.title {
 			font-size: 32rpx;
 			font-weight: bold;
 			color: #333333;
 		}
+
 		.tag-list {
 			margin-top: 24rpx;
 			display: flex;
 			align-items: center;
+
 			.tag-item {
 				display: flex;
 				align-items: center;
@@ -306,18 +337,22 @@
 				padding: 0 13rpx;
 				background-color: #eaeff4;
 				color: #333333;
+
 				&.jobs {
 					background-color: #e6f0ff !important;
 					color: #3a84f0 !important;
 				}
-				& + .tag-item {
+
+				&+.tag-item {
 					margin-left: 10rpx;
 				}
 			}
 		}
+
 		.employee-item {
 			height: 92rpx;
 		}
+
 		.body-wrapper {
 			position: absolute;
 			top: 32rpx;
@@ -327,6 +362,7 @@
 			box-sizing: border-box;
 			z-index: 1;
 			padding-bottom: 160rpx;
+
 			.body-wrapper-top {
 				display: flex;
 				justify-content: space-between;
@@ -339,117 +375,120 @@
 				font-size: 24rpx;
 				font-weight: 500;
 			}
+
 			.body {
 				padding: 32rpx;
 				box-sizing: border-box;
 				background-color: #fff;
 				border-radius: 0 0 15rpx 15rpx;
+
 				.employee-list {
-				.employee-item-footer {
-					height: 82rpx;
-					line-height: 82rpx;
-					padding: 0 29rpx;
-					background-color: #f9f9f9;
+					.employee-item-footer {
+						height: 82rpx;
+						line-height: 82rpx;
+						padding: 0 29rpx;
+						background-color: #f9f9f9;
 
-					.single-complete {
-						font-size: 24rpx;
-						font-weight: bold;
-						color: #999999;
-					}
-
-					.edit-btn {
-						height: 55rpx;
-
-						/deep/.u-button {
-							height: 100%;
-						}
-					}
-				}
-
-				/deep/.u-collapse-item {
-					margin-top: 40rpx;
-
-					.u-cell__body {
-						image {
-							height: 92rpx !important;
-							width: 92rpx !important;
-							border-radius: 50%;
-						}
-					}
-
-					.u-cell__title-text {
-						margin-left: 38rpx;
-						font-size: 32rpx;
-						font-weight: bold;
-						color: #333333;
-					}
-				}
-			}
-
-			.progress {
-				margin-top: 50rpx;
-
-				.progress-item {
-					margin-top: 30rpx;
-					min-height: 80rpx;
-
-					.progress-item-left {
-						height: 100%;
-
-						.record-tag {
-							border: 1px solid #999999;
+						.single-complete {
+							font-size: 24rpx;
+							font-weight: bold;
 							color: #999999;
-							border-radius: 3rpx;
-							padding: 5rpx 10rpx;
-							font-size: 20rpx;
-							font-weight: 500;
-							line-height: 28rpx;
-							text-align: center;
+						}
 
-							&.isRecord {
-								border: 1px solid #3a84f0;
-								color: #3a84f0;
+						.edit-btn {
+							height: 55rpx;
+
+							/deep/.u-button {
+								height: 100%;
 							}
 						}
 					}
 
-					.progress-item-right {
-						flex: 1;
-						margin-left: 10rpx;
+					/deep/.u-collapse-item {
+						margin-top: 40rpx;
 
-						/deep/.u-album {
-							margin-top: 10rpx;
-
+						.u-cell__body {
 							image {
-								width: 132rpx !important;
-								height: 114rpx !important;
+								height: 92rpx !important;
+								width: 92rpx !important;
+								border-radius: 50%;
 							}
 						}
 
-						.remark {
-							margin-top: 29rpx;
-							font-size: 24rpx;
-							font-weight: 500;
+						.u-cell__title-text {
+							margin-left: 38rpx;
+							font-size: 32rpx;
+							font-weight: bold;
 							color: #333333;
-						}
-
-						.day {
-							font-size: 24rpx;
-							font-weight: 500;
-							color: #333333;
-						}
-
-						.time {
-							margin-top: 24rpx;
-							font-size: 20rpx;
-							font-weight: 500;
-							color: #666666;
 						}
 					}
 				}
-			}
+
+				.progress {
+					margin-top: 50rpx;
+
+					.progress-item {
+						margin-top: 30rpx;
+						min-height: 80rpx;
+
+						.progress-item-left {
+							height: 100%;
+
+							.record-tag {
+								border: 1px solid #999999;
+								color: #999999;
+								border-radius: 3rpx;
+								padding: 5rpx 10rpx;
+								font-size: 20rpx;
+								font-weight: 500;
+								line-height: 28rpx;
+								text-align: center;
+
+								&.isRecord {
+									border: 1px solid #3a84f0;
+									color: #3a84f0;
+								}
+							}
+						}
+
+						.progress-item-right {
+							flex: 1;
+							margin-left: 10rpx;
+
+							/deep/.u-album {
+								margin-top: 10rpx;
+
+								image {
+									width: 132rpx !important;
+									height: 114rpx !important;
+								}
+							}
+
+							.remark {
+								margin-top: 29rpx;
+								font-size: 24rpx;
+								font-weight: 500;
+								color: #333333;
+							}
+
+							.day {
+								font-size: 24rpx;
+								font-weight: 500;
+								color: #333333;
+							}
+
+							.time {
+								margin-top: 24rpx;
+								font-size: 20rpx;
+								font-weight: 500;
+								color: #666666;
+							}
+						}
+					}
+				}
 			}
 		}
+
 		.footer {
 			position: fixed;
 			z-index: 3;

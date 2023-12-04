@@ -3,6 +3,15 @@
 		<view class="body">
 
 			<view class="title">完善下单信息</view>
+			<view class="authenticate">
+				<view class="authenticate-left">
+					<u-icon name="/static/authenticate.png" size="34rpx"></u-icon>
+					<view class="label">您还未进行企业认证</view>
+				</view>
+				<view class="authenticate-right">
+					<u-button color="#3A84F0" :customStyle="{ height: '55rpx' }" @tap="$toRoute('/pages/my/enterpriseCertification')">去认证</u-button>
+				</view>
+			</view>
 			<view class="form">
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }"
 					:model="form">
@@ -26,9 +35,10 @@
 							border="none"></u--textarea> -->
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item label="用工地址" prop="userInfo.name" borderBottom ref="item1" required>
+					<u-form-item label="用工地址" prop="userInfo.name" borderBottom ref="item1" @click="addressPopVisible = !addressPopVisible; " required>
 						<u--input v-model="dataForm.workAddress" border="none" placeholder="请输入用工地址"
 							@change='getWorkAddress'></u--input>
+						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工数量" prop="userInfo.name" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入用工数量"
@@ -85,6 +95,34 @@
 		<view class="footer">
 			<u-button text="保存" color="#3A84F0" @click="onBack"></u-button>
 		</view>
+		
+		<u-popup :show="addressPopVisible" round="30rpx" mode="bottom">
+			<view class="address-form">
+				<view class="flex-center-between">
+					<view class="title">选择地址</view>
+					<u-icon name="close-circle-fill" size="40rpx" color="#CCCCCC" @click="addressPopVisible = false"></u-icon>
+				</view>
+				<view class="address-btn" v-if="!addressForm.address">
+					<u-button type="primary" shape="square" text="在地图上选择地址 >" plain @click="openMap"></u-button>
+				</view>
+				<u-form :model="addressForm" label-width="100rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
+					<u-form-item label="门牌号" prop="address" :required="true" v-if="addressForm.address">
+						<u-input v-model="addressForm.address" placeholder="请选择地址" border="none">
+							<u-icon slot="suffix" label="重新选择" label-color="#3A84F0" label-size="28rpx" @click="openMap"></u-icon>
+						</u-input>
+					</u-form-item>
+					<u-form-item prop="doorNumber" label="门牌号" :required="true">
+						<u-input v-model="addressForm.doorNumber" placeholder="请输入详细地址，例1层101室" border="none"></u-input>
+					</u-form-item>
+				</u-form>
+				<view class="form-footer">
+					<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx" class="page-footer"></u-icon>
+					<view class="btn-box">
+						<u-button text="确认提交" color="#3A84F0"></u-button>
+					</view>
+				</view>
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -104,6 +142,11 @@
 		},
 		data() {
 			return {
+				addressPopVisible: false,
+				addressForm: {
+					address: '',
+					doorNumber: '',
+				},
 				value1:Number(new Date()),
 				value2:Number(new Date()),
 				dataForm: {
@@ -407,7 +450,71 @@
 				})
 			},
 			
-
+			openMap() {
+				this.getMapLocation()
+			},
+			getMapLocation() {
+				uni.chooseLocation({
+					success: (res) => {
+						console.log(res)
+						this.addressForm.address = res.address
+						// this.getRegionFn(res);
+					},
+					fail: () => {
+						// 如果用uni.chooseLocation没有获取到地理位置，则需要获取当前的授权信息，判断是否有地理授权信息
+						uni.getSetting({
+							success: (res) => {
+								console.log(res)
+								var status = res.authSetting
+								if (!status['scope.userLocation']) {
+									// 如果授权信息中没有地理位置的授权，则需要弹窗提示用户需要授权地理信息
+									uni.showModal({
+										title: '是否授权当前位置',
+										content: '需要获取您的地理位置，请确认授权，否则地图功能将无法使用',
+										success: (tip) => {
+											if (tip.confirm) {
+												// 如果用户同意授权地理信息，则打开授权设置页面，判断用户的操作
+												uni.openSetting({
+													success: (data) => {
+														// 如果用户授权了地理信息在，则提示授权成功
+														if (data.authSetting['scope.userLocation'] === true) {
+															uni.showToast({
+																title: '授权成功',
+																icon: 'success',
+																duration: 1000,
+															})
+															// 授权成功后，然后再次chooseLocation获取信息
+															uni.chooseLocation({
+																success: (res) => {
+																	console.log('详细地址', res)
+																	// this.getRegionFn(res);
+																},
+															})
+														} else {
+															uni.showToast({
+																title: '授权失败',
+																icon: 'none',
+																duration: 1000,
+															})
+														}
+													},
+												})
+											}
+										},
+									})
+								}
+							},
+							fail: (res) => {
+								uni.showToast({
+									title: '调用授权窗口失败',
+									icon: 'none',
+									duration: 1000,
+								})
+							},
+						})
+					},
+				})
+			},
 
 
 			labelSelect(e) {
@@ -490,6 +597,45 @@
 	}
 
 	.pages-order-add {
+		.address-form {
+			height: 630rpx;
+			padding: 42rpx 32rpx;
+			box-sizing: border-box;
+			position: relative;
+			.flex-center-between {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			/deep/.u-form-item {
+				margin-top: 50rpx;
+			}
+			.address-btn {
+				margin: 50rpx 0;
+			}
+			.form-footer {
+				position: absolute;
+				border-top: 1rpx solid #c0c0c0;
+				z-index: 3;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				padding: 20rpx 42rpx;
+				padding-bottom: 60rpx;
+				box-sizing: border-box;
+				background-color: #fff;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.btn-box {
+					height: 89rpx;
+					width: 521rpx;
+					.u-button {
+						height: 100%;
+					}
+				}
+			}
+		}
 		.body {
 			padding: 53rpx 36rpx 45rpx 36rpx;
 			box-sizing: border-box;
@@ -505,6 +651,33 @@
 
 				/deep/.u-number-box {
 					width: 100% !important;
+				}
+			}
+			
+			.authenticate {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border-radius: 15rpx;
+				box-sizing: border-box;
+				background-color: #fef8f8;
+				padding: 28rpx 25rpx;
+				& + .authenticate {
+					margin-top: 24rpx;
+				}
+				.authenticate-left {
+					display: flex;
+					align-items: center;
+					font-size: 28rpx;
+					.label {
+						margin-left: 24rpx;
+						font-size: 28rpx;
+						font-weight: bold;
+						color: #f37878;
+					}
+				}
+				.authenticate-right {
+					height: 55rpx;
 				}
 			}
 

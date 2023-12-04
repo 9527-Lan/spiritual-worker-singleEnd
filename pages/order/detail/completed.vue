@@ -24,9 +24,9 @@
 				<template v-if="employees.length > 0">
 					<view class="flex-center-between title">结算列表</view>
 					<view class="employee-list">
-						<u-collapse :border="false" accordion @change="change">
+						<u-collapse :border="false" accordion @change="change" @open="open">
 							<view class="employee-item" v-for="(item, index) in employees" :key="index">
-								<u-collapse-item :icon="item.headSculptureUrl" :title="item.engineerRealname">
+								<u-collapse-item ref="collapseItem" :name="index" :icon="item.headSculptureUrl" :title="item.engineerRealname">
 									<view class="progress">
 										<u-steps :current="progress.current" direction="column" dot>
 											<u-steps-item v-for="(pItem, pIndex) in progress.dateList"
@@ -150,16 +150,19 @@ export default {
 				this.employees = res.data.casualOrderPaymentRecordItems
 			})
 		},
+		open(index) {
+			console.log("index", index);
+			let item = this.employees[index]
+			this.listOrderItemList(this.id, item.engineerId)
+		},
 		// 获取u-collapse数据
-		change(e) {
-			console.log(e, 'eeeeeeeeeeeee');
-			let openList = e.filter(el => { return el.status === 'open' })
-			if (openList.length) {
-				let open = openList[0]
-				let index = open.name
-				let item = this.employees[index]
-				this.listOrderItemList(this.id, item.engineerId)
-			}
+		change(v) {
+			const index = v.findIndex(el => el.status === 'open');
+			if (index === -1) return;
+		
+			setTimeout(() => {
+				this.$refs.collapseItem[index].setContentAnimate();
+			}, 500);
 		},
 		listOrderItemList(orderId, engineerId) {
 			let params = {
