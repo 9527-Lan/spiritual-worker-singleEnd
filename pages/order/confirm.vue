@@ -89,6 +89,13 @@
 						border: 'none'
 					},
 					{
+						field: '12',
+						label: '详细地址',
+						required: false,
+						value: '',
+						border: 'none'
+					},
+					{
 						field: '5',
 						label: '详细描述',
 						fieldType: 'textarea',
@@ -145,7 +152,6 @@
 			}
 		},
 		onLoad(options) {
-			
 			this.datas = JSON.parse(options.datas)
 			console.log(options.orderId,'1111111');
 			this.orderId = options.orderId;
@@ -160,6 +166,7 @@
 			this.dataForm['9'] = this.datas.startTime + '-' + this.datas.endTime;
 			this.dataForm['10'] = (this.datas.singleMoney * this.datas.workNum * this.datas.employmentDay).toFixed(2);
 			this.dataForm['11']=this.datas.qdQuantity
+			this.dataForm['12'] = this.datas.addressItem
 
 		},
 		methods: {
@@ -239,8 +246,8 @@
 			margin: 38rpx 32rpx;
 			border-radius: 15rpx;
 			background-color: #fff;
-			position: relative;
-
+			// position: relative;
+			height: 1980rpx !important;
 			.title {
 				margin-bottom: 50rpx;
 			}
@@ -305,13 +312,15 @@
 			.form {
 				width: 100%;
 				margin-top: 46rpx;
+				margin-bottom: 60rpx;
+				height: auto;
 			}
 
 			.footer-tip {
-				position: absolute;
-				left: 0;
-				right: 0;
-				bottom: 43rpx;
+				// position: absolute;
+				// left: 0;
+				// right: 0;
+				// bottom: 43rpx;
 				text-align: center;
 				font-size: 24rpx;
 				font-weight: 500;
