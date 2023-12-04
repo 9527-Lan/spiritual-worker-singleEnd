@@ -198,3 +198,11 @@ export function settlementSubmission (id){
 		params:{order_id:id},
 	})
 }
+// 已结算订单查询人员详情
+export function reviewNodes (id){
+	return request({
+		url: '/reviewNodes',
+		method: 'get',
+		params:{orderId:id},
+	})
+}

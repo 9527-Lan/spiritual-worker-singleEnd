@@ -36,18 +36,20 @@
 							img: item.cardImgPositive,
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
-							role: item.typeName,
-							experience: item.labelName,
+							role: item.typeName?.split(','),
+							experience: item.labelName?.split(','),
 							times: item.employmentNumber,
 							id:item.id,
-							hasCertificate:true
+							hasCertificate:true,
+							hasCertificate: item.casualEngineerCertificate.length,
+							casualEngineerCertificate: item.casualEngineerCertificate
 						}			
 					})
 				})
 			},
-			pageTo(e) {
+			pageTo(item) {
 				uni.navigateTo({
-					url:'/pages/index/personalDetails/check?id=' + e.id,
+					url:'/pages/index/personalDetails/check?data=' + encodeURIComponent(JSON.stringify(item))
 				})
 			},
 			getValue(e) {

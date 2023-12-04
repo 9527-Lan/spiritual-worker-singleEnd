@@ -97,7 +97,7 @@ export default {
 			},
 			orderStatistics: [
 				{ field: 'summary', title: '订单总额（元）', color: '#333333' },
-				{ field: 'complete', title: '待结算（元）', color: '#333333' },
+				{ field: 'complete', title: '已结算（元）', color: '#333333' },
 				{ field: 'Remain', title: '结余（元）', color: '#3A84F0' },
 			],
 			orderStatisticsf: {

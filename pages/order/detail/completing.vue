@@ -22,8 +22,9 @@
 					<view class="flex-center-between title">结算列表</view>
 					<view class="employee-list">
 						<u-collapse @change="change" @open="open" accordion :border="false">
-							<view class="employee-item"  v-for="(item, index) in compData.employees" :key="index">
-								<u-collapse-item ref="collapseItem" :name="index" :icon="item.headSculptureUrl" :title="item.engineerRealname">
+							<view class="employee-item" v-for="(item, index) in compData.employees" :key="index">
+								<u-collapse-item ref="collapseItem" :name="index" :icon="item.headSculptureUrl"
+									:title="item.engineerRealname">
 									<view class="progress">
 										<u-steps :current="compData.progress.current" direction="column" dot>
 											<u-steps-item v-for="(pItem, pIndex) in compData.progress.dateList"
@@ -69,7 +70,9 @@
 				size="36rpx"></u-icon>
 			<view class="flex-center btn-box">
 				<!-- <u-button text="划入异常" type="primary" plain></u-button> -->
-				<u-button text="全部结算" color="#3A84F0" @click="submitbtn"></u-button>
+				<u-button text="全部结算" color="#3A84F0" v-if="compData.orderStatistics.isSubmit === '0'"
+					@click="submitbtn"></u-button>
+				<u-button text="查看进度" color="#3A84F0" v-else @click="look"></u-button>
 			</view>
 		</view>
 		<u-popup :show="editPopVisible" round="30rpx" mode="bottom">
@@ -106,13 +109,37 @@
 				</view>
 			</view>
 		</u-popup>
+
+		<u-modal :show="cardShow" :showConfirmButton="false" cancelText="关闭" width="622rpx" style="padding-top: 0;">
+			<view style="min-height: 750rpx; position: relative;">
+				<view style="text-align: center;
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: bold;">审核进度</view>
+				<u-steps :current="looklist.length" direction="column" dot>
+					<u-steps-item v-for="(item, index) in looklist">
+						<view slot="desc" class="progress-item flex-center">
+
+							<view class="progress-item-right">
+								<view class="day">{{ item.nodeName }}</view>
+								<view class="day">{{ item.createTime }}</view>
+								<view class="time">{{ item.userName }}</view>
+
+							</view>
+						</view>
+					</u-steps-item>
+				</u-steps>
+				
+			</view>
+			<u-button  text="关闭" style="position: absolute; bottom: 10px; font-size: 32rpx;font-family: PingFang SC;font-weight: 500;color: #3A84F0;" @click="cardShow = !cardShow"></u-button>
+		</u-modal>
 	</view>
 </template>
 
 <script>
 import orderInfo from './components/order-info.vue'
 import orderDescription from './components/order-description.vue'
-import { listOrderSetbtn, submit,examine } from '@/api/sub.js'
+import { listOrderSetbtn, submit, examine, reviewNodes } from '@/api/sub.js'
 import {
 
 	listOrderItem
@@ -126,6 +153,8 @@ export default {
 		return {
 			editPopVisible: false,
 			id: '',
+			looklist: [],
+			cardShow: false,
 			editForm: {
 				name: '',
 				img: '',
@@ -202,6 +231,7 @@ export default {
 					summary: res.data.orderMoney,
 					complete: res.data.settlementMoney,
 					Remain: Math.abs(res.data.orderMoney - res.data.settlementMoney),
+					isSubmit: res.data.isSubmit
 				}
 				this.compData.employees = res.data.casualOrderSettlementItemVoList
 			})
@@ -217,7 +247,7 @@ export default {
 			})
 			this.compData.orderStatistics.complete = sum
 			this.compData.orderStatistics.Remain = this.compData.orderStatistics.summary - this.compData.orderStatistics.complete
-			this.editForm.realComplete=''
+			this.editForm.realComplete = ''
 
 
 		},
@@ -230,7 +260,7 @@ export default {
 		change(v) {
 			const index = v.findIndex(el => el.status === 'open');
 			if (index === -1) return;
-		
+
 			setTimeout(() => {
 				this.$refs.collapseItem[index].setContentAnimate();
 			}, 500);
@@ -256,30 +286,39 @@ export default {
 			})
 		},
 		submitbtn() {
-			let obj={
-				casualOrderPaymentRecordItems:this.compData.employees,
-				cashSurplusMoney:this.compData.orderStatistics.Remain,
-				orderMoney:this.compData.orderStatistics.summary,
-				settlementMoney:this.compData.orderStatistics.complete,
-				id:Number(this.id)
+			let obj = {
+				casualOrderPaymentRecordItems: this.compData.employees,
+				cashSurplusMoney: this.compData.orderStatistics.Remain,
+				orderMoney: this.compData.orderStatistics.summary,
+				settlementMoney: this.compData.orderStatistics.complete,
+				id: Number(this.id)
 			}
 			submit(obj).then((res) => {
-				if(res.code==='00000'){
+				if (res.code === '00000') {
 					examine({
-						businessId:Number(this.id),
-						businessType:'1'
-					}).then((res)=>{
+						businessId: Number(this.id),
+						businessType: '1'
+					}).then((res) => {
 						if (res.code === '00000') {
-					uni.showToast({
-						title: res.data,
-						icon: 'success',
-						duration: 2000,
-					
-					})
-				}
+							uni.showToast({
+								title: res.data,
+								duration: 2000,
+
+							})
+							this.getdetail(this.id)
+						}
 					})
 				}
 			})
+		},
+
+		look() {
+			reviewNodes(
+				Number(this.id)
+			).then((res) => {
+				this.looklist = res.data
+			})
+			this.cardShow = true
 		}
 
 	},
@@ -591,4 +630,66 @@ page {
 		}
 	}
 }
-</style>
+
+.progress {
+	margin-top: 50rpx;
+
+	.progress-item {
+		margin-top: 30rpx;
+		min-height: 80rpx;
+
+		.progress-item-left {
+			height: 100%;
+
+			.record-tag {
+				border: 1px solid #999999;
+				color: #999999;
+				border-radius: 3rpx;
+				padding: 5rpx 10rpx;
+				font-size: 20rpx;
+				font-weight: 500;
+				line-height: 28rpx;
+				text-align: center;
+
+				&.isRecord {
+					border: 1px solid #3a84f0;
+					color: #3a84f0;
+				}
+			}
+		}
+
+		.progress-item-right {
+			flex: 1;
+			margin-left: 10rpx;
+
+			/deep/.u-album {
+				margin-top: 10rpx;
+
+				image {
+					width: 132rpx !important;
+					height: 114rpx !important;
+				}
+			}
+
+			.remark {
+				margin-top: 29rpx;
+				font-size: 24rpx;
+				font-weight: 500;
+				color: #333333;
+			}
+
+			.day {
+				font-size: 24rpx;
+				font-weight: 500;
+				color: #333333;
+			}
+
+			.time {
+				margin-top: 24rpx;
+				font-size: 20rpx;
+				font-weight: 500;
+				color: #666666;
+			}
+		}
+	}
+}</style>
