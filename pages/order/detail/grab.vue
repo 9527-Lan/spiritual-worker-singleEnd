@@ -22,8 +22,9 @@
 								<u-avatar :src="item.headSculptureUrl" size="92rpx"></u-avatar>
 								<view class="name">{{ item.engineerRealname }}</view>
 							</view>
-							<view v-if="item.status === 3" class="grab-failed">抢单失败</view>
-							<view v-if="item.status === 2" class="grab-success">抢单成功</view>
+							<view v-if="item.status === 2" class="flex-center review-btn">
+								<u-button text="取消抢单" @click="desc(item)" color="#3A84F0"></u-button>
+							</view>
 							<view v-else-if="item.status === 1" class="flex-center review-btn">
 								<u-button text="抢单成功" @click="success(item)" color="#3A84F0"></u-button>
 							</view>
@@ -43,11 +44,11 @@
 			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
 				size="36rpx"></u-icon>
 			<view class="flex-center btn-box">
-				<u-button text="撤销订单" type="primary" plain @click="onCancelOrder"></u-button>
+				<u-button text="取消订单" type="primary" plain @click="onCancelOrder"></u-button>
 				<u-button text="转发微信" color="#3A84F0" @click="shareToWx"></u-button>
 			</view>
 		</view>
-		<u-modal :show="cancelModalVisible" title="是否撤销此订单" :showConfirmButton="false">
+		<u-modal :show="cancelModalVisible" title="是否取消此订单" :showConfirmButton="false">
 			<view class="cancel-modal-btns">
 				<u-button text="取消" type="info" plain style="height: 100%" @click="cancelOdrer"></u-button>
 				<u-button text="确定" type="primary" color="#3A84F0" style="height: 100%" @click="sureOdrder"></u-button>
@@ -66,7 +67,8 @@ import {
 	getcasualOrderList,
 	getcasualOrder,
 	getEngineerdetail,
-	successBtn
+	successBtn,
+	orderItemDesc
 } from '@/api/sub.js'
 import { firmLogin } from '../../../api/user'
 export default {
@@ -251,7 +253,33 @@ export default {
 					})
 				}
 			})
+		},
+		// 取消抢单
+		desc(item){
+			orderItemDesc(
+				{
+					order_id: this.engineer_ids,
+				engineer_id: item.id
+				}
+			).then((res)=>{
+				if (res.code === '00000') {
+					uni.showToast({
+						title: '取消成功',
+						icon: 'success',
+						duration: 2000,
+						success: () => {
+							getcasualOrderList(this.engineer_ids).then((res) => {
+								this.compData.employees = res.data
+							})
+						}
+					})
+				}
+			})
 		}
+
+
+
+
 	},
 }
 </script>

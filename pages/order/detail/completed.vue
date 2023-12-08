@@ -33,7 +33,7 @@
 												:key="pIndex">
 												<view slot="desc" class="progress-item flex-center">
 													<view class="progress-item-left">
-														<view v-if="pItem.isRecord" class="record-tag isRecord">已记录</view>
+														<view v-if="pItem.imgs.length>0" class="record-tag isRecord">已记录</view>
 														<view v-else class="record-tag">待记录</view>
 													</view>
 													<view class="progress-item-right">

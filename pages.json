@@ -59,9 +59,33 @@
 			}
 		},
 		{
+			"path": "pages/my/userList",
+			"style": {
+				"navigationBarTitleText": "账户管理",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/my/adduser",
+			"style": {
+				"navigationBarTitleText": "添加账户",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/my/callMe/callMe",
 			"style": {
 				"navigationBarTitleText": "关于我们",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/my/messageList",
+			"style": {
+				"navigationBarTitleText": "消息",
 				"navigationBarBackgroundColor": "#f2f6ff",
 				"enablePullDownRefresh": false
 			}
@@ -192,6 +216,24 @@
 			"path": "pages/order/confirm",
 			"style": {
 				"navigationBarTitleText": "确认订单",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"disableSwipeBack":true,
+				"navigationBarHidden":true,
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/order/addDetail",
+			"style": {
+				"navigationBarTitleText": "编辑下单",
+				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/order/orderDetail",
+			"style": {
+				"navigationBarTitleText": "编辑",
 				"navigationBarBackgroundColor": "#f2f6ff",
 				"enablePullDownRefresh": false
 			}

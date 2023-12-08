@@ -37,15 +37,31 @@
 			<u-button @click="onLogin" color="#3A84F0" :disabled="logining" :customStyle="{ marginTop: '60rpx' }">登录</u-button>
 			<view class="footer-tip">
 				<!-- <view class="circle"></view> -->
-				<u-checkbox-group v-model="isAgree" @change="checkboxChange">
-					<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
-				</u-checkbox-group>
+				<u-radio-group v-model="agree" @change="checkboxChange">
+				<u-radio size="28rpx"></u-radio>
+			</u-radio-group>
 				我已阅读并理解
 				<text class="link">《服务协议》</text>
 				和
 				<text class="link">《隐私协议》</text>
 			</view>
+			<u-modal :show="cardShow" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
+			
+			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll">
+				<u-loading-icon v-if="!node" text="加载中" textSize="24"></u-loading-icon>
+				<view v-else>
+					<rich-text :nodes="node"></rich-text>
+				<view style="display: flex;">
+					<u-button text="确认"
+						style=" font-size: 32rpx;font-family: PingFang SC;margin-top: 15px; font-weight: 500;color: #3A84F0;"
+						@click="cardbtn"></u-button>
+				</view>
+				</view>
+				
+			</view>
+		</u-modal>
 		</view>
+		
 	</view>
 </template>
 
@@ -53,10 +69,13 @@
 	import {
 		mapMutations
 	} from 'vuex';
+	import {  getAgreement } from "@/api/user.js"
 	export default {
 		data() {
 			return {
 				logining: false,
+				cardShow:false,
+				node:``,
 				isAgree: [{
 					nema : 'argree'
 				}],
@@ -102,11 +121,19 @@
 			radioChange(n) {
 			},
 			checkboxChange() {
-				console.log(this.isAgree)
-				this.agree = !this.agree
+				this.cardShow=!this.cardShow;
+				getAgreement().then((res) => {
+				this.carloading=!this.carloading
+				this.node = res.data
+			})
 			},
+			cardbtn() {
+			this.cardShow = !this.cardShow
+			this.loginStatus=true
+			console.log(this.agree)
+		},
 			onLogin() {
-				if (this.agree) {
+				if (this.loginStatus) {
 					this.$refs.uForm.validate().then(res => {
 						if(this.radiovalue1 === '企业') {
 							this.firmLogin()

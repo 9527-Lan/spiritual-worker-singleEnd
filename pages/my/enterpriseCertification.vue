@@ -3,7 +3,7 @@
 		<view class="body">
 			<view class="title">完善企业信息</view>
 			<view class="form">
-				<u-form label-width="145rpx" :model="dataForm"
+				<u-form label-width="145rpx" :model="dataForm" :rules="rules"
 					:label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
 					<u-form-item label="企业名称" borderBottom required>
 						<u--input border="none" v-model="dataForm.name" placeholder="请输入"
@@ -13,7 +13,7 @@
 						<u--input border="none" v-model="dataForm.delegate" placeholder="请输入"
 							@change='getworkpeople'></u--input>
 					</u-form-item>
-					<u-form-item label="法人身份证件号码" borderBottom required>
+					<u-form-item label="法人身份证件号码" borderBottom required name="idCard">
 						<u--input v-model="dataForm.idCard" type='number' disabledColor="#ffffff" placeholder="请输入"
 							border="none" @change='getnumber'></u--input>
 
@@ -121,6 +121,12 @@ export default {
 					clickEvent: 'uploadLicense',
 				},
 			],
+			rules:{
+				idCard:[
+{min:18,max:18,message:'请输入正确的身份证号码'},
+
+				]
+			}
 		}
 	},
 	methods: {
@@ -130,12 +136,28 @@ export default {
 		// 保存
 		sumbit(){
 			this.dataForm.id=this.$store.state.user.userInfo.id
-			this.dataForm.delegateImgGh=this.$store.state.user.userCard.delegateImgGh
-			this.dataForm.delegateImgRx=this.$store.state.user.userCard.delegateImgRx
-			this.dataForm.licenseImg=this.$store.state.user.userCard.licenseImg
+			// this.dataForm.delegateImgGh=uni.getStorageSync('delegateImgGh')
+			// this.dataForm.delegateImgRx=uni.getStorageSync('delegateImgRx')
+			// this.dataForm.licenseImg=uni.getStorageSync('licenseImg')
 			console.log(this.dataForm,'222222');
 			casuaEdit(this.dataForm).then((res)=>{
-				console.log(res,'2222');
+			
+				if(res.code==='00000'){
+					uni.showToast({
+							title: "上传成功",
+							duration: 2000,
+							success: (res) => {
+								
+								setTimeout(() => {
+									uni.switchTab({
+					url:'/pages/my/index'
+				})
+								}, 2000)
+							},
+						})
+				}else{
+					uni.$u.toast('上传失败')
+				}
 			})
 		},
 
@@ -185,6 +207,20 @@ export default {
 			// this.dataForm.taxNo = res.data.taxNo
 			this.dataForm=res.data
 			this.$store.state.user.userCard.licenseImgUrl=res.data.licenseImgUrl
+
+			console.log(this.dataForm, '939939399');
+
+		})
+	},
+	onShow(){
+		getuser(Number(this.$store.state.user.userInfo.id)).then((res) => {
+			// this.dataForm.name = res.data.name
+			// this.dataForm.delegate = res.data.delegate
+			// this.dataForm.idCard = res.data.idCard
+			// this.dataForm.taxNo = res.data.taxNo
+			this.dataForm=res.data
+			// this.$store.state.user.userCard.licenseImgUrl=res.data.licenseImgUrl
+
 			console.log(this.dataForm, '939939399');
 
 		})

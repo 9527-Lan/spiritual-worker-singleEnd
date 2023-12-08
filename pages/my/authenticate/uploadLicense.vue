@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import {casuaEdit} from "@/api/user.js"
 	export default {
 		data() {
 			return {
@@ -84,13 +85,42 @@
 				})
 			},
 			add(){
-				this.url=this.$store.state.user.userCard.licenseImg=this.frontList[0].id
-				console.log(this.$store.state.user.userCard);
-				uni.navigateBack(1)
+				let status= this.frontList.every((item)=>{
+					return item.status==="success"
+				})
+				let state=this.frontList.length>0
+				if(status&&state) {
+					casuaEdit({
+						licenseImg:this.frontList[0].id,
+						id:Number(this.$store.state.user.userInfo.id)
+					}).then((res)=>{
+						if(res.code==='00000'){
+							uni.showToast({
+							title: "上传成功",
+							duration: 2000,
+							success: (res) => {
+								setTimeout(() => {
+									uni.navigateBack(1)
+								}, 2000)
+							},
+						})
+							
+						}else{
+							uni.$u.toast(res.data)
+						}
+					})
+					// uni.setStorageSync('licenseImg', this.frontList[0].id)
+				}else{
+					 uni.$u.toast('请上传完上传营业执照照片再试')
+				
+				}
+			
+				// this.$store.state.user.userCard.licenseImg=this.frontList[0].id
+				// console.log(this.$store.state.user.userCard);
+			
 			}
 		},
 		mounted(){
-			console.log(this.$store.state.user.userCard.licenseImgUrl,'22222');
 			this.url=this.$store.state.user.userCard.licenseImgUrl
 			this.frontList[0].id=this.$store.state.user.userCard.licenseImg
 			console.log(this.frontList[0]);

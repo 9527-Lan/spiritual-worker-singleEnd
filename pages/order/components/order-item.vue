@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import {getorderItems} from "@/api/sub.js"
 export default {
 	name: 'order-item',
 	props: {
@@ -73,9 +74,42 @@ export default {
 		onCheckDetail() {
 			console.log(this.compData, 'compData');
 			let compData = this.compData
-			uni.navigateTo({
+			if(compData.state==='creatyj'){
+				getorderItems(compData.id).then((res)=>{
+		let obj = {
+							workTitile:res.data.name,  
+							workTypeId:"1",      
+							workType:res.data.typeName,
+							workLabel:res.data.labelName,
+						  	workLabelId:res.data.labelIds,     
+							workAddress:res.data.address,     
+							addressItem:res.data.addressItem, 
+							longitude:res.data.longitude, 	
+							latitude:res.data.latitude, 	
+					 		workNum:res.data.orderQuantity,
+							singleMoney:res.data.price, 		
+							startTime:res.data.orderStatr, 	
+							qdQuantity:res.data.qdQuantity,	
+							endTime:res.data.orderEnd, 	
+							workPlace:res.data.description, 
+							principal:res.data.principal,	
+							principalType:res.data.principalType,
+							employmentDay:res.data.employmentDay,
+
+							 id:res.data.id
+				}
+				uni.navigateTo({
+				url: '/pages/order/orderDetail?data=' + JSON.stringify(obj),
+			})
+				})
+				
+				
+			}else{
+				uni.navigateTo({
 				url: `/pages/order/detail/${compData.state}?orderItem=` + encodeURIComponent(JSON.stringify(compData))
 			})
+			}
+			
 
 
 			// this.$toRoute(`/pages/order/detail/${compData.state}?orderItem=` + encodeURIComponent(JSON.stringify(compData)))

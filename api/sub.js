@@ -206,3 +206,36 @@ export function reviewNodes (id){
 		params:{orderId:id},
 	})
 }
+// 下单端-一键下单修改
+export function edit (data){
+	return request({
+		url: '/web/casualOrder/edit',
+		method: 'post',
+		data,
+	})
+}
+// 取消下单
+export function orderItemDesc (params){
+	return request({
+		url: '/web/casualOrder/orderItemDesc',
+		method: 'get',
+		params:params,
+	})
+}
+
+// 下单人根据id 查询创建的订单
+export function queryOrderbyCjId (params){
+	return request({
+		url: '/queryOrderbyCjId',
+		method: 'get',
+		params:params,
+	})
+}
+// 订单明细查询
+export function getorderItems (id){
+	return request({
+		url: '/web/casualOrder/getById',
+		method: 'get',
+		params:{id:id},
+	})
+}

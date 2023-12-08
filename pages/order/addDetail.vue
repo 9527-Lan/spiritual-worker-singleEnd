@@ -135,7 +135,7 @@
 	import {
 		getWorkType,
 		getType,
-		submitLis
+		submitLis,edit
 	} from '@/api/sub.js'
 	import {
 		mapstate
@@ -315,7 +315,6 @@
 		},
 		methods: {
 			addressConfirm() {
-				
 				let addressForm = this.addressForm
 				this.dataForm.workAddress = addressForm.name
 				this.dataForm.addressItem = addressForm.address
@@ -409,7 +408,7 @@
 					return;
 				}
 				console.log(this.dataForm,'222222');
-				submitLis({
+				edit({
 					name: this.dataForm.workTitile,
 					typeId: this.dataForm.workTypeId,
 					labelIds: this.dataForm.workLabelId,
@@ -425,25 +424,25 @@
 					description: this.dataForm.workPlace,
 					principal:this.principal,
 					principalType:this.principalType,
-					employmentDay: this.dataForm.employmentDay
+					employmentDay: this.dataForm.employmentDay,
+					id:this.dataForm.id
 				}).then(res => {
 					if (res.code == "00000") {
-						let ids = res.data;
 						uni.showToast({
-							title: "确认下单成功",
+							title: "修改成功",
 							duration: 2000,
 							success: (res) => {
-								uni.setStorageSync('order_ids', ids);
 								setTimeout(() => {
 									uni.navigateTo({
-										url: '/pages/order/confirm?datas=' + JSON.stringify(this.dataForm) + '&orderId=' + ids,
+										url: '/pages/order/confirm?datas=' + JSON.stringify(this.dataForm) + '&orderId=' + this.dataForm.id,
 									})
 								}, 2000)
 							},
 						})
 					}else{
 						uni.showToast({
-							title:res.msg,
+							title: "修改失败",
+							duration: 2000,
 							icon:'none'
 						})
 					}
@@ -613,6 +612,11 @@
 				return GMT;
 			},
 		},
+		onLoad(options){
+			let data= JSON.parse(options.data)
+			console.log(data,'data');
+			this.dataForm=data
+		}
 	}
 </script>
 

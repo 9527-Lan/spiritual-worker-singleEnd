@@ -31,7 +31,7 @@
 												:key="pIndex">
 												<view slot="desc" class="progress-item flex-center">
 													<view class="progress-item-left">
-														<view v-if="pItem.isRecord" class="record-tag isRecord">已记录</view>
+														<view v-if="pItem.imgs.length>0" class="record-tag isRecord">已记录</view>
 														<view v-else class="record-tag">待记录</view>
 													</view>
 													<view class="progress-item-right">
@@ -47,7 +47,7 @@
 									</view>
 								</u-collapse-item>
 								<view class="employee-item-footer flex-center-between">
-									<view class="single-complete">单人已结算：￥{{ item.settlementMoney || '0.00' }}</view>
+									<view class="single-complete">单人待结算：￥{{ item.settlementMoney || '0.00' }}</view>
 									<view class="edit-btn">
 										<u-button type="primary" plain text="修改" @click="onEdit(item, index)"></u-button>
 									</view>
@@ -139,7 +139,7 @@
 <script>
 import orderInfo from './components/order-info.vue'
 import orderDescription from './components/order-description.vue'
-import { listOrderSetbtn, submit, examine, reviewNodes } from '@/api/sub.js'
+import { listOrderSetbtn, submit, examine, reviewNodes,settlementSubmission } from '@/api/sub.js'
 import {
 
 	listOrderItem
@@ -201,10 +201,17 @@ export default {
 	},
 	onLoad(options) {
 		// 获取id
+		
 		let obj = JSON.parse(options.orderItem)
+		console.log(obj,'obj');
 		this.id = obj.id
 		// 通过id获取详情
-		this.getdetail(this.id)
+		if(obj.auditStatus===0){
+			this.getdetail(this.id)
+		}else{
+			this.getdetailed(this.id)
+		}
+		
 	},
 	methods: {
 		onEdit(row, index) {
@@ -234,6 +241,18 @@ export default {
 					isSubmit: res.data.isSubmit
 				}
 				this.compData.employees = res.data.casualOrderSettlementItemVoList
+			})
+		},
+		// 结算后获取详情
+		getdetailed(id){
+			settlementSubmission(id).then((res)=>{
+				this.compData.orderStatistics = {
+					summary: res.data.orderMoney,
+					complete: res.data.settlementMoney,
+					Remain: Math.abs(res.data.orderMoney - res.data.settlementMoney),
+					isSubmit: res.data.isSubmit
+				}
+				this.compData.employees = res.data.casualOrderPaymentRecordItems
 			})
 		},
 		// 工程师修改
@@ -305,7 +324,8 @@ export default {
 								duration: 2000,
 
 							})
-							this.getdetail(this.id)
+							this.getdetailed(this.id)
+							// this.getdetail(this.id)
 						}
 					})
 				}
@@ -692,4 +712,9 @@ page {
 			}
 		}
 	}
-}</style>
+}
+::v-deep uni-image>view{
+	height: 100px;
+}
+
+</style>

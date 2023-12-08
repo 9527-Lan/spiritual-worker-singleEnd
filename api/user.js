@@ -121,3 +121,52 @@ export function tomerService(params) {
 		params: params,
 	})
 }
+export function getAgreement(){
+	return request({
+		url: '/userAgreement',
+		method: 'get',
+	})
+}
+
+// 信息条数
+export function getmessageCount(params){
+	return request({
+		url: '/messageCount',
+		method: 'get',
+		params:params
+	})
+}
+//消息列表 
+export function casualMessage(params){
+	return request({
+		url: '/casualMessage/pages',
+		method: 'get',
+		params:params
+	})
+}
+//消息清空
+export function editMessage(params){
+	return request({
+		url: '/editMessage',
+		method: 'get',
+		params:params
+	})
+}
+// 账户查询
+export function itempages(params){
+	return request({
+		url: '/itempages',
+		method: 'get',
+		params:params
+	})
+}
+// 新增用户
+export function addItem(data){
+	return request({
+		url: '/addItem',
+		method: 'post',
+	data
+	})
+}
+
+
