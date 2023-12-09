@@ -100,6 +100,14 @@
 
 			//  #ifndef MP
 			async toLogin() {
+				if(!uni.$u.test.mobile(this.mobile)) {
+					uni.$u.toast('请正确填写手机号'); 
+					return 
+				}e
+				if(!uni.$u.test.code(this.verifyCod,6)) {
+					uni.$u.toast('请正确填写验证码'); 
+					return 
+				}
 				this.logining = true;
 				this.$store.dispatch('user/login', {
 					code: this.verifyCode,

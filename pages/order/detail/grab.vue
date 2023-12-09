@@ -6,7 +6,7 @@
 				<view>状态：{{ resData.statusText }}</view>
 				<view>抢单数：{{ resData.haveRegistered == null ? 0 : resData.haveRegistered }}</view>
 				<view>
-					抢单成功数：{{ resData.successSum == null ? 0 : resData.successSum }}/{{ resData.orderQuantity == null ? 0 :
+					抢单成功数：{{ resData.haveRegistered == null ? 0 : resData.haveRegistered }}/{{ resData.orderQuantity == null ? 0 :
 						resData.orderQuantity }}
 				</view>
 			</view>
@@ -144,10 +144,7 @@ export default {
 			this.compData.employees = res.data
 
 		})
-		getcasualOrder(this.engineer_ids).then((res) => {
-			res.data.labelName = res.data?.labelName.split(','),
-			this.resData = res.data
-		})
+		this.getcasualOrder()
 		// let orderItem = JSON.parse(option.orderItem)
 		// console.log("grab",orderItem)
 		// if(orderItem) {
@@ -158,6 +155,12 @@ export default {
 
 	},
 	methods: {
+		getcasualOrder(){
+			getcasualOrder(this.engineer_ids).then((res) => {
+				res.data.labelName = res.data?.labelName.split(','),
+				this.resData = res.data
+			})
+		},
 		getInfo() {
 			casualOrderEngineerList({
 				order_id: this.resData.id
@@ -249,6 +252,7 @@ export default {
 							getcasualOrderList(this.engineer_ids).then((res) => {
 								this.compData.employees = res.data
 							})
+							this.getcasualOrder()
 						}
 					})
 				}

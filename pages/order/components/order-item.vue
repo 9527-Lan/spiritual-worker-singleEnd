@@ -54,7 +54,7 @@
 			<text v-if="compData.state == 'completing'">状态：待结算</text>
 			<text v-if="compData.state == 'completed'">状态：已结算</text>
 			<text v-if="compData.state == 'exception'">订单存在异常，若有结算争议，请联系平台客服</text>
-			<text v-if="compData.state == 'grab'">抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{
+			<text v-if="compData.state == 'grab'">抢单成功数：{{ compData.haveRegistered == null ? 0 : compData.haveRegistered }}/{{
 				compData.orderQuantity }}</text>
 		</view>
 	</view>

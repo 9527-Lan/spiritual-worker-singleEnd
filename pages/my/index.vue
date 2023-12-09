@@ -92,7 +92,7 @@ export default {
 			{
 				icon: '/static/我的信息.png',
 				title: '消息',
-				status: '1',
+				status: '',
 				// route: '/pages/my/editInfo',
 				route: '/pages/my/messageList'
 			},
