@@ -7,7 +7,7 @@
                    >
                     <u-form-item label="账号" prop="userInfo.name" borderBottom ref="item1" required>
                         <u--input v-model="dataForm.accountName" border="none" placeholder="请输入账号名称"
-                            @change='getaccountName'></u--input>
+                            ></u--input>
                     </u-form-item>
                     <u-form-item label="密码" prop="userInfo.workType" borderBottom ref="item1"
                         required>
@@ -30,7 +30,7 @@
 
 <script>
 
-import {addItem} from "@/api/user.js"
+import {addItem,updateItem} from "@/api/user.js"
 export default {
     data() {
         return {
@@ -38,12 +38,17 @@ export default {
             dataForm: {
                 accountName: '',
                 password: '',
-                isMain:false,
-             
+                isMain:false
             },
         }
     },
     created() {
+		console.log(this.$route)
+		if(this.$route.query){
+			this.$route.query.isMain = this.$route.query.isMain == 1 ? true :false
+			this.dataForm = this.$route.query
+		}
+		this.$route.query? this.dataForm = this.$route.query :null
     },
     methods: {
         addressConfirm() {
@@ -70,32 +75,53 @@ export default {
                 })
                 return;
             }
-            console.log(this.dataForm,'jsjjssjsjj');
             this.dataForm.entrepreneurId=this.$store.state.user.userInfo.id
-            this.dataForm.isMain= this.dataForm.isMain?'1':'0'
-            console.log(this.dataForm,'22222');
-            addItem(this.dataForm).then(res => {
-                if (res.code == "00000") {
-                    uni.showToast({
-                        title: "新增账户成功",
-                        duration: 2000,
-                        success: (res) => {
-                            setTimeout(() => {
-                                uni.navigateTo({
-                                  
-                                })
-                            }, 2000)
-                        },
-                    })
-                } else {
-                    uni.showToast({
-                        title: res.msg,
-                        icon: 'none'
-                    })
-                }
-
-            })
-
+			let dataFormCopy = JSON.parse(JSON.stringify(this.dataForm))
+            dataFormCopy.isMain= this.dataForm.isMain?'1':'0'
+			if(this.dataForm.id){
+				updateItem(dataFormCopy).then(res=>{
+					if (res.code == "00000") {
+					    uni.showToast({
+					        title: "编辑账户成功",
+					        duration: 2000,
+					        success: (res) => {
+					            setTimeout(() => {
+					                uni.navigateTo({
+					                  url:'/pages/my/userList'
+					                })
+					            }, 2000)
+					        },
+					    })
+					} else {
+					    uni.showToast({
+					        title: res.msg,
+					        icon: 'none'
+					    })
+					}
+				})
+			}else{
+				addItem(dataFormCopy).then(res => {
+				    if (res.code == "00000") {
+				        uni.showToast({
+				            title: "新增账户成功",
+				            duration: 2000,
+				            success: (res) => {
+				                setTimeout(() => {
+				                    uni.navigateTo({
+				                      
+				                    })
+				                }, 2000)
+				            },
+				        })
+				    } else {
+				        uni.showToast({
+				            title: res.msg,
+				            icon: 'none'
+				        })
+				    }
+				
+				})
+			}
         },
         accountName(e){
             console.log(e);

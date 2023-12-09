@@ -87,6 +87,14 @@ export function updateItem(data) {
 		data: data
 	})
 }
+// 子账户删除
+export function delItem(params) {
+	return request({
+		url: '/delItem',
+		method: 'get',
+		params:params
+	})
+}
 // 子账户修改
 export function getuser(data) {
 	console.log(data,'data');
@@ -165,7 +173,7 @@ export function addItem(data){
 	return request({
 		url: '/addItem',
 		method: 'post',
-	data
+		data
 	})
 }
 

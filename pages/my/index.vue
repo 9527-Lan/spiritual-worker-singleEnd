@@ -99,7 +99,6 @@ export default {
 			{
 				icon: '/static/我的信息.png',
 				title: '账户管理',
-				status: '1',
 				// route: '/pages/my/editInfo',
 				route: '/pages/my/userList'
 			},

@@ -139,7 +139,10 @@ export default {
 			// this.dataForm.delegateImgGh=uni.getStorageSync('delegateImgGh')
 			// this.dataForm.delegateImgRx=uni.getStorageSync('delegateImgRx')
 			// this.dataForm.licenseImg=uni.getStorageSync('licenseImg')
-			console.log(this.dataForm,'222222');
+			if(!uni.$u.test.idCard(this.dataForm.idCard)){
+				uni.$u.toast('请填写正确的身份证号')
+				return
+			}
 			casuaEdit(this.dataForm).then((res)=>{
 			
 				if(res.code==='00000'){

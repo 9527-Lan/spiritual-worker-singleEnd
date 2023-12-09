@@ -15,9 +15,11 @@
 		</view>
 
 		<view class="page-footer">
-			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"
+			<u-icon @click="callPhone" name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"
 				class="page-footer"></u-icon>
 		</view>
+		<u-modal :show="show" title="拨打客服电话进行咨询" :content='content' :showCancelButton='true' @confirm="closeCard"
+			@cancel="del"></u-modal>
 		<u-picker :show="typePickerVisble" :columns="[typeList]" keyName="title" @confirm="onTypePickConfirm"
 			@cancel="onTypePickCancle"></u-picker>
 	</view>
@@ -32,6 +34,9 @@ import {
 	queryOrderbyYcEngId,
 	queryOrderbyCjId
 } from '@/api/sub.js'
+import {
+	tomerService
+} from "@/api/user.js"
 import { toChineseBig } from '@/utils/utils.js'
 export default {
 	components: {
@@ -49,6 +54,8 @@ export default {
 				{ title: '异常订单', value: 0 },
 				{ title: '已创建', value: 0 },
 			],
+			content:'',
+			show:false,
 			typePickerVisble: false,
 			orderList: [],
 			being: [
@@ -147,13 +154,25 @@ export default {
 		onBack() {
 			uni.navigateBack(1)
 		},
-
+		closeCard() {
+			uni.makePhoneCall({
+				phoneNumber: this.content //仅为示例
+			});
+			this.show = false;
+		},
+		callPhone(){
+			this.show = true
+		},
+		del() {
+			this.show = false;
+		},
 		onTypePickShow() {
 			this.typePickerVisble = true
 		},
 		onTypePickCancle() {
 			this.typePickerVisble = false
 		},
+		
 		onTypePickConfirm(event) {
 			console.log('onTypePickConfirm', event)
 			this.currentType = event.indexs[0]
@@ -204,6 +223,9 @@ export default {
 					break
 			}
 			uni.stopPullDownRefresh()
+			tomerService().then((res) => {
+				this.content = res.data
+			})
 		},
 		async getGrabList(userId, loginType) {
 			let res = await queryOrderbyEngId({ id: userId, type: loginType })

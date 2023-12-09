@@ -41,16 +41,21 @@
             class="item"
             style="text-align: right; margin-left: 10px; width: 110px"
           >
-        
+			<button class="button" @click="updateUser(item)">编辑</button>
+			<button class="button" @click="deleteUser(item)">删除</button>
           </view>
         </view>
       </view>
       <view class="bottom"> </view>
+	  <uni-popup ref="alertDialog" type="dialog">
+		<uni-popup-dialog type="warn" cancelText="否" confirmText="是" title="通知" content="是否删除该子账户" @confirm="dialogConfirm"
+			></uni-popup-dialog>
+	  </uni-popup>
     </view>
   </template>
   
   <script>
-  import { itempages } from "@/api/user.js";
+  import { itempages,delItem } from "@/api/user.js";
   export default {
     data() {
       return {
@@ -65,6 +70,7 @@
         queryDateShow: false,
         queryTypeShow: false,
         list: [],
+		selectUser:{}
       };
     },
     onLoad() {
@@ -72,17 +78,44 @@
     methods: {
         adduser(){
             this.$toRoute('/pages/my/adduser')
-        }
+        },
+		updateUser(data){
+			this.$toRoute('/pages/my/adduser',data)
+		},
+		deleteUser(item){
+			this.$refs.alertDialog.open()
+			this.selectUser = item
+		},
+		itempages(){
+			itempages(this.params).then((res)=>{
+				this.list=res.data.list
+			})
+		},
+		dialogConfirm(){
+			delItem({id:this.selectUser.id}).then(res=>{
+				if (res.code == "00000") {
+				    uni.showToast({
+				        title: "删除账户成功",
+				        duration: 2000,
+				        success: (res) => {
+							this.itempages()
+				            this.$refs.alertDialog.close()
+				        },
+				    })
+				} else {
+				    uni.showToast({
+				        title: res.msg,
+				        icon: 'none'
+				    })
+				}
+			})
+		}
     },
     onShow(){
-        itempages(this.params).then((res)=>{
-            this.list=res.data.list
-        })
+        this.itempages()
     },
     mounted(){
-        itempages(this.params).then((res)=>{
-            this.list=res.data.list
-        })
+        this.itempages()
     }
   };
   </script>
@@ -91,7 +124,19 @@
   page {
     background: #f2f6ff;
   }
-  
+  .item{
+	display: flex; 
+	 justify-content: space-around;
+	 align-items: center;
+  }
+  .button{
+	  background-color: #fff;
+	  padding: 0 5px;
+  	&::after{
+  		border: none;
+		width: 0;
+  	}
+  }
   .container {
     margin: 0 auto;
     padding: 0 32rpx;
@@ -106,7 +151,6 @@
       display: flex;
       align-items: center;
     }
-  
     p {
       font-size: 28rpx;
       font-weight: bold;
