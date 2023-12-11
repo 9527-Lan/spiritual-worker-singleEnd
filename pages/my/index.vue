@@ -32,6 +32,9 @@
 			<u-modal :show="show" :title="title" :content='content' :showCancelButton='true' @confirm="closeCard"
 				@cancel="del"></u-modal>
 		</view>
+		<view class="">
+			<u-button type="error" shape='circle' @click="unLogin" class="unLogin" text="退出登录"></u-button>
+		</view>
 	</view>
 </template>
 
@@ -53,25 +56,25 @@ export default {
 			title: '拨打客服电话进行咨询',
 			operates: [
 			{
-				number: 3,
+				number: 0,
 				label: '已创建',
 				color: '#333333',
 				route: '/pages/order/index?state=creatyj'
 			},
 			{
-				number: 3,
-				label: '已报名',
+				number: 0,
+				label: '抢单中',
 				color: '#333333',
 				route: '/pages/order/index?state=grab'
 			},
 			{
-				number: 1,
+				number: 0,
 				label: '进行中',
 				color: '#333333',
 				route: '/pages/order/index?state=being'
 			},
 			{
-				number: 56,
+				number: 0,
 				label: '已完成',
 				color: '#333333',
 				route: '/pages/order/index?state=completes'
@@ -124,6 +127,14 @@ export default {
 		// ...
 	},
 	methods: {
+		unLogin(){
+			uni.redirectTo({
+				url: '/',
+				success:()=>{
+					this.$store.commit('SET_HAS_LOGIN',false)
+				}
+			})
+		},
 		personageList() {
 			let userInfo = this.$store.state.user.userInfo
 			this.userInfo = userInfo
@@ -143,7 +154,7 @@ export default {
 				},	
 				{
 					number: item.qdzOrderCount,
-					label: '已报名',
+					label: '抢单中',
 					color: '#333333',
 					route: '/pages/order/index?state=grab'
 				}, {
@@ -208,6 +219,10 @@ export default {
 </script>
 
 <style lang="scss">
+	.unLogin{
+		width: 50%;
+		margin: 20px auto;
+	}
 page {
 	background-color: #f2f6ff;
 }

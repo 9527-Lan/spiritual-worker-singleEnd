@@ -26,7 +26,7 @@
 											<u-steps-item v-for="(pItem, pIndex) in progress.dateList" :key="pIndex">
 												<view slot="desc" class="progress-item flex-center">
 													<view class="progress-item-left">
-														<view v-if="pItem.isRecord" class="record-tag isRecord">已记录
+														<view v-if="pItem.imgs.length > 0 || pItem.orderDesc" class="record-tag isRecord">已记录
 														</view>
 														<view v-else class="record-tag">待记录</view>
 													</view>

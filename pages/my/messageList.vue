@@ -1,6 +1,6 @@
 <template>
     <view class="container">
-        <u-navbar title="信息" @rightClick="rightClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
+        <u-navbar title="我的消息" @rightClick="rightClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
             leftIconColor="#000" titleStyle="color: #000;font-size:34rpx">
         </u-navbar>
         <!-- <view class="query-box">

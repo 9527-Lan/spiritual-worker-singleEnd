@@ -6,7 +6,7 @@
 				<view>状态：{{ resData.statusText }}</view>
 				<view>抢单数：{{ resData.haveRegistered == null ? 0 : resData.haveRegistered }}</view>
 				<view>
-					抢单成功数：{{ resData.haveRegistered == null ? 0 : resData.haveRegistered }}/{{ resData.orderQuantity == null ? 0 :
+					抢单成功数：{{ resData.successSum == null ? 0 : resData.successSum }}/{{ resData.orderQuantity == null ? 0 :
 						resData.orderQuantity }}
 				</view>
 			</view>
@@ -275,6 +275,7 @@ export default {
 							getcasualOrderList(this.engineer_ids).then((res) => {
 								this.compData.employees = res.data
 							})
+							this.getcasualOrder()
 						}
 					})
 				}

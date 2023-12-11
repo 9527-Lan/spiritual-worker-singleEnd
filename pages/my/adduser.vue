@@ -14,10 +14,6 @@
                         <u--input v-model="dataForm.password" border="none" type="password" placeholder="请输入密码"
                             @change='getpassword'></u--input>
                     </u-form-item>
-                    <u-form-item label="是否主账号" prop="userInfo.workType" borderBottom  ref="item1"
-                        required>
-                        <u-switch v-model="dataForm.isMain"  @change='getisMain'></u-switch>
-                    </u-form-item>
                 </u-form>
             </view>
             <view class="footer-tip">平台承诺，严格保障您的隐私安全</view>

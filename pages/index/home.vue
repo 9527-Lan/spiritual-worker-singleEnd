@@ -23,7 +23,7 @@
 			</view>
 		</view>
 		<view>
-			<u-tabs :list="tabList" @click="onTabClick" lineHeight="16rpx" lineWidth="64rpx" @change="changeTabList"></u-tabs>
+			<u-tabs :list="tabList" @click="onTabClick" lineHeight="0.4rem" lineWidth="35" @change="changeTabList"></u-tabs>
 		</view>
 		<view>
 			<!-- /pages/index/personalDetails/index -->

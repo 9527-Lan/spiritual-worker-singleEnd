@@ -4,7 +4,7 @@
 			:titleStyle="{ fontSize: '34rpx', color: '#000000' }">
 			<u-icon slot="left" color="#333" size="34rpx" name="arrow-left" @click="onBack"></u-icon>
 		</u-navbar>
-		<view class="flex-center">
+		<view class="flex-center" v-if="selectShow">
 			<view class="select-box" @click="onTypePickShow">
 				<u-icon :label="typeList[currentType].title" label-color="#333333" labelSize="28rpx"></u-icon>
 				<u-icon size="18rpx" name="arrow-down-fill" color="#333333"></u-icon>
@@ -54,6 +54,7 @@ export default {
 				{ title: '异常订单', value: 0 },
 				{ title: '已创建', value: 0 },
 			],
+			selectShow:true,
 			content:'',
 			show:false,
 			typePickerVisble: false,
@@ -141,6 +142,9 @@ export default {
 	},
 	async onLoad(event) {
 		console.log(event.state, 'event')
+		if(event.state == 'creatyj'){
+			this.selectShow = false
+		}
 		let state = event.state
 		this.currentValue = state
 		console.log("this.currentValue", this.currentValue);

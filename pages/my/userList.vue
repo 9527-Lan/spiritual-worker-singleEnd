@@ -23,18 +23,11 @@
               size="108"
             ></u-avatar>
             <view
-              style="
-                line-height: 54px;
-                margin-left: 20px;
-                font-weight: bold;
-                font-size: 32rpx;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                width: 240rpx;
-              "
+			  class="namestyle"
             >
-              {{ item.accountName }}</view
+				<view>{{ item.accountName }}</view>
+				<view v-if="item.isMain">主</view>
+              </view
             >
           </view>
           <view
@@ -128,6 +121,29 @@
 	display: flex; 
 	 justify-content: space-around;
 	 align-items: center;
+  }
+	  
+  .namestyle{
+	  line-height: 54px;
+	  margin-left: 20px;
+	  font-weight: bold;
+	  font-size: 32rpx;
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  & view:first-child{
+		  line-height: 35px;
+	  }
+	  & view:nth-child(2n){
+		  line-height: 20px;
+		  font-weight: 200;
+		  color: #fff;
+		  font-size: 12px;
+		  background-color: red;
+		  width: 32px;
+		  border-radius: 50%;
+		  text-align: center;
+	  }
   }
   .button{
 	  background-color: #fff;
