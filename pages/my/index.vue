@@ -33,7 +33,7 @@
 				@cancel="del"></u-modal>
 		</view>
 		<view class="">
-			<u-button type="error" shape='circle' @click="unLogin" class="unLogin" text="退出登录"></u-button>
+			<u-button  shape='circle' @click="unLogin" class="unLogin" text="退出登录"></u-button>
 		</view>
 	</view>
 </template>
@@ -86,34 +86,35 @@ export default {
 				route: '/pages/order/index?state=exception'
 			},
 			],
-			cellList: [{
-				icon: '/static/我的信息.png',
-				title: '我的信息',
-				// route: '/pages/my/editInfo',
-				route: '/pages/my/enterpriseCertification'
-			},
-			{
-				icon: '/static/我的信息.png',
-				title: '消息',
-				status: '',
-				// route: '/pages/my/editInfo',
-				route: '/pages/my/messageList'
-			},
-			{
-				icon: '/static/我的信息.png',
-				title: '账户管理',
-				// route: '/pages/my/editInfo',
-				route: '/pages/my/userList'
-			},
-			{
-				icon: '/static/咨询客服.png',
-				title: '咨询客服'
-			},
-			{
-				icon: '/static/关于我们.png',
-				title: '关于我们',
-				route: '/pages/my/callMe/callMe'
-			},
+			cellList: [
+				{
+					icon: '/static/消息.png',
+					title: '消息',
+					status: '',
+					// route: '/pages/my/editInfo',
+					route: '/pages/my/messageList'
+				},
+				{
+					icon: '/static/我的信息.png',
+					title: '我的信息',
+					// route: '/pages/my/editInfo',
+					route: '/pages/my/enterpriseCertification'
+				},
+				{
+					icon: '/static/账户.png',
+					title: '账户管理',
+					// route: '/pages/my/editInfo',
+					route: '/pages/my/userList'
+				},
+				{
+					icon: '/static/咨询客服.png',
+					title: '咨询客服'
+				},
+				{
+					icon: '/static/关于我们.png',
+					title: '关于我们',
+					route: '/pages/my/callMe/callMe'
+				},
 			],
 		}
 	},
@@ -222,6 +223,9 @@ export default {
 	.unLogin{
 		width: 50%;
 		margin: 20px auto;
+		background-color: #1e80ff;
+		border-color: #1e80ff;
+		color: #fff;
 	}
 page {
 	background-color: #f2f6ff;

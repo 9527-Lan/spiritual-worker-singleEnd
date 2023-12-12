@@ -35,7 +35,7 @@
             style="text-align: right; margin-left: 10px; width: 110px"
           >
 			<button class="button" @click="updateUser(item)">编辑</button>
-			<button class="button" @click="deleteUser(item)">删除</button>
+			<button class="button" @click="deleteUser(item)" v-if="!item.isMain">删除</button>
           </view>
         </view>
       </view>

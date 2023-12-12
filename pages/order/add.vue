@@ -458,12 +458,34 @@
 				this.endDateShow = false;
 			},
 			getStartTimes(e) {
-				this.dataForm.startTime = this.timestampToTime(e.value);
-				this.dateShow = false;
+				let data = new Date(this.dataForm.endTime).getTime()
+				let edata = new Date(e.value).getTime()
+				if(data>edata || !this.dataForm.endTime){
+					this.dataForm.startTime = this.timestampToTime(e.value);
+					this.dateShow = false;
+				}else{
+					uni.showToast({
+						title: '开始时间不可大于结束时间',
+						icon: 'none',
+						duration: 1000,
+					})
+					this.dataForm.startTime = ''
+				}
 			},
 			getEndTimes(e) {
-				this.dataForm.endTime = this.timestampToTime(e.value);
-				this.endDateShow = false;
+				let data = new Date(this.dataForm.startTime).getTime()
+				let edata = new Date(e.value).getTime()
+				if(data>edata ||!this.dataForm.startTime){
+					this.dataForm.endTime = this.timestampToTime(e.value);
+					this.endDateShow = false;
+				}else{
+					uni.showToast({
+						title: '结束时间不可小于开始时间',
+						icon: 'none',
+						duration: 1000,
+					})
+					this.dataForm.endTime = ''
+				}
 			},
 			typeSelect(e) {
 				this.dataForm.workType = e.name;
