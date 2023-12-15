@@ -30,14 +30,15 @@
 		methods: {
 			// 搜索
 			findCasualEngineerList() {
+				console.log('111')
 				findCasualEngineer().then(res => {					
 					this.pageList=res.data.list.map(item => {
 						return {
 							img: item.cardImgPositive,
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
-							role: item.typeName?.split(','),
-							experience: item.labelName?.split(','),
+							role: item.typeName?item.typeName.split(','):[],
+							experience: item.labelName?item.labelName.split(','):[],
 							times: item.employmentNumber,
 							id:item.id,
 							hasCertificate:true,

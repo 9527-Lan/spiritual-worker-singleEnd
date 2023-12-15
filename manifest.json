@@ -1,6 +1,6 @@
 {
     "name" : "灵工-下单端",
-    "appid" : "__UNI__EFD4299",
+    "appid" : "__UNI__EA2918B",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -98,11 +98,16 @@
                 //外网网址根路径 `/ `后，数据包前的部分
                 "/" : {
                     //外网根路径 `https://www.abc.com`
-                    "target" : "https://t44o902052.zicp.fun"
+                    // "target" : "https://t44o902052.zicp.fun"
+                    "target" : "https://lhyg.hnxfsd.cn/prod-api/LowerSingleEnd"
                 }
             },
             //步骤二勾选后的效果
             "https" : false
+        },
+        "router" : {
+            "base" : "/",
+            "mode" : "hash"
         }
     }
 }

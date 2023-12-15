@@ -1,7 +1,10 @@
 <template>
 	<view class="page-my-index">
 		<view class="information">
-			<u-avatar :src="avater" size="120rpx"></u-avatar>
+			<view class="left">
+				<u-avatar :src="avater" size="120" @click="upAvatar"></u-avatar>
+				<avatar @upload="myUpload" ref="avatar" style="width: 0;height: 0;"></avatar>
+			</view>
 			<view class="information-right">
 				<view class="name">{{ userInfo.name }}</view>
 				<view v-if="userInfo.mobile" class="phone">手机号：{{ userInfo.mobile }}</view>
@@ -42,8 +45,12 @@
 import {
 	personage
 } from "@/api/sub.js"
+import avatar from "../../components/yq-avatar/yq-avatar.vue";
+import service from '@/utils/request.js'
 import {
-	tomerService, getmessageCount
+	tomerService, getmessageCount,
+	casualPersonageAvatar,
+	casualEntrepreneurAvatar
 } from "@/api/user.js"
 export default {
 	data() {
@@ -118,6 +125,9 @@ export default {
 			],
 		}
 	},
+	components:{
+		avatar
+	},
 	onLoad() {
 
 	},
@@ -134,6 +144,42 @@ export default {
 				success:()=>{
 					this.$store.commit('SET_HAS_LOGIN',false)
 				}
+			})
+		},
+		upAvatar() {
+			this.$refs.avatar.fChooseImg(0, {
+				selWidth: "300upx", selHeight: "300upx",
+				expWidth: '260upx', expHeight: '260upx'
+			});
+		},
+		myUpload(rsp) {
+			console.log(rsp, 'rsp');
+			let that = this
+			return new Promise((resolve, reject) => {
+				let a = uni.uploadFile({
+					//service.defaults.baseURL
+					url: 'https://lhyg.hnxfsd.cn/prod-api' + '/file/upload', // 仅为示例，非真实的接口地址
+					filePath: rsp.base64,
+					name: 'file',
+					formData: {
+						user: 'test',
+					},
+					success: (res) => {
+						console.log(JSON.parse(res.data).data);
+						
+						let parmas = {
+							id: uni.getStorageSync('userInfoItem').headSculpture,
+							img: JSON.parse(res.data).data.id
+						}
+						casualEntrepreneurAvatar(parmas).then(res => {
+							uni.$u.toast('上传成功')
+							this.personageList()
+						})
+					},
+					fail() {
+		
+					}
+				});
 			})
 		},
 		personageList() {

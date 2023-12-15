@@ -33,3 +33,12 @@ export function toChineseBig(num) {
 		return chineseBigNum[n]
 	}
 }
+export function formattedTime (){
+	// 获取当前时间
+	const currentTime = new Date();
+	 
+	// 格式化时间为年-月-日 时:分:秒
+	const formattedTime = currentTime.getFullYear() + '-' + (currentTime.getMonth() + 1) + '-' + currentTime.getDate();
+	 
+	return currentTime
+}

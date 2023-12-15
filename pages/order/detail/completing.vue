@@ -3,7 +3,7 @@
 		<view class="header"></view>
 		<view class="body-wrapper">
 			<view class="body-wrapper-top">
-				<view>状态：待结算</view>
+				<view>状态：<text :class="orderItem.auditStatus == 3?'red':''">{{orderItem.auditStatus == 3?'驳回':'待结算'}}</text></view>
 			</view>
 			<view class="body">
 				<view class="orderStatistic-container">
@@ -70,8 +70,11 @@
 				size="36rpx"></u-icon>
 			<view class="flex-center btn-box">
 				<!-- <u-button text="划入异常" type="primary" plain></u-button> -->
+				<u-button text="全部结算" color="#3A84F0" v-if="orderItem.auditStatus == 3"
+				@click="submitbtn('noId')"></u-button>
 				<u-button text="全部结算" color="#3A84F0" v-if="compData.orderStatistics.isSubmit === '0'"
-					@click="submitbtn"></u-button>
+				@click="submitbtn">
+				</u-button>
 				<u-button text="查看进度" color="#3A84F0" v-else @click="look"></u-button>
 			</view>
 		</view>
@@ -153,6 +156,7 @@ export default {
 		return {
 			editPopVisible: false,
 			id: '',
+			orderItem:{},
 			looklist: [],
 			cardShow: false,
 			editForm: {
@@ -203,6 +207,7 @@ export default {
 		// 获取id
 		
 		let obj = JSON.parse(options.orderItem)
+		this.orderItem = obj
 		console.log(obj,'obj');
 		this.id = obj.id
 		// 通过id获取详情
@@ -304,13 +309,18 @@ export default {
 				}
 			})
 		},
-		submitbtn() {
+		submitbtn(noId) {
 			let obj = {
 				casualOrderPaymentRecordItems: this.compData.employees,
 				cashSurplusMoney: this.compData.orderStatistics.Remain,
 				orderMoney: this.compData.orderStatistics.summary,
 				settlementMoney: this.compData.orderStatistics.complete,
 				id: Number(this.id)
+			}
+			if(noId){
+				obj.casualOrderPaymentRecordItems.forEach(item=>{
+					item.id = ''
+				})
 			}
 			submit(obj).then((res) => {
 				if (res.code === '00000') {
@@ -393,7 +403,7 @@ page {
 			right: 0;
 			bottom: 0;
 			padding: 20rpx 42rpx;
-			padding-bottom: 60rpx;
+			padding-bottom: 120rpx;
 			box-sizing: border-box;
 			background-color: #fff;
 			display: flex;
@@ -628,7 +638,7 @@ page {
 		left: 0;
 		right: 0;
 		bottom: 0;
-		height: 173rpx;
+		height: 120rpx;
 		padding: 20rpx 42rpx;
 		box-sizing: border-box;
 		background-color: #fff;
@@ -715,6 +725,9 @@ page {
 }
 ::v-deep uni-image>view{
 	height: 100px;
+}
+.red{
+	color: red;
 }
 
 </style>

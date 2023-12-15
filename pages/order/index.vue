@@ -252,7 +252,8 @@ export default {
 						let big = toChineseBig(index + 1)
 						return {
 							day: '第' + big + '天',
-							time: el.order_date
+							time: el.order_date,
+							sign:el.sign
 						}
 					})
 					let sign = el.casualOrderRecords.filter(el => { return el.sign })
@@ -345,6 +346,7 @@ page {
 
 	.order-list {
 		margin-top: 42rpx;
+		    padding-bottom: 120rpx;
 	}
 
 	.page-footer {
@@ -353,7 +355,7 @@ page {
 		left: 0;
 		right: 0;
 		bottom: 0;
-		height: 173rpx;
+		height: 120rpx;
 		padding: 20rpx 42rpx;
 		box-sizing: border-box;
 		background-color: #fff;

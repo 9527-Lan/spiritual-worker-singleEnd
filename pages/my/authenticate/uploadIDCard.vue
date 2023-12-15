@@ -36,6 +36,7 @@
 <script>
 import service from '@/utils/request.js'
 import {casuaEdit} from "@/api/user.js"
+import {translate} from "@/utils/yasuoimg.js"
 export default {
 	data() {
 		return {
@@ -55,15 +56,17 @@ export default {
 				})
 			})
 			for (let i = 0; i < lists.length; i++) {
-				const result = await this.uploadFilePromise(lists[i].url)
-				let item = this.frontList[fileListLen]
-				this.frontList.splice(fileListLen, 1, Object.assign(item, {
-					status: 'success',
-					message: '',
-					url: JSON.parse(result).data.fileUrl,
-					id: JSON.parse(result).data.id,
-				}))
-				fileListLen++
+				await translate(lists[i].url,async (res)=>{
+					const result = await this.uploadFilePromise(res)
+					let item = this.frontList[fileListLen]
+					this.frontList.splice(fileListLen, 1, Object.assign(item, {
+						status: 'success',
+						message: '',
+						url: JSON.parse(result).data.fileUrl,
+						id: JSON.parse(result).data.id,
+					}))
+					fileListLen++
+				})
 			}
 			console.log(this.frontList, 'jjjjj');
 		},
@@ -81,15 +84,17 @@ export default {
 				})
 			})
 			for (let i = 0; i < lists.length; i++) {
-				const result = await this.uploadFilePromise(lists[i].url)
-				let item = this.contraryList[fileListLen]
-				this.contraryList.splice(fileListLen, 1, Object.assign(item, {
-					status: 'success',
-					message: '',
-					url: JSON.parse(result).data.fileUrl,
-					id: JSON.parse(result).data.id,
-				}))
-				fileListLen++
+				await translate(lists[i].url,async (res)=>{
+					const result = await this.uploadFilePromise(res)
+					let item = this.contraryList[fileListLen]
+					this.contraryList.splice(fileListLen, 1, Object.assign(item, {
+						status: 'success',
+						message: '',
+						url: JSON.parse(result).data.fileUrl,
+						id: JSON.parse(result).data.id,
+					}))
+					fileListLen++
+				})
 			}
 		},
 		delContrary(file, lists, name) {

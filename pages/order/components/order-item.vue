@@ -39,7 +39,7 @@
 					<view class="day">{{ item.day }}</view>
 					<view class="time">{{ item.time }}</view>
 				</view> -->
-				<u-steps :current="compData.progress.current" direction="column" dot>
+				<u-steps :current="sept" direction="column" dot>
 					<u-steps-item v-for="(item, index) in compData.progress.dateList" :key="index">
 						<view slot="desc" class="progress-item">
 							<view class="day">{{ item.day }}</view>
@@ -51,7 +51,7 @@
 		</view>
 		<view class="footer" :class="compData.state">
 			<text v-if="compData.state == 'being'">状态：进行中</text>
-			<text v-if="compData.state == 'completing'">状态：待结算</text>
+			<text v-if="compData.state == 'completing'">状态：<text :class="compData.auditStatus == '3'?'red':''">{{compData.auditStatus == '3'?'驳回':'待结算'}}</text></text>
 			<text v-if="compData.state == 'completed'">状态：已结算</text>
 			<text v-if="compData.state == 'exception'">订单存在异常，若有结算争议，请联系平台客服</text>
 			<text v-if="compData.state == 'grab'">抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{
@@ -62,6 +62,7 @@
 
 <script>
 import {getorderItems} from "@/api/sub.js"
+import {formattedTime} from "@/utils/utils.js"
 export default {
 	name: 'order-item',
 	props: {
@@ -69,6 +70,21 @@ export default {
 	},
 	data() {
 		return {}
+	},
+	computed:{
+		sept(){
+			let aaa = 0
+			console.log(this.compData.progress.dateList)
+			let dangqianDate = new Date(formattedTime()).getTime()
+			for (let i = 0; i < this.compData.progress.dateList.length; i++) {
+				if(this.compData.progress.dateList[i].sign == 1 ||
+				  new Date(this.compData.progress.dateList[i].time).getTime()<dangqianDate){
+					aaa = i
+				}
+			}
+			console.log(aaa)
+			return aaa
+		}
 	},
 	methods: {
 		onCheckDetail() {
@@ -119,6 +135,9 @@ export default {
 </script>
 
 <style lang="scss">
+	.red{
+		color: red;
+	}
 .order-item {
 	background-color: #fff;
 	border-radius: 15rpx;

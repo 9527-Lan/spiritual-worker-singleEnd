@@ -9,6 +9,7 @@ const service = axios.create({
 	// baseURL: "http://app.youlai.tech/prod-api", // 线上接口地址(谷歌等有跨域限制浏览器)
 	// baseURL: "https://t44o902052.zicp.fun/LowerSingleEnd", // 本地开发环境地址
 	baseURL: "https://lhyg.hnxfsd.cn/prod-api/LowerSingleEnd", 
+	// baseURL: "http://172.20.10.3:9999/prod-api/LowerSingleEnd", 
 	withCredentials: true, // send cookies when cross-domain requests
 	timeout: 10000 // request timeout
 })

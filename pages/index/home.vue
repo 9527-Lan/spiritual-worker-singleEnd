@@ -9,15 +9,15 @@
 			
 			<!-- h5 -->
 			<view slot="left" class="search-box-h5" @click="toSearch">
-				<u-search :showAction="false" placeholder="搜索工程师..." bgColor="#fff" style="width: 100%" disabled
-	></u-search>
+				<u-search @click.stop="toSearch" :showAction="false" :disabled='true' placeholder="搜索工程师..." bgColor="#fff" style="width: 100%"
+				></u-search>
 			</view>
 		</u-navbar>
 		<view class="swiper-box">
 			<u-swiper :list="swiperList" circular height="280rpx" :radius="15" indicator></u-swiper>
 		</view>
 		<view class="order-box">
-			<u-image src="@/static/publish.png" height="200rpx" width="100%"></u-image>
+			<u-image @click="$toRoute('/pages/order/add')" src="@/static/publish.png" height="200rpx" width="100%"></u-image>
 			<view class="order-btn">
 				<u-button color="#3A84F0" size="mini" @click="$toRoute('/pages/order/add')">一键下单</u-button>
 			</view>
@@ -95,6 +95,7 @@
 					const dataList = res.data.list.map(item => {
 						return {
 							img: item.headSculptureUrl,
+							headSculpture:item.headSculpture,
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
 							role: item.typeName?.split(','),

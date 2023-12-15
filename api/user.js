@@ -21,6 +21,22 @@ export function personLogin(data) {
 		data: data
 	})
 }
+//企业个人头像上传
+export function casualEntrepreneurAvatar(params) {
+	return request({
+		url: '/web/entrepreneur/avatar',
+		method: 'get',
+		params: params,
+	})
+}
+//个人头像上传
+export function casualPersonageAvatar(params) {
+	return request({
+		url: '/web/personage/avatar',
+		method: 'get',
+		params: params,
+	})
+}
 
 
 

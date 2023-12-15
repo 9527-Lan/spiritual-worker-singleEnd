@@ -73,8 +73,8 @@
 						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择结束时间"></u--input>
 					</u-form-item>
 					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入详细描述"
-							@change='getWorkplace'></u--input>
+						<u--textarea v-model="dataForm.workPlace" border="none" placeholder="请输入详细描述"
+							@change='getWorkplace'></u--textarea>
 					</u-form-item>
 				</u-form>
 			</view>
@@ -366,7 +366,7 @@
 					})
 					return;
 				}
-				if(this.dataForm.qdQuantity <this.dataForm.workNum) {
+				if(this.dataForm.qdQuantity < this.dataForm.workNum) {
 					uni.showToast({
 						title:'报名人数不得少于用工人数',
 						icon:'none'
@@ -475,7 +475,7 @@
 			getEndTimes(e) {
 				let data = new Date(this.dataForm.startTime).getTime()
 				let edata = new Date(e.value).getTime()
-				if(data>edata ||!this.dataForm.startTime){
+				if(data<edata ||!this.dataForm.startTime){
 					this.dataForm.endTime = this.timestampToTime(e.value);
 					this.endDateShow = false;
 				}else{
