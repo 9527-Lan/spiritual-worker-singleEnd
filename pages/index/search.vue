@@ -34,7 +34,7 @@
 				findCasualEngineer().then(res => {					
 					this.pageList=res.data.list.map(item => {
 						return {
-							img: item.cardImgPositive,
+							headSculpture: item.headSculpture,
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
 							role: item.typeName?item.typeName.split(','):[],
@@ -60,11 +60,11 @@
 					const data = res.data;
 					this.pageList = data.list.map(item => {
 						return {
-							img: item.cardImgPositive,
+							headSculpture: item.headSculpture,
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
-							role: item.typeName,
-							experience: item.labelName,
+							role: item.typeName?item.typeName.split(','):[],
+							experience: item.labelName?item.labelName.split(','):[],
 							times: item.employmentNumber,
 							id:item.id,
 							hasCertificate:true

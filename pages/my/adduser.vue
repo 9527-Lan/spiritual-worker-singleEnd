@@ -14,6 +14,11 @@
                         <u--input v-model="dataForm.password" border="none" type="password" placeholder="请输入密码"
                             @change='getpassword'></u--input>
                     </u-form-item>
+					<u-form-item label="确认密码" prop="userInfo.workType" borderBottom ref="item1"
+					    required>
+					    <u--input v-model="dataForm.confirmPassword" border="none" type="password" placeholder="请输入密码"
+					        @change='getpassword'></u--input>
+					</u-form-item>
                 </u-form>
             </view>
             <view class="footer-tip">平台承诺，严格保障您的隐私安全</view>
@@ -34,7 +39,8 @@ export default {
             dataForm: {
                 accountName: '',
                 password: '',
-                isMain:false
+                isMain:false,
+				confirmPassword:''
             },
         }
     },
@@ -45,6 +51,7 @@ export default {
 			this.dataForm = this.$route.query
 		}
 		this.$route.query? this.dataForm = this.$route.query :null
+		this.dataForm.password = ''
     },
     methods: {
         addressConfirm() {
@@ -71,6 +78,13 @@ export default {
                 })
                 return;
             }
+			if (this.dataForm.confirmPassword != this.dataForm.password) {
+				uni.showToast({
+				    title: '密码和确认密码框不一致',
+				    icon: 'none'
+				})
+				return;
+			}
             this.dataForm.entrepreneurId=this.$store.state.user.userInfo.id
 			let dataFormCopy = JSON.parse(JSON.stringify(this.dataForm))
             dataFormCopy.isMain= this.dataForm.isMain?'1':'0'

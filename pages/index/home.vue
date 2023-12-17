@@ -9,8 +9,8 @@
 			
 			<!-- h5 -->
 			<view slot="left" class="search-box-h5" @click="toSearch">
-				<u-search @click.stop="toSearch" :showAction="false" :disabled='true' placeholder="搜索工程师..." bgColor="#fff" style="width: 100%"
-				></u-search>
+					<u-search  :showAction="false"  placeholder="搜索工程师..." bgColor="#fff" style="width: 100%"
+					></u-search>
 			</view>
 		</u-navbar>
 		<view class="swiper-box">
