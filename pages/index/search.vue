@@ -61,6 +61,7 @@
 					this.pageList = data.list.map(item => {
 						return {
 							headSculpture: item.headSculpture,
+							img:item.casualEngineerCertificate,
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
 							role: item.typeName?item.typeName.split(','):[],

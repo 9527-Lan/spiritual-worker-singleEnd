@@ -19,14 +19,14 @@
 							<view class="tag-item" v-if="detailData.hasCertificate">持证上岗</view>
 						</view>
 					</view>
-					<u-avatar :src="detailData.img" size="96rpx"></u-avatar>
+					<u-avatar :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + detailData.headSculpture" size="96rpx"></u-avatar>
 				</view>
 				<view class="title">持有证书</view>
 				<view class="certificate">
 					<!-- <u-image v-for="(item, index) in detailData.casualEngineerCertificate" :key = "index" :src="item" height="457rpx" width="615rpx"></u-image> -->
 					<u-swiper
 						style="width: 615rpx;"
-						:list="detailData.casualEngineerCertificate"
+						:list="detailData.img"
 						previousMargin="30"
 						nextMargin="30"
 						circular
@@ -104,6 +104,7 @@
 			console.log(datas)
 			this.detailData = {
 					img: datas.img,
+					headSculpture: datas.headSculpture,
 					name: datas.name,
 					sex: datas.sex,
 					role: datas.role,
