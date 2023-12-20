@@ -1,6 +1,6 @@
 <template>
-	<view class="order-item" @click="onCheckDetail">
-		<view class="body">
+	<view class="order-item" >
+		<view class="body" @click="onCheckDetail">
 			<view class="flex-center between">
 				<view class="title">{{ compData.name }}</view>
 				<view class="salary">{{ compData.price }}元/天</view>
@@ -48,6 +48,9 @@
 					</u-steps-item>
 				</u-steps>
 			</view>
+			<view class="deleteButton" v-if="compData.status === 0" @click.stop="deleteOrder">
+				删除
+			</view>
 		</view>
 		<view class="footer" :class="compData.state">
 			<text v-if="compData.state == 'being'">状态：进行中</text>
@@ -57,6 +60,10 @@
 			<text v-if="compData.state == 'grab'">抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{
 				compData.orderQuantity }}</text>
 		</view>
+		<uni-popup ref="alertDialog" type="dialog">
+			<uni-popup-dialog type="warn" cancelText="否" confirmText="是" title="通知" content="是否删除该订单" @confirm="dialogConfirm"
+				></uni-popup-dialog>
+		</uni-popup>
 	</view>
 </template>
 
@@ -87,47 +94,47 @@ export default {
 		}
 	},
 	methods: {
+		dialogConfirm(){
+			this.$emit('deleteOrder',this.compData)
+		},
+		deleteOrder(){
+			this.$refs.alertDialog.open()
+		},
 		onCheckDetail() {
 			console.log(this.compData, 'compData');
 			let compData = this.compData
 			if(compData.state==='creatyj'){
 				getorderItems(compData.id).then((res)=>{
-		let obj = {
-							workTitile:res.data.name,  
-							workTypeId:"1",      
-							workType:res.data.typeName,
-							workLabel:res.data.labelName,
-						  	workLabelId:res.data.labelIds,     
-							workAddress:res.data.address,     
-							addressItem:res.data.addressItem, 
-							longitude:res.data.longitude, 	
-							latitude:res.data.latitude, 	
-					 		workNum:res.data.orderQuantity,
-							singleMoney:res.data.price, 		
-							startTime:res.data.orderStatr, 	
-							qdQuantity:res.data.qdQuantity,	
-							endTime:res.data.orderEnd, 	
-							workPlace:res.data.description, 
-							principal:res.data.principal,	
-							principalType:res.data.principalType,
-							employmentDay:res.data.employmentDay,
-
-							 id:res.data.id
-				}
-				uni.navigateTo({
-				url: '/pages/order/orderDetail?data=' + JSON.stringify(obj),
-			})
+					let obj = {
+						workTitile:res.data.name,  
+						workTypeId:"1",      
+						workType:res.data.typeName,
+						workLabel:res.data.labelName,
+						workLabelId:res.data.labelIds,     
+						workAddress:res.data.address,     
+						addressItem:res.data.addressItem, 
+						longitude:res.data.longitude, 	
+						latitude:res.data.latitude, 	
+						workNum:res.data.orderQuantity,
+						singleMoney:res.data.price, 		
+						startTime:res.data.orderStatr, 	
+						qdQuantity:res.data.qdQuantity,	
+						endTime:res.data.orderEnd, 	
+						workPlace:res.data.description, 
+						principal:res.data.principal,	
+						principalType:res.data.principalType,
+						employmentDay:res.data.employmentDay,
+						id:res.data.id
+					}
+					uni.navigateTo({
+						url: '/pages/order/orderDetail?data=' + JSON.stringify(obj),
+					})
 				})
-				
-				
 			}else{
 				uni.navigateTo({
 				url: `/pages/order/detail/${compData.state}?orderItem=` + encodeURIComponent(JSON.stringify(compData))
 			})
 			}
-			
-
-
 			// this.$toRoute(`/pages/order/detail/${compData.state}?orderItem=` + encodeURIComponent(JSON.stringify(compData)))
 		}
 	},
@@ -146,9 +153,16 @@ export default {
 	.body {
 		box-sizing: border-box;
 		padding: 35rpx;
-
+		position: relative;
 		.body-line {
 			margin-top: 28rpx;
+		}
+		.deleteButton{
+			position: absolute;
+			bottom: 0;
+			right: 40rpx;
+			color: #f37878;
+			font-size: 40rpx;
 		}
 	}
 

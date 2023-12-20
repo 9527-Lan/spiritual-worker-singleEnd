@@ -5,11 +5,11 @@
 			<view class="form">
 				<u-form label-width="145rpx" :model="dataForm" :rules="rules"
 					:label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
-					<u-form-item label="企业名称" borderBottom required>
+					<u-form-item label="企业名称" borderBottom required name="name">
 						<u--input border="none" v-model="dataForm.name" placeholder="请输入"
 							@change='getname'></u--input>
 					</u-form-item>
-					<u-form-item label="法人" borderBottom required>
+					<u-form-item label="法人" borderBottom required name="delegate">
 						<u--input border="none" v-model="dataForm.delegate" placeholder="请输入"
 							@change='getworkpeople'></u--input>
 					</u-form-item>
@@ -18,7 +18,7 @@
 							border="none" @change='getnumber'></u--input>
 
 					</u-form-item>
-					<u-form-item label="社会统一信用代码" borderBottom required>
+					<u-form-item label="社会统一信用代码" borderBottom required name="taxNo">
 						<u--input v-model="dataForm.taxNo" type='number' placeholder="请输入" disabledColor="#ffffff"
 							border="none" @change="getdm"></u--input>
 
@@ -26,21 +26,20 @@
 					</u-form-item>
 					<u-form-item label="法人身份证件照片" borderBottom required>
 						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" border="none"></u--input>
-
-						<view class="imgdelegate" v-if="dataForm.delegateImgGhUrl&&dataForm.delegateImgGhUrl">
-							<u-image  :src="dataForm.delegateImgGhUrl" height="150rpx" width="200rpx"  style="margin-right: 20px;"></u-image>
-						   <u-image  :src="dataForm.delegateImgRxUrl" height="150rpx" width="200rpx"></u-image>
+						<view class="imgdelegate" v-if="dataForm.delegateImgGh&&dataForm.delegateImgRx">
+							<u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + dataForm.delegateImgGh" height="150rpx" width="200rpx"  style="margin-right: 20px;"></u-image>
+						   <u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + dataForm.delegateImgRx" height="150rpx" width="200rpx"></u-image>
 						</view>
 						
-						<u-tag v-else :text="dataForm.delegateImgGh&&dataForm.delegateImgRx?'去查看':'去认证'" shape="circle" plain size="mini"
+						<u-tag v-else text='去认证' shape="circle" plain size="mini"
 							@click="handleClick('uploadIDCard')"></u-tag>
 						<!-- </view> -->
 					</u-form-item>
 	
 					<u-form-item label="营业执照" borderBottom required>
 						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" border="none"></u--input>
-						<u-image v-if="dataForm.licenseImgUrl" :src="dataForm.licenseImgUrl" height="200rpx" width="200rpx"></u-image>
-						<u-tag v-else :text="dataForm.licenseImg?'去查看':'去认证'" shape="circle" plain size="mini"
+						<u-image v-if="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + dataForm.licenseImg" :src="dataForm.licenseImgUrl" height="200rpx" width="200rpx"></u-image>
+						<u-tag v-else text="去认证" shape="circle" plain size="mini"
 							@click="handleClick('uploadLicense')"></u-tag>
 						<!-- </view> -->
 					</u-form-item>
@@ -84,7 +83,10 @@ export default {
 				taxNo: '',//社会统一信用代码
 				delegateImgGh: '',//身份证国徽
 				delegateImgRx: '',//身份证人像
+				delegateImgGhUrl: '',//身份证国徽
+				delegateImgRxUrl: '',//身份证人像
 			},
+			imgData:null,
 			formList: [
 				{ field: '', label: '企业名称', required: true, placeholder: '湖南湘银物业有限责任公司', border: 'none' },
 				{
@@ -123,8 +125,7 @@ export default {
 			],
 			rules:{
 				idCard:[
-{min:18,max:18,message:'请输入正确的身份证号码'},
-
+					{min:18,max:18,message:'请输入正确的身份证号码'},
 				]
 			}
 		}
@@ -136,15 +137,11 @@ export default {
 		// 保存
 		sumbit(){
 			this.dataForm.id=this.$store.state.user.userInfo.id
-			// this.dataForm.delegateImgGh=uni.getStorageSync('delegateImgGh')
-			// this.dataForm.delegateImgRx=uni.getStorageSync('delegateImgRx')
-			// this.dataForm.licenseImg=uni.getStorageSync('licenseImg')
 			if(!uni.$u.test.idCard(this.dataForm.idCard)){
 				uni.$u.toast('请填写正确的身份证号')
 				return
 			}
 			casuaEdit(this.dataForm).then((res)=>{
-			
 				if(res.code==='00000'){
 					uni.showToast({
 							title: "上传成功",
@@ -163,7 +160,14 @@ export default {
 				}
 			})
 		},
-
+		setImg(){
+			if (this.imgData) {
+				this.dataForm.delegateImgGhUrl = this.imgData.delegateImgGh.url
+				this.dataForm.delegateImgGh = this.imgData.delegateImgGh.id
+				this.dataForm.delegateImgRxUrl = this.imgData.delegateImgRx.url
+				this.dataForm.delegateImgRx = this.imgData.delegateImgRx.id
+			}
+		},
 		handleClick(event) {
 			switch (event) {
 				case 'enterpriseCertification':
@@ -199,18 +203,17 @@ export default {
 
 	},
 	onLoad(options) {
-		
+		if (options.data) {
+			this.imgData = JSON.parse(options.data)
+			console.log(this.imgData);
+		}
 	},
 	mounted() {
 
 		getuser(Number(this.$store.state.user.userInfo.id)).then((res) => {
-			// this.dataForm.name = res.data.name
-			// this.dataForm.delegate = res.data.delegate
-			// this.dataForm.idCard = res.data.idCard
-			// this.dataForm.taxNo = res.data.taxNo
 			this.dataForm=res.data
 			this.$store.state.user.userCard.licenseImgUrl=res.data.licenseImgUrl
-
+			this.setImg()
 			console.log(this.dataForm, '939939399');
 
 		})
@@ -222,6 +225,7 @@ export default {
 			// this.dataForm.idCard = res.data.idCard
 			// this.dataForm.taxNo = res.data.taxNo
 			this.dataForm=res.data
+			this.setImg()
 			// this.$store.state.user.userCard.licenseImgUrl=res.data.licenseImgUrl
 
 			console.log(this.dataForm, '939939399');

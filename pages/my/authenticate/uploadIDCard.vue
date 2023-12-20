@@ -130,28 +130,33 @@ export default {
 				return item.status === "success" && item.status
 			})
 			if (status2 && status&&state) {
-				casuaEdit({
-					delegateImgGh:this.contraryList[0].id,
-					delegateImgRx:this.frontList[0].id,
-					id:Number(this.$store.state.user.userInfo.id)
-				}).then((res)=>{
-					if(res.code==='00000'){
-						uni.showToast({
-							title: "上传成功",
-							duration: 2000,
-							success: (res) => {
-								setTimeout(() => {
-									uni.navigateBack(1)
-								}, 2000)
-							},
-						})
-					}else{
-						uni.$u.toast(res.data)
-					}
-					 
+				let l = {
+					delegateImgGh:this.contraryList[0],
+					delegateImgRx:this.frontList[0],
+				}
+				uni.redirectTo({
+					url:'/pages/my/enterpriseCertification?data=' + JSON.stringify(l)
 				})
-				// uni.setStorageSync('delegateImgGh', this.contraryList[0].id)
-				// uni.setStorageSync('delegateImgRx', this.frontList[0].id)
+				// casuaEdit({
+				// 	delegateImgGh:this.contraryList[0].id,
+				// 	delegateImgRx:this.frontList[0].id,
+				// 	id:Number(this.$store.state.user.userInfo.id)
+				// }).then((res)=>{
+				// 	if(res.code==='00000'){
+				// 		uni.showToast({
+				// 			title: "上传成功",
+				// 			duration: 2000,
+				// 			success: (res) => {
+				// 				setTimeout(() => {
+				// 					uni.navigateBack(1)
+				// 				}, 2000)
+				// 			},
+				// 		})
+				// 	}else{
+				// 		uni.$u.toast(res.data)
+				// 	}
+					 
+				// })
 				// uni.navigateBack(1)
 			} else {
 				 uni.$u.toast('请上传完身份证信息后再试')

@@ -11,7 +11,7 @@
 			</view>
 		</view>
 		<view class="order-list">
-			<orderItem v-for="(item, index) in orderList" :key="index" :compData="item"></orderItem>
+			<orderItem v-for="(item, index) in orderList" :key="index" :compData="item" @deleteOrder= 'deleteOrder'></orderItem>
 		</view>
 
 		<view class="page-footer">
@@ -32,10 +32,12 @@ import {
 	queryOrderbyJxzEngId,
 	queryOrderbyWcEngId,
 	queryOrderbyYcEngId,
-	queryOrderbyCjId
+	queryOrderbyCjId,
+	queryOrderbyQxId,
 } from '@/api/sub.js'
 import {
-	tomerService
+	tomerService,
+	orderDel
 } from "@/api/user.js"
 import { toChineseBig } from '@/utils/utils.js'
 export default {
@@ -52,7 +54,8 @@ export default {
 				{ title: '抢单中', value: 0 },
 				{ title: '已完成', value: 0 },
 				{ title: '异常订单', value: 0 },
-				{ title: '已创建', value: 0 },
+				{ title: '待发布', value: 0 },
+				{ title: '已取消', value: 0 },
 			],
 			selectShow:true,
 			content:'',
@@ -150,13 +153,18 @@ export default {
 		console.log("this.currentValue", this.currentValue);
 		this.switchStatus()
 	},
-
 	onPullDownRefresh() {
 		this.switchStatus()
 	},
 	methods: {
 		onBack() {
 			uni.navigateBack(1)
+		},
+		deleteOrder(compData){
+			orderDel({id:compData.id}).then(res=>{
+				console.log(res);
+				this.switchStatus()
+			})
 		},
 		closeCard() {
 			uni.makePhoneCall({
@@ -222,6 +230,10 @@ export default {
 				case 'creatyj':
 					this.currentType = 4
 					this.getcreateyjList(userId, loginType)
+					break;
+				case 'Cancelled':
+					this.currentType = 5
+					this.getcreateQxList(userId, loginType)
 					break;
 				default:
 					break
@@ -309,6 +321,17 @@ export default {
 				console.log(data, '22222');
 				this.orderList = data
 			}
+		},
+		async getcreateQxList(userId, loginType) {
+			let res = await queryOrderbyQxId({ id: userId, type: loginType })
+				let data = res.data.map(el => {
+					return {
+						...el,
+						state: this.currentValue
+
+					}
+				});
+				this.orderList = data
 		}
 	},
 }

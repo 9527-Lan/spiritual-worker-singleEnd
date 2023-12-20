@@ -111,6 +111,22 @@ export function delItem(params) {
 		params:params
 	})
 }
+// 待发布删除
+export function orderDel(params) {
+	return request({
+		url: '/order/del',
+		method: 'get',
+		params:params
+	})
+}
+// 根据账号查询
+export function querybyAccount(params) {
+	return request({
+		url: '/querybyAccount',
+		method: 'get',
+		params:params
+	})
+}
 // 子账户修改
 export function getuser(data) {
 	console.log(data,'data');
