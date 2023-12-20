@@ -12,7 +12,7 @@
 		</view>
 		<view class="operate-container">
 			<view class="title">我的订单</view>
-			<u-grid :col="5" :border="false">
+			<u-grid :col="3" class="margin" :border="false">
 				<u-grid-item v-for="(item, index) in operates" :key="index" @click="$toRoute(item.route)">
 					<view class="operate-item">
 						<view class="number" :style="{ color: item.color }">{{ item.number }}</view>
@@ -64,7 +64,7 @@ export default {
 			operates: [
 			{
 				number: 0,
-				label: '已创建',
+				label: '待发布',
 				color: '#333333',
 				route: '/pages/order/index?state=creatyj'
 			},
@@ -85,6 +85,12 @@ export default {
 				label: '已完成',
 				color: '#333333',
 				route: '/pages/order/index?state=completes'
+			},
+			{
+				number: 0,
+				label: '已取消',
+				color: '#333333',
+				route: '/pages/order/index?state=Cancelled'
 			},
 			{
 				number: 0,
@@ -195,7 +201,7 @@ export default {
 				this.operates = [
 				{
 					number: item.cjOrderCount,
-					label: '已创建',
+					label: '待发布',
 					color: '#333333',
 					route: '/pages/order/index?state=creatyj'
 				},	
@@ -215,7 +221,13 @@ export default {
 					color: '#333333',
 					route: '/pages/order/index?state=completes'
 				},
-				 {
+				{
+					number: item.qxOrderCount,
+					label: '已取消',
+					color: '#333333',
+					route: '/pages/order/index?state=Cancelled'
+				},
+				{
 					number: item.ycOrderCount,
 					label: '异常',
 					color: '#F37878',
@@ -227,7 +239,6 @@ export default {
 			tomerService().then((res) => {
 				this.content = res.data
 			})
-			console.log(this.operates);
 		},
 		toBtn(item) {
 			if (item.title === '咨询客服') {
@@ -364,4 +375,14 @@ page {
 		}
 	}
 }
+.margin>:nth-child(1).u-grid-item {
+	margin-bottom: 50rpx;
+}
+.margin>:nth-child(2).u-grid-item{
+	margin-bottom: 50rpx;
+}
+.margin>:nth-child(3).u-grid-item{
+	margin-bottom: 50rpx;
+}
+
 </style>

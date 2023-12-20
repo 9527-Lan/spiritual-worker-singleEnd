@@ -37,9 +37,9 @@
 			<u-button @click="onLogin" color="#3A84F0" :disabled="logining" :customStyle="{ marginTop: '60rpx' }">登录</u-button>
 			<view class="footer-tip">
 				<!-- <view class="circle"></view> -->
-				<u-radio-group v-model="agree" @change="checkboxChange">
-				<u-radio size="28rpx"></u-radio>
-			</u-radio-group>
+				<u-radio-group :value="agree" @change="checkboxChange">
+					<u-radio name='a' size="28rpx"></u-radio>
+				</u-radio-group>
 				我已阅读并理解
 				<text class="link">《服务协议》</text>
 				和
@@ -69,7 +69,7 @@
 	import {
 		mapMutations
 	} from 'vuex';
-	import {  getAgreement } from "@/api/user.js"
+	import {  getAgreement,querybyAccount } from "@/api/user.js"
 	export default {
 		data() {
 			return {
@@ -128,34 +128,36 @@
 			})
 			},
 			cardbtn() {
-			this.cardShow = !this.cardShow
-			this.loginStatus=true
-			console.log(this.agree)
-		},
+				this.cardShow = !this.cardShow
+				this.loginStatus=true
+				console.log(this.agree)
+			},
 			onLogin() {
-				if (this.loginStatus) {
-					this.$refs.uForm.validate().then(res => {
-						if(this.radiovalue1 === '企业') {
-							this.firmLogin()
-						} 
-						if(this.radiovalue1 === '个人') {
-							this.personLogin()
+				querybyAccount({accountName:this.form.accountName}).then(res=>{
+					if(res.data!=0){
+						this.agree = 'a'
+						this.loginGoGoGo()
+					}else{
+						if (this.loginStatus) {
+							this.loginGoGoGo()
+						} else {
+							this.$api.msg('请仔细阅读协议后登录');
 						}
-					}).catch(errors => {
-						// uni.$u.toast('校验失败')
-					})
-
-				} else {
-					this.$api.msg('请仔细阅读协议后登录');
-				}
-				// this.$refs.uForm.validate().then(res => {
-				// 	uni.$u.toast('校验通过')
-				// }).catch(errors => {
-				// 	uni.$u.toast('校验失败')
-				// })
-				// uni.reLaunch({
-				// 	url: '/pages/index/home',
-				// })
+					}
+				})
+				
+			},
+			loginGoGoGo(){
+				this.$refs.uForm.validate().then(res => {
+					if(this.radiovalue1 === '企业') {
+						this.firmLogin()
+					} 
+					if(this.radiovalue1 === '个人') {
+						this.personLogin()
+					}
+				}).catch(errors => {
+					// uni.$u.toast('校验失败')
+				})
 			},
 			firmLogin() {
 				this.logining = true;

@@ -231,6 +231,14 @@ export function queryOrderbyCjId (params){
 		params:params,
 	})
 }
+// 下单人根据id 查询取消的订单
+export function queryOrderbyQxId (params){
+	return request({
+		url: '/queryOrderbyQxId',
+		method: 'get',
+		params:params,
+	})
+}
 // 订单明细查询
 export function getorderItems (id){
 	return request({
