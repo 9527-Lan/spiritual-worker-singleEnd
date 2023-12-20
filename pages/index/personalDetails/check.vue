@@ -14,19 +14,18 @@
 							</view>
 						</view>     
 						<view class="information-tag">
-							<view class="tag-item" v-for="(item, index) in detailData.role" :key="index">{{ item }}</view>
+							<view class="tag-item" v-for="(item, index) in detailData.role" :key="item">{{ item }}</view>
 							<view class="tag-item" v-if="detailData.experience != null" v-for="(item, index) in detailData.experience" :key="index">{{ item }}</view>
 							<view class="tag-item" v-if="detailData.hasCertificate">持证上岗</view>
 						</view>
 					</view>
-					<u-avatar :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + detailData.headSculpture" size="96rpx"></u-avatar>
+					<u-avatar  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + detailData.headSculpture" size="96rpx"></u-avatar>
 				</view>
 				<view class="title">持有证书</view>
 				<view class="certificate">
-					<!-- <u-image v-for="(item, index) in detailData.casualEngineerCertificate" :key = "index" :src="item" height="457rpx" width="615rpx"></u-image> -->
 					<u-swiper
 						style="width: 615rpx;"
-						:list="detailData.img"
+						:list="detailData.casualEngineerCertificate"
 						previousMargin="30"
 						nextMargin="30"
 						circular

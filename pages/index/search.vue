@@ -30,12 +30,12 @@
 		methods: {
 			// 搜索
 			findCasualEngineerList() {
-				console.log('111')
 				findCasualEngineer().then(res => {					
 					this.pageList=res.data.list.map(item => {
 						return {
 							headSculpture: item.headSculpture,
 							name: item.engineerRealname,
+							img:[item.cardImgNegative,item.cardImgPositive],
 							sex: item.engineerSexName,
 							role: item.typeName?item.typeName.split(','):[],
 							experience: item.labelName?item.labelName.split(','):[],
@@ -61,14 +61,16 @@
 					this.pageList = data.list.map(item => {
 						return {
 							headSculpture: item.headSculpture,
-							img:item.casualEngineerCertificate,
+							img:[item.cardImgNegative,item.cardImgPositive],
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
 							role: item.typeName?item.typeName.split(','):[],
 							experience: item.labelName?item.labelName.split(','):[],
 							times: item.employmentNumber,
 							id:item.id,
-							hasCertificate:true
+							hasCertificate:true,
+							hasCertificate: item.casualEngineerCertificate.length,
+							casualEngineerCertificate: item.casualEngineerCertificate
 						}			
 					})
 				})

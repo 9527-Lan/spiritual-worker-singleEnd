@@ -18,7 +18,7 @@
 				<view class="tip-text">用工数：{{ compData.times }}次</view>
 			</view>
 			<view class="information-tag">
-				<view class="tag-item" v-for="(item, index) in compData.role" :key="index">{{ item }}</view>
+				<view class="tag-item" v-for="(item, index) in compData.role" :key="item">{{ item }}</view>
 				<view class="tag-item" v-if="compData.experience != null" v-for="(item, index) in compData.experience" :key="index">{{ item }}</view>
 				<view class="tag-item" v-if="compData.hasCertificate">持证上岗</view>
 				<!-- <u-tag type="info" size="mini" :text="compData.role" plain class="tag-item"></u-tag>

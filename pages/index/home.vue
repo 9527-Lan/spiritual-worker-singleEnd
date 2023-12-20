@@ -94,8 +94,8 @@
 				findCasualEngineer(params).then(res => {			
 					const dataList = res.data.list.map(item => {
 						return {
-							img: item.headSculptureUrl,
-							headSculpture:item.headSculpture,
+							headSculpture: item.headSculpture,
+							img:[item.cardImgNegative,item.cardImgPositive],
 							name: item.engineerRealname,
 							sex: item.engineerSexName,
 							role: item.typeName?.split(','),
