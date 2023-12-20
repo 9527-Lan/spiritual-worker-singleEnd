@@ -41,8 +41,8 @@
 			<orderDescription :compData="resData"></orderDescription>
 		</view>
 		<view class="footer">
-			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
-				size="36rpx"></u-icon>
+			<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
+				size="36rpx" />
 			<view class="flex-center btn-box">
 				<u-button text="取消订单" type="primary" plain @click="onCancelOrder"></u-button>
 				<u-button text="转发微信" color="#3A84F0" @click="shareToWx"></u-button>
@@ -59,6 +59,7 @@
 
 <script>
 import orderInfo from './components/order-info.vue'
+import kefu from "@/components/kefu.vue"
 import orderDescription from './components/order-description.vue'
 import {
 	casualOrderEngineerList,
@@ -75,6 +76,7 @@ export default {
 	components: {
 		orderInfo,
 		orderDescription,
+		kefu
 	},
 	data() {
 		return {

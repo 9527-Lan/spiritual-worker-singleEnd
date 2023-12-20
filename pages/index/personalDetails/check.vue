@@ -48,14 +48,6 @@
 				</view>
 			</view>
 		</view>
-<!-- 		<view class="footer">
-			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
-				size="36rpx"></u-icon>
-			<view class="flex-center btn-box">
-				<u-button text="拒绝Ta" type="info" plain></u-button>
-				<u-button text="审核通过" color="#3A84F0"></u-button>
-			</view>
-		</view> -->
 	</view>
 </template>
 

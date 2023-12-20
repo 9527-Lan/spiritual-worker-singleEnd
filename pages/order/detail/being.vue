@@ -57,8 +57,8 @@
 			<orderDescription :compData="resData"></orderDescription>
 		</view>
 		<view class="footer">
-			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
-				size="36rpx"></u-icon>
+			<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
+				size="36rpx" />
 		</view>
 	</view>
 </template>
@@ -69,12 +69,14 @@
 		getorderItems,
 		listOrderItem
 	} from '@/api/user.js'
+	import kefu from "@/components/kefu.vue"
 	import orderInfo from './components/order-info.vue'
 	import orderDescription from './components/order-description.vue'
 	export default {
 		components: {
 			orderInfo,
 			orderDescription,
+			kefu
 		},
 		data() {
 			return {

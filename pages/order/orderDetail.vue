@@ -121,7 +121,7 @@
 					</u-form-item>
 				</u-form>
 				<view class="form-footer">
-					<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx" class="page-footer"></u-icon>
+					<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx" class="page-footer" />
 					<view class="btn-box">
 						<u-button @click="addressConfirm" text="确认提交" color="#3A84F0"></u-button>
 					</view>
@@ -132,6 +132,7 @@
 </template>
 
 <script>
+	import kefu from "@/components/kefu.vue"
 	import {
 		getWorkType,
 		getType,
@@ -143,7 +144,8 @@
 	import qianziyuSelect from "@/pages/index/components/qianziyu-select.vue"
 	export default {
 		components: {
-			qianziyuSelect
+			qianziyuSelect,
+			kefu
 		},
 		data() {
 			return {

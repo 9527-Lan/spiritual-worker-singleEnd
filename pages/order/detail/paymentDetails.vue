@@ -30,7 +30,7 @@
 		</view>
 
 		<view class="footer">
-			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"></u-icon>
+			<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx" />
 		</view>
 	</view>
 </template>
@@ -38,9 +38,11 @@
 <script>
 	import orderInfo from './components/order-info.vue'
 	import { listOrderPay } from '@/api/sub.js'
+	import kefu from "@/components/kefu.vue"
 	export default {
 		components: {
 			orderInfo,
+			kefu
 		},
 		data() {
 			return {

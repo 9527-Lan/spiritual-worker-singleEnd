@@ -7,12 +7,20 @@
 </template>
 
 <script>
+	import {
+		tomerService
+	} from "@/api/user.js"
 	export default{
 		data(){
 			return {
 				show:false,
 				content:'18570390397'
 			}
+		},
+		created(){
+			tomerService().then((res) => {
+				this.content = res.data
+			})
 		},
 		methods:{
 			closeCard() {

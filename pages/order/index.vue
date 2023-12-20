@@ -15,11 +15,9 @@
 		</view>
 
 		<view class="page-footer">
-			<u-icon @click="callPhone" name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"
-				class="page-footer"></u-icon>
+			<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"
+				class="page-footer" />
 		</view>
-		<u-modal :show="show" title="拨打客服电话进行咨询" :content='content' :showCancelButton='true' @confirm="closeCard"
-			@cancel="del"></u-modal>
 		<u-picker :show="typePickerVisble" :columns="[typeList]" keyName="title" @confirm="onTypePickConfirm"
 			@cancel="onTypePickCancle"></u-picker>
 	</view>
@@ -27,6 +25,7 @@
 
 <script>
 import orderItem from './components/order-item.vue'
+import kefu from "@/components/kefu.vue"
 import {
 	queryOrderbyEngId,
 	queryOrderbyJxzEngId,
@@ -43,6 +42,7 @@ import { toChineseBig } from '@/utils/utils.js'
 export default {
 	components: {
 		orderItem,
+		kefu
 	},
 	data() {
 		return {
@@ -165,18 +165,6 @@ export default {
 				console.log(res);
 				this.switchStatus()
 			})
-		},
-		closeCard() {
-			uni.makePhoneCall({
-				phoneNumber: this.content //仅为示例
-			});
-			this.show = false;
-		},
-		callPhone(){
-			this.show = true
-		},
-		del() {
-			this.show = false;
 		},
 		onTypePickShow() {
 			this.typePickerVisble = true
