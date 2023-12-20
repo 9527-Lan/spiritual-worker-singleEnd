@@ -26,7 +26,7 @@
 					<!-- <u-image v-for="(item, index) in detailData.casualEngineerCertificate" :key = "index" :src="item" height="457rpx" width="615rpx"></u-image> -->
 					<u-swiper
 						style="width: 615rpx;"
-						:list="detailData.img"
+						:list="detailData.casualEngineerCertificate"
 						previousMargin="30"
 						nextMargin="30"
 						circular
