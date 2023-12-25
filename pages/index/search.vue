@@ -43,7 +43,7 @@
 							id:item.id,
 							hasCertificate:true,
 							hasCertificate: item.casualEngineerCertificate.length,
-							casualEngineerCertificate: item.casualEngineerCertificate
+							casualEngineerCertificate: item.casualEngineerCertificate.length?item.casualEngineerCertificate:['/static/nodata.png']
 						}			
 					})
 				})
@@ -70,7 +70,7 @@
 							id:item.id,
 							hasCertificate:true,
 							hasCertificate: item.casualEngineerCertificate.length,
-							casualEngineerCertificate: item.casualEngineerCertificate
+							casualEngineerCertificate: item.casualEngineerCertificate.length?item.casualEngineerCertificate:['/static/nodata.png']
 						}			
 					})
 				})

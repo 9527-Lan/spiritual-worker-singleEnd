@@ -82,16 +82,20 @@ const actions = {
 		console.log(data,'data');
 		return new Promise((resolve, reject) => {
 			firmLogin(data).then(response => {
-				console.log(response.data);
-				let data = response.data
-				let userInfo = data.casualEntrepreneur
-				let userInfoItem = data.casualEntrepreneurItem
-				uni.setStorageSync('userInfo', userInfo)
-				uni.setStorageSync('userInfoItem', userInfoItem)
-				commit('SET_LOGIN_TYPE', 1)
-				commit('SET_USER_INFO', userInfo)
-				commit('SET_USER_INFO_ITEM', userInfoItem)
-				resolve()
+				if (response.code == '00000') {
+					let data = response.data
+					let userInfo = data.casualEntrepreneur
+					let userInfoItem = data.casualEntrepreneurItem
+					uni.setStorageSync('userInfo', userInfo)
+					uni.setStorageSync('userInfoItem', userInfoItem)
+					commit('SET_LOGIN_TYPE', 1)
+					commit('SET_USER_INFO', userInfo)
+					commit('SET_USER_INFO_ITEM', userInfoItem)
+					resolve()
+				}else{
+					uni.$u.toast(response.msg); 
+					reject()
+				}
 			}).catch(error => {
 				reject(error)
 			})
@@ -100,13 +104,18 @@ const actions = {
 	personLogin({commit},data){
 		return new Promise((resolve,reject)=>{
 			personLogin(data).then(response=>{
-				console.log(response.data);
-				let data = response.data
-				let userInfo = data
-				uni.setStorageSync('userInfo', userInfo)
-				commit('SET_LOGIN_TYPE', 2)
-				commit('SET_USER_INFO', userInfo)
-				resolve()
+				if (response.code == '00000') {
+					let data = response.data
+					let userInfo = data
+					uni.setStorageSync('userInfo', userInfo)
+					commit('SET_LOGIN_TYPE', 2)
+					commit('SET_USER_INFO', userInfo)
+					resolve()
+				}else{
+					uni.$u.toast(response.msg); 
+					reject()
+				}
+				
 			}).catch(error=>{
 				reject(error)
 			})

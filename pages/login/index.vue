@@ -163,7 +163,6 @@
 				this.logining = true;
 				let data = this.form
 				this.$store.dispatch('user/firmLogin', data).then(res => {
-					console.log(res);
 					const pages = getCurrentPages();
 					if (pages.length > 1) {
 						uni.navigateBack()
@@ -175,7 +174,6 @@
 					}
 					this.logining = false;
 				}).catch((err) => {
-					console.log(err)
 					this.logining = false;
 				});
 			},
@@ -183,7 +181,6 @@
 				this.logining = true;
 				let data = this.form
 				this.$store.dispatch('user/personLogin',data).then(res=>{
-					console.log(res);
 					const pages = getCurrentPages();
 					if (pages.length > 1) {
 						uni.navigateBack()
@@ -194,7 +191,7 @@
 						});
 					}
 					this.logining = false;
-				}).then((err)=>{
+				}).catch((err)=>{
 					this.logining=false
 				})
 			}

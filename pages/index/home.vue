@@ -103,7 +103,7 @@
 							times: item.employmentNumber,
 							id: item.id,
 							hasCertificate: item.casualEngineerCertificate.length,
-							casualEngineerCertificate: item.casualEngineerCertificate
+							casualEngineerCertificate: item.casualEngineerCertificate.length?item.casualEngineerCertificate:['/static/nodata.png']
 						}			
 					})
 					const data = res.data.list;

@@ -49,8 +49,9 @@
 				</u-steps>
 			</view>
 			<view class="deleteButton" v-if="compData.status === 0" @click.stop="deleteOrder">
-				删除
+				<u-icon color="red" size="40" name="trash"></u-icon>
 			</view>
+			
 		</view>
 		<view class="footer" :class="compData.state">
 			<text v-if="compData.state == 'being'">状态：进行中</text>

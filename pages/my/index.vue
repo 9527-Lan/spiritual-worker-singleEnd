@@ -22,13 +22,12 @@
 			</u-grid>
 		</view>
 		<view class="cell-container">
-			<u-cell-group :border="false">
-				<u-cell :border="false" v-for="(item, index) in cellList" :key="index" isLink @click="toBtn(item)">
+			<u-cell-group :border="false">{
+				<u-cell :border="false" v-show='!(item.title == "账户管理" && !hind)' v-for="(item, index) in cellList" :key="index" isLink @click="toBtn(item)">
 					<view slot="title" class="title">
 						<u-icon :name="item.icon" size="35rpx"></u-icon>
 						<view class="label">{{ item.title }}</view>
 						<u-badge v-if="item.status" type="error " numberType="overflow" max="99" :value="msgnum"></u-badge>
-						<!-- <view v-if="index == 0" class="status">待完善</view> -->
 					</view>
 				</u-cell>
 			</u-cell-group>
@@ -55,6 +54,7 @@ import {
 export default {
 	data() {
 		return {
+			hind:'',
 			userInfo: {},
 			avater: '',
 			show: false,
@@ -116,7 +116,6 @@ export default {
 				{
 					icon: '/static/账户.png',
 					title: '账户管理',
-					// route: '/pages/my/editInfo',
 					route: '/pages/my/userList'
 				},
 				{
@@ -135,7 +134,9 @@ export default {
 		avatar
 	},
 	onLoad() {
-
+		this.$nextTick(()=>{
+			this.hind = uni.getStorageSync('userInfoItem').isMain
+		})
 	},
 	onShow() {
 		this.personageList()
