@@ -25,7 +25,7 @@
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item label="用工标签" prop="userInfo.sex" borderBottom @click="showLabel = !showSex; "
+					<u-form-item label="用工标签" prop="userInfo.sex" borderBottom @click="showLabel = !showLabel; "
 						ref="item1" required>
 						<u--textarea  v-model="dataForm.workLabel" disabled disabledColor="#ffffff" placeholder="请选择用工标签"
 							border="none" autoHeight></u--textarea>
@@ -87,9 +87,6 @@
 		<u-action-sheet :show="showSex" :actions="workTypeList" title="请选择类型" @close="showSex = false"
 			@select="typeSelect">
 		</u-action-sheet>
-		<!-- <u-action-sheet :show="showLabel" :actions="labelList" title="请选择标签" @close="showLabel = false"
-			@select="labelSelect">
-		</u-action-sheet> -->
 		<u-datetime-picker :show="dateShow" mode="datetime" @cancel='starts' @confirm="getStartTimes"
 			v-model="value1" :formatter="formatter" ref="startPicker"></u-datetime-picker>
 		<u-datetime-picker :show="endDateShow" mode="datetime" @cancel='ends' @confirm="getEndTimes"
@@ -618,6 +615,14 @@
 			let data= JSON.parse(options.data)
 			console.log(data,'data');
 			this.dataForm=data
+			if (this.dataForm.workTypeId) {
+				getWorkType({
+					typeId: this.dataForm.workTypeId
+				}).then(res => {
+					this.labelList = res.data
+				})
+			}
+			
 		}
 	}
 </script>

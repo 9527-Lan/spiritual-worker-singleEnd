@@ -18,12 +18,9 @@
 				<view class="tip-text">用工数：{{ compData.times }}次</view>
 			</view>
 			<view class="information-tag">
-				<view class="tag-item" v-for="(item, index) in compData.role" :key="item">{{ item }}</view>
-				<view class="tag-item" v-if="compData.experience != null" v-for="(item, index) in compData.experience" :key="index">{{ item }}</view>
-				<view class="tag-item" v-if="compData.hasCertificate">持证上岗</view>
-				<!-- <u-tag type="info" size="mini" :text="compData.role" plain class="tag-item"></u-tag>
-				<u-tag type="info" size="mini" :text="compData.experience" plain class="tag-item"></u-tag>
-				<u-tag type="info" size="mini" v-if="compData.hasCertificate" text="持证上岗" plain class="tag-item"></u-tag> -->
+				<view class="tag-item" :style="{minWidth:item.length*24 + 20 + 'rpx'}" v-for="(item, index) in compData.role" :key="item">{{ item }}</view>
+				<view class="tag-item" :style="{minWidth:item.length*24 + 20 + 'rpx'}" v-if="compData.experience != null" v-for="(item, index) in compData.experience" :key="index">{{ item }}</view>
+				<view class="tag-item" :style="{minWidth:4*24 + 20 + 'rpx'}" v-if="compData.hasCertificate">持证上岗</view>
 			</view>
 			<view class="tip-text">{{ compData.hasCertificate ? '已上传证书' : '' }}</view>
 		</view>
@@ -45,11 +42,35 @@
 				},
 			}
 		},
+		mounted(){
+			// this.ss()
+		},
 		methods:{
 			onClick(){
 				this.$emit('onClick')
 			},
-
+			
+			// ss(){
+			// 	let parent = {}
+			// 	let children = {}
+			// 	const query = uni.createSelectorQuery().in(this);
+			// 	query.select('.information-tag').boundingClientRect(data=>{
+			// 		console.log(data);
+			// 		parent = data
+			// 	}).exec()
+			// 	const query1 = uni.createSelectorQuery().in(this);
+			// 	query1.selectAll('.tag-item').fields({rect:true},data=>{
+			// 		console.log(data);
+			// 		children = data
+			// 	}).exec()
+			// 	children.forEach(child => {
+			// 	    const isOverflowX = child.right > parent.right;
+				
+			// 	    if (isOverflowX || isOverflowY) {
+			// 	      console.log('Child is overflowing:', child);
+			// 	    }
+			// 	  });
+			// }
 		}
 	}
 </script>
@@ -89,7 +110,9 @@
 			.information-tag {
 				margin: 28rpx 0;
 				display: flex;
+				width: calc(100vw - 334rpx);
 				align-items: center;
+				overflow: hidden;
 				.tag-item {
 					border-radius: 5rpx;
 					font-size: 24rpx;

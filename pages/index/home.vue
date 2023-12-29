@@ -1,17 +1,21 @@
 <template>
 	<view class="page-index">
 		<u-navbar :bgColor="bgColor" >
-			<!-- 小程序 -->
-			<!-- <view slot="left" class="search-box" >
+			<!-- #ifdef MP-WEIXIN -->
+			<view slot="left" class="search-box" >
 				<u-search :showAction="false" placeholder="搜索用工类型信息..." bgColor="#fff" style="width: 100%" disabled
 					@click="toSearch" ></u-search>
-			</view> -->
-			
-			<!-- h5 -->
-			<view slot="left" class="search-box-h5" @click="toSearch">
-					<u-search  :showAction="false"  placeholder="搜索工程师..." bgColor="#fff" style="width: 100%"
-					></u-search>
 			</view>
+			<!-- #endif -->
+			
+			<!-- #ifdef H5 -->
+			<view slot="left" class="search-box-h5" @click="toSearch">
+				<u-search  :showAction="false"  placeholder="搜索工程师..." bgColor="#fff" style="width: 100%"
+				></u-search>
+			</view>
+			<!-- #endif -->
+			<!-- h5 -->
+			
 		</u-navbar>
 		<view class="swiper-box">
 			<u-swiper :list="swiperList" circular height="280rpx" :radius="15" indicator></u-swiper>
@@ -22,8 +26,16 @@
 				<u-button color="#3A84F0" size="mini" @click="$toRoute('/pages/order/add')">一键下单</u-button>
 			</view>
 		</view>
-		<view>
-			<u-tabs :list="tabList" @click="onTabClick" lineHeight="0.4rem" lineWidth="35" @change="changeTabList"></u-tabs>
+		<view class="tab">
+			<!-- <u-tabs :list="tabList" lineHeight="0.4rem" lineWidth="35" @change="changeTabList"></u-tabs> -->
+			<u-tabs @change="changeTabList" :list="tabList" lineWidth="33" lineHeight="0.4rem" :scrollable="false"
+				:activeStyle="{
+						color: '#333333',
+						fontWeight: 'bold',
+						transform: 'scale(1.05)',
+						fontFamily: 'PingFang SC'
+					}">
+			</u-tabs>
 		</view>
 		<view>
 			<!-- /pages/index/personalDetails/index -->
@@ -153,11 +165,17 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		background-color: #f2f6ff;
 	}
-
+	.tab {
+		margin: 42rpx 32rpx;
+	
+		/deep/ .u-tabs__wrapper__nav__line {
+			width: 35px !important;
+		}
+	}
 	.page-index {
 		padding: 0 32rpx;
 		padding-top: 103rpx;
@@ -170,7 +188,7 @@
 			height: 64rpx;
 		}
 		.search-box-h5 {
-				margin-top: 20rpx;
+			margin-top: 20rpx;
 			width: 100%;
 			height: 64rpx;
 		}

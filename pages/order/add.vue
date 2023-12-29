@@ -98,7 +98,7 @@
 
 			
 		<view class="footer">
-			<u-button text="保存" color="#3A84F0" @click="onBack"></u-button>
+			<u-button text="保存" :disabled="!submitDisabled" color="#3A84F0" @click="onBack"></u-button>
 		</view>
 		
 		<u-popup :show="addressPopVisible" round="30rpx" mode="bottom">
@@ -121,7 +121,7 @@
 					</u-form-item>
 				</u-form>
 				<view class="form-footer">
-					<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx" class="page-footer"></kefu>
+					<kefu name="phone" label="平台客服" labelPos="bottom" labelSize="20rpx" labelColor="#333" size="36rpx" class="page-footer"></kefu>
 					<view class="btn-box">
 						<u-button @click="addressConfirm" text="确认提交" color="#3A84F0"></u-button>
 					</view>
@@ -315,6 +315,44 @@
 				});
 			})
 		},
+		computed:{
+			submitDisabled(){
+				if(this.dataForm.workTitile == '') {
+					return;
+				}
+				if(this.dataForm.workTypeId == '') {
+					return;
+				}
+				if(this.dataForm.workLabelId == '') {
+					return;
+				}
+				if(this.dataForm.workAddress == '') {
+					return;
+				}
+				if(this.dataForm.workNum == '') {
+					return;
+				}
+				if(this.dataForm.qdQuantity == '') {
+					return;
+				}
+				if(this.dataForm.singleMoney == '') {
+					return;
+				}
+				if(this.dataForm.employmentDay == '') {
+					return;
+				}
+				if(this.dataForm.startTime == '') {
+					return;
+				}
+				if(this.dataForm.endTime == '') {
+					return;
+				}
+				if(this.dataForm.workPlace == '') {
+					return;
+				}
+				return true
+			}
+		},
 		methods: {
 			addressConfirm() {
 				
@@ -460,9 +498,8 @@
 				this.endDateShow = false;
 			},
 			getStartTimes(e) {
-				let data = new Date(this.dataForm.endTime).getTime()
-				let edata = new Date(e.value).getTime()
-				if(data>edata || !this.dataForm.endTime){
+				let data = new Date(this.dataForm.endTime.replace('-','/')).getTime()
+				if(data>e.value || !this.dataForm.endTime){
 					this.dataForm.startTime = this.timestampToTime(e.value);
 					this.dateShow = false;
 				}else{
@@ -475,9 +512,8 @@
 				}
 			},
 			getEndTimes(e) {
-				let data = new Date(this.dataForm.startTime).getTime()
-				let edata = new Date(e.value).getTime()
-				if(data<edata ||!this.dataForm.startTime){
+				let data = new Date(this.dataForm.startTime.replace('-','/')).getTime()
+				if(data<e.value ||!this.dataForm.startTime){
 					this.dataForm.endTime = this.timestampToTime(e.value);
 					this.endDateShow = false;
 				}else{
@@ -644,7 +680,9 @@
 	page {
 		background-color: #f2f6ff;
 	}
-
+	/deep/ .u-form-item__body__left__content__required{
+		left: -24rpx;
+	}
 	.pages-order-add {
 		padding-bottom: 173rpx;;
 		.address-form {

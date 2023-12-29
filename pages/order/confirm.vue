@@ -12,7 +12,7 @@
 							<view class="click-over"></view>
 						</view>
 						<view v-else-if="item.fieldType == 'tags'" class="tags">
-							<view class="tag-item" v-for="(tagItem, tagIndex) in dataForm[item.field]" :key="tagIndex">
+							<view class="tag-item" v-for="(tagItem, tagIndex) in dataForm[item.field].split(',')" :key="tagIndex">
 								{{ tagItem }}</view>
 						</view>
 						<view v-else-if="item.fieldType == 'text'" class="input-container">
@@ -163,7 +163,7 @@ export default {
 		this.orderId = options.orderId;
 		this.dataForm['1'] = this.datas.workTitile;
 		this.dataForm['2'] = this.datas.workType;
-		this.dataForm['3'] = [this.datas.workLabel];
+		this.dataForm['3'] = this.datas.workLabel;
 		this.dataForm['4'] = this.datas.workAddress;
 		this.dataForm['5'] = this.datas.workPlace;
 		this.dataForm['6'] = this.datas.workNum;

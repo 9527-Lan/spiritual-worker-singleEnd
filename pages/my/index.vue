@@ -3,7 +3,7 @@
 		<view class="information">
 			<view class="left">
 				<u-avatar :src="avater" size="120" @click="upAvatar"></u-avatar>
-				<avatar @upload="myUpload" ref="avatar" style="width: 0;height: 0;"></avatar>
+				<avatar @upload="myUpload" v-if="!avater" ref="avatar" style="width: 0;height: 0;"></avatar>
 			</view>
 			<view class="information-right">
 				<view class="name">{{ userInfo.name }}</view>
@@ -14,7 +14,7 @@
 			<view class="title">我的订单</view>
 			<u-grid :col="3" class="margin" :border="false">
 				<u-grid-item v-for="(item, index) in operates" :key="index" @click="$toRoute(item.route)">
-					<view class="operate-item">
+					<view class="operate-item" :style="{marginBottom:index<3?'50rpx':''}">
 						<view class="number" :style="{ color: item.color }">{{ item.number }}</view>
 						<view class="laber">{{ item.label }}</view>
 					</view>
@@ -22,7 +22,7 @@
 			</u-grid>
 		</view>
 		<view class="cell-container">
-			<u-cell-group :border="false">{
+			<u-cell-group :border="false">
 				<u-cell :border="false" v-show='!(item.title == "账户管理" && !hind)' v-for="(item, index) in cellList" :key="index" isLink @click="toBtn(item)">
 					<view slot="title" class="title">
 						<u-icon :name="item.icon" size="35rpx"></u-icon>
@@ -31,11 +31,25 @@
 					</view>
 				</u-cell>
 			</u-cell-group>
-			<u-modal :show="show" :title="title" :content='content' :showCancelButton='true' @confirm="closeCard"
-				@cancel="del"></u-modal>
+			<u-modal :show="show" :title="title" :showCancelButton='true'
+				@cancel="del">
+				<view class="modalContent">
+					{{content}}
+				</view>
+				<view slot='confirmButton' class="confirmButton">
+					<u-button class="meiyige" shape="circle" text="取消" @click="del"></u-button>
+					<u-button class="meiyige" shape="circle" type="primary" text="确定" @click="closeCard"></u-button>
+				</view>
+			</u-modal>
 		</view>
 		<view class="">
-			<u-button  shape='circle' @click="unLogin" class="unLogin" text="退出登录"></u-button>
+			<!-- <u-button   text="退出登录"></u-button> -->
+		<button shape='circle' @click="unLogin" style="width: 50%;
+		margin: 20rpx auto;
+		background-color: #1e80ff;
+		border-color: #1e80ff;
+		border-radius: 60rpx;
+		color: #fff;">退出登录</button>
 		</view>
 	</view>
 </template>
@@ -277,7 +291,22 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+	.modalContent{
+		padding: 30rpx 0;
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #606266;
+	}
+	.confirmButton{
+		display: flex;
+		width: 80%;
+		margin: 0 auto;
+		justify-content: space-between;
+		& .meiyige{
+			width: 45%;
+		}
+	}
 	.unLogin{
 		width: 50%;
 		margin: 20px auto;
@@ -291,7 +320,9 @@ page {
 
 .page-my-index {
 	padding-top: 222rpx;
+	padding-bottom: 60rpx;
 	width: 100%;
+	background-color: #f2f6ff;
 
 	.information {
 		display: flex;
@@ -347,7 +378,7 @@ page {
 	}
 
 	.cell-container {
-		margin: 53rpx 30rpx 0 30rpx;
+		margin: 30rpx 30rpx 0 30rpx;
 
 		.title {
 			display: flex;
@@ -375,15 +406,6 @@ page {
 			}
 		}
 	}
-}
-.margin>:nth-child(1).u-grid-item {
-	margin-bottom: 50rpx;
-}
-.margin>:nth-child(2).u-grid-item{
-	margin-bottom: 50rpx;
-}
-.margin>:nth-child(3).u-grid-item{
-	margin-bottom: 50rpx;
 }
 
 </style>

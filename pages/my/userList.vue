@@ -26,7 +26,7 @@
 			  class="namestyle"
             >
 				<view>{{ item.accountName }}</view>
-				<view v-if="item.isMain">主</view>
+				<view class="mainClass" v-if="item.isMain">主</view>
               </view
             >
           </view>
@@ -134,7 +134,7 @@
 	  & view:first-child{
 		  line-height: 35px;
 	  }
-	  & view:nth-child(2n){
+	  & .mainClass{
 		  line-height: 20px;
 		  font-weight: 200;
 		  color: #fff;

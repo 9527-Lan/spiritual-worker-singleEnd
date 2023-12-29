@@ -11,6 +11,8 @@
 							:customStyle="{marginLeft: '16rpx',fontSize:'24rpx'}" 
 							v-for="(item, index) in radiolist1" 
 							:key="index"
+							iconSize = '30'
+							labelSize='30'
 							:label="item.name" 
 							:name="item.name" 
 							@change="radioChange">
@@ -47,7 +49,7 @@
 			</view>
 			<u-modal :show="cardShow" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
 			
-			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll">
+			<view class="rich" style="height: calc(100vh - 300rpx); margin:  auto; overflow: scroll">
 				<u-loading-icon v-if="!node" text="加载中" textSize="24"></u-loading-icon>
 				<view v-else>
 					<rich-text :nodes="node"></rich-text>

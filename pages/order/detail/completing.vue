@@ -66,8 +66,8 @@
 			<orderDescription :compData="compData"></orderDescription> -->
 		</view>
 		<view class="footer">
-			<u-icon name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
-				size="36rpx"></u-icon>
+			<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
+				size="36rpx"/>
 			<view class="flex-center btn-box">
 				<!-- <u-button text="划入异常" type="primary" plain></u-button> -->
 				<u-button text="全部结算" color="#3A84F0" v-if="orderItem.auditStatus == 3"

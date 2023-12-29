@@ -19,7 +19,7 @@
 							<view class="tag-item" v-if="detailData.hasCertificate">持证上岗</view>
 						</view>
 					</view>
-					<u-avatar  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + detailData.headSculpture" size="96rpx"></u-avatar>
+					<u-avatar class="toux" :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + detailData.headSculpture" size="96rpx"></u-avatar>
 				</view>
 				<view class="title">持有证书</view>
 				<view class="certificate">
@@ -35,7 +35,7 @@
 						bgColor="#ffffff"
 					></u-swiper>
 				</view>
-				<view class="flex-center-between">
+				<view class="flex-center-between marginll">
 					<view class="title">Ta的用工记录</view>
 					<view class="tip-text">用工数：{{ detailData.records.length }}次</view>
 				</view>
@@ -225,7 +225,9 @@
 			left: 0;
 			right: 0;
 		}
-
+		.marginll{
+			margin-top: 30rpx;
+		}
 		.flex-center {
 			display: flex;
 			align-items: center;
@@ -270,11 +272,16 @@
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
+					position: relative;
 
 					.information-left {
 						height: 100%;
+						width: 75%;
 					}
-
+					.toux{
+						position: fixed;
+						right: 80rpx;
+					}
 					.name {
 						font-size: 32rpx;
 						font-weight: bold;

@@ -1266,8 +1266,6 @@
 	}
 
 	.my-avatar {
-		width: 150upx;
-		height: 150upx;
 		border-radius: 100%;
 	}
 
