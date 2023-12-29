@@ -16,7 +16,7 @@
 
 		<view class="page-footer">
 			<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"
-				class="page-footer" />
+				className="page-footer" />
 		</view>
 		<u-picker :show="typePickerVisble" :columns="[typeList]" keyName="title" @confirm="onTypePickConfirm"
 			@cancel="onTypePickCancle"></u-picker>

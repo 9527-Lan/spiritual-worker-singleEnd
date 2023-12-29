@@ -121,7 +121,7 @@
 					</u-form-item>
 				</u-form>
 				<view class="form-footer">
-					<kefu name="phone" label="平台客服" labelPos="bottom" labelSize="20rpx" labelColor="#333" size="36rpx" class="page-footer"></kefu>
+					<kefu name="phone" label="平台客服" labelPos="bottom" labelSize="20rpx" labelColor="#333" size="36rpx" className="page-footer"></kefu>
 					<view class="btn-box">
 						<u-button @click="addressConfirm" text="确认提交" color="#3A84F0"></u-button>
 					</view>

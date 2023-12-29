@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<u-icon @click="callPhone" :labelPos='labelPos' :label='label' :labelSize='labelSize' :labelColor='labelColor' :size='size' :name='name' :class='class'></u-icon>
+		<u-icon @click="callPhone" :labelPos='labelPos' :label='label' :labelSize='labelSize' :labelColor='labelColor' :size='size' :name='name' :class='className'></u-icon>
 		<u-modal :show="show" title="拨打客服电话进行咨询"  :showCancelButton='true' 
 			@cancel="del">
 			<view class="modalContent">
@@ -32,7 +32,7 @@
 			labelColor:'',
 			size:'',
 			name:'',
-			class:''
+			className:''
 		},
 		created(){
 			tomerService().then((res) => {
