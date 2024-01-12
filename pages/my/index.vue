@@ -34,7 +34,7 @@
 			<u-modal :show="show" :title="title" :showCancelButton='true'
 				@cancel="del">
 				<view class="modalContent">
-					{{content}}
+					<rich-text style="width: 100%;" :nodes="content" class="rText"></rich-text>
 				</view>
 				<view slot='confirmButton' class="confirmButton">
 					<u-button class="meiyige" shape="circle" text="取消" @click="del"></u-button>

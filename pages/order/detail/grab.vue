@@ -25,7 +25,7 @@
 								</view>
 								<view class="score" :style="{color:item.creditScore>=95?'#3A84F0':''}">
 									<u-icon 
-										name="account-fill" 
+										name="/static/fs.png" 
 										size="24rpx" 
 										color="#3A84F0" 
 										:label="`${item.creditScore}分`" 
@@ -53,12 +53,16 @@
 			<orderInfo :compData="resData"></orderInfo>
 			<orderDescription :compData="resData"></orderDescription>
 		</view>
+		<uni-popup ref="copyDialog" type="dialog">
+			<uni-popup-dialog type="warn" cancelText="否" confirmText="是" title="通知" content="是否截止抢单" @confirm="confirmCopy"
+				></uni-popup-dialog>
+		</uni-popup>
 		<view class="footer">
 			<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333"
 				size="36rpx" />
 			<view class="flex-center btn-box">
 				<u-button text="取消订单" type="primary" plain @click="onCancelOrder"></u-button>
-				<u-button text="截止抢单" color="#3A84F0" @click="shareToWx"></u-button>
+				<u-button text="截止抢单" color="#3A84F0" @click="copyOrder"></u-button>
 			</view>
 		</view>
 		<u-modal :show="cancelModalVisible" title="是否取消此订单" :showConfirmButton="false">
@@ -156,7 +160,7 @@ export default {
 		let obj = JSON.parse(option.orderItem)
 		console.log(obj);
 		this.engineer_ids = obj.id
-		this.danziId = obj.danziId
+		this.danziId = obj.id
 		getcasualOrderList(this.engineer_ids).then((res) => {
 			console.log(res, 'res')
 			this.compData.employees = res.data
@@ -188,6 +192,12 @@ export default {
 				}
 			})
 		},
+		copyOrder(){
+			this.$refs.copyDialog.open()
+		},
+		confirmCopy(){
+			this.shareToWx()
+		},
 		onCancelOrder() {
 			this.cancelModalVisible = true
 		},
@@ -217,23 +227,20 @@ export default {
 		},
 		shareToWx() {
 			casualOrderCutoff({id:this.danziId}).then(res=>{
-				console.log(res);
+				if(res.code == '00000'){
+					uni.showToast({
+						title: '截止抢单成功',
+						icon: 'success',
+						duration: 2000
+					})
+				}else{
+					uni.showToast({
+						title: '截止抢单失败',
+						icon: 'success',
+						duration: 2000
+					})
+				}
 			})
-			// uni.share({
-			// 	provider: "weixin",
-			// 	scene: "WXSceneSession",
-			// 	type: 0,
-			// 	href: "http://uniapp.dcloud.io/",
-			// 	title: "uni-app分享",
-			// 	summary: "我正在使用HBuilderX开发uni-app，赶紧跟我一起来体验！",
-			// 	imageUrl: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni@2x.png",
-			// 	success: function (res) {
-			// 		console.log("success:" + JSON.stringify(res));
-			// 	},
-			// 	fail: function (err) {
-			// 		console.log("fail:" + JSON.stringify(err));
-			// 	}
-			// });
 		},
 		// 工人详情
 		tourl(item) {
@@ -363,6 +370,7 @@ page {
 		justify-content: space-between;
 	}
 	.score{
+		border-radius: 8rpx;
 		margin-top: 20rpx;
 		padding: 10rpx 12rpx;
 		font-size: 36rpx;

@@ -1,27 +1,11 @@
 <template>
 	<view>
 		<view class="editor_toolbox">
-			<view style="display: flex;">
-				<i class="iconfont icon-undo" data-method="undo" @tap="edit" />
-				<i class="iconfont icon-redo" data-method="redo" @tap="edit" />
-				<!-- <i class="iconfont icon-img" data-method="insertImg" @tap="edit" /> -->
-				<!-- <i class="iconfont icon-video" data-method="insertVideo" @tap="edit" /> -->
-				<!-- <i class="iconfont icon-link" data-method="insertLink" @tap="edit" /> -->
-				<i class="iconfont icon-text" data-method="insertText" @tap="edit" />
-				<i class="iconfont icon-line" data-method="insertHtml" data-param="<hr style='margin:10px 0'/>" @tap="edit" />
-				<i class="iconfont icon-heading" @tap="insertHead" />
-			</view>
-			<view style="display: flex;">
-				<i class="iconfont icon-quote" data-method="insertHtml"
-					data-param="<blockquote style='padding:0 1em;color:#6a737d;border-left:.25em solid #dfe2e5'>引用</blockquote>"
-					@tap="edit" />
-				<i class="iconfont icon-table" @tap="insertTable" />
-				<!-- <i class="iconfont icon-code" @tap="insertCode" /> -->
-				<!-- <i class="iconfont icon-emoji" data-type="emoji" @tap="openDialog" /> -->
-				<i class="iconfont icon-template" data-type="template" @tap="openDialog" />
-				<i class="iconfont icon-clear" @tap="clear" />
-				<!-- <i class="iconfont icon-load" @tap="load" /> -->
-				<i :class="'iconfont icon-'+(editable?'save':'edit')" @tap="save" />
+			<view style="display: flex;justify-content: flex-end;padding:20rpx">
+				<!-- <i :class="'iconfont icon-'+(editable?'save':'edit')" @tap="save" /> -->
+				<view class="" @tap="save">
+					保存
+				</view>
 			</view>
 		</view>
 		<view style="padding-top: 198rpx;">

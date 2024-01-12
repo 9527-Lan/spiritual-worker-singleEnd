@@ -386,6 +386,7 @@
 		onShow(){
 			console.log(uni.getStorageSync('workPlace'));
 			this.dataForm.workPlace = uni.getStorageSync('workPlace');
+			uni.setStorageSync('workPlace','');
 		},
 		onLoad() {
 			
@@ -460,13 +461,6 @@
 				if(this.dataForm.qdQuantity == '') {
 					uni.showToast({
 						title:'请输入报名人数',
-						icon:'none'
-					})
-					return;
-				}
-				if(this.dataForm.qdQuantity < this.dataForm.workNum) {
-					uni.showToast({
-						title:'报名人数不得少于用工人数',
 						icon:'none'
 					})
 					return;
@@ -718,20 +712,6 @@
 			handleClick(event) {
 				console.log(111);
 				this.show = true;
-				// switch (event) {
-				// 	case 'enterpriseCertification':
-				// 		console.log('handleClick')
-				// 		this.$toRoute('/pages/my/enterpriseCertification')
-				// 		break
-				// 	case 'uploadLicense':
-				// 		this.$toRoute('/pages/my/authenticate/uploadLicense')
-				// 		break
-				// 	case 'uploadIDCard':
-				// 		this.$toRoute('/pages/my/authenticate/uploadIDCard')
-				// 		break
-				// 	default:
-				// 		break
-				// }
 			},
 			timestampToTime(timestamp) {
 				// 时间戳为10位需*1000，时间戳为13位不需乘1000

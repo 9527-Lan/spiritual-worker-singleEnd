@@ -58,7 +58,11 @@
 		</view>
 		<view class="footer" v-if="compData.status != 4" :class="compData.state">
 			<text v-if="compData.state == 'being'">状态：进行中</text>
-			<text v-if="compData.state == 'completing'">状态：<text :class="compData.auditStatus == '3'?'red':''">{{compData.auditStatus == '3'?'驳回'+`(${compData.auditText})`:'待结算'}}</text></text>
+			<text v-if="compData.state == 'completing'">状态：
+				<text :class="compData.auditStatus == '3'?'red':''">
+					{{compData.auditStatus == '3'?('驳回' + ` (${compData.auditText})`):'待结算'}}
+				</text>
+			</text>
 			<text v-if="compData.state == 'completed'">状态：已结算</text>
 			<text v-if="compData.state == 'exception'">订单存在异常，若有结算争议，请联系平台客服</text>
 			<text v-if="compData.state == 'grab'">抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{
@@ -174,7 +178,6 @@ export default {
 				url: `/pages/order/detail/${compData.state}?orderItem=` + encodeURIComponent(JSON.stringify(compData))
 			})
 			}
-			// this.$toRoute(`/pages/order/detail/${compData.state}?orderItem=` + encodeURIComponent(JSON.stringify(compData)))
 		}
 	},
 }

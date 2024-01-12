@@ -212,6 +212,14 @@ export function casualEngineerAdd (params,){
 		params,
 	})
 }
+export function setInvitationalevision (params,){
+	console.log('data',params,)
+	return request({
+		url: '/web/casualPromotions/invitationalevision',
+		method: 'get',
+		params,
+	})
+}
 // 订单审核
 export function examine (data){
 	return request({

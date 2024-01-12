@@ -103,7 +103,7 @@
 						<u-input v-model="editForm.realComplete" placeholder="请输入" border="none"></u-input>
 					</u-form-item>
 					<u-form-item label="信用分：" >
-						<u-input v-model="editForm.creditScore" placeholder="请输入" border="none"></u-input>
+						<u-input v-model="editForm.creditScore" placeholder="请输入" readonly border="none"></u-input>
 					</u-form-item>
 					<u-form-item label="是否修改信用分：" >
 						<u-switch v-model="value"></u-switch>
@@ -152,7 +152,7 @@
 					>
 						<u--input
 							v-model="typeName"
-							disabled
+							@click="showtype = true"
 							disabledColor="#ffffff"
 							placeholder="请选择处理方式"
 							border="none"
@@ -273,7 +273,17 @@ import orderInfo from './components/order-info.vue'
 import kefu from "@/components/kefu.vue"
 import search from "@/pages/index/search.vue"
 import orderDescription from './components/order-description.vue'
-import { listOrderSetbtn,casualEngineerAdd, submit, examine, reviewNodes,settlementSubmission ,creditscoreEdit,casualEngineerList} from '@/api/sub.js'
+import { 
+	listOrderSetbtn,
+	casualEngineerAdd, 
+	submit, 
+	examine, 
+	reviewNodes,
+	settlementSubmission ,
+	creditscoreEdit,
+	casualEngineerList,
+	setInvitationalevision
+} from '@/api/sub.js'
 import {
 
 	listOrderItem
@@ -375,6 +385,7 @@ export default {
 	methods: {
 		updatexyf(){
 			this.xyfmodel = {}
+			this.typeName = ''
 			this.editPopVisible = false
 			this.xyfmodel.engineerId = this.editForm.engineerId
 			this.xyfShow = true
@@ -401,10 +412,25 @@ export default {
 							title: '新增成功',
 							duration: 2000,
 						})
-						this.editForm.yqEngineerName = this.useraddmodel.name
-						this.editForm.yqEngineerId = res.data
-						this.yqrShow = false
-						this.editPopVisible = true
+						setInvitationalevision({engineerId:this.editForm.engineerId,yqEngineerId:res.data}).then(res=>{
+							if (res.code == '00000') {
+								uni.showToast({
+									title: '修改成功',
+									duration: 2000,
+								})
+								this.editForm.yqEngineerName = this.useraddmodel.name
+								this.editForm.yqEngineerId = res.data
+								this.compData.employees[this.index].yqEngineerId = res.data
+								this.compData.employees[this.index].yqEngineerName = this.useraddmodel.name
+								this.yqrShow = false
+								this.editPopVisible = true
+							}else{
+								uni.showToast({
+									title: '修改失败',
+									duration: 2000,
+								})
+							}
+						})
 					}else{
 						uni.showToast({
 							title: '新增失败',
@@ -430,14 +456,21 @@ export default {
 				})
 				return
 			}
-			if (!this.xyfmodel.reason) {
+			if (!uni.$u.test.digits(this.xyfmodel.scoreLess)) {
+				uni.showToast({
+					title: '信用分为正整数',
+					duration: 2000,
+				})
+				return
+			}
+			if (!this.xyfmodel.scoreLess) {
 				uni.showToast({
 					title: '未填写信用分',
 					duration: 2000,
 				})
 				return
 			}
-			if (!this.xyfmodel.scoreLess) {
+			if (!this.xyfmodel.reason) {
 				uni.showToast({
 					title: '未填写原因',
 					duration: 2000,
@@ -452,7 +485,6 @@ export default {
 					})
 					this.getdetail(this.id)
 					this.xyfShow = false
-					this.editPopVisible = true
 				}else{
 					uni.showToast({
 						title: '修改时失败',
@@ -462,11 +494,25 @@ export default {
 			})
 		},
 		searchItem(item){
-			console.log(item);
-			this.editForm.yqEngineerName = item.name
-			this.editForm.yqEngineerId = item.id
-			this.editPopVisible = true
-			this.yqrShow = false
+			setInvitationalevision({engineerId:this.editForm.engineerId,yqEngineerId:item.id}).then(res=>{
+				if (res.code == '00000') {
+					uni.showToast({
+						title: '修改成功',
+						duration: 2000,
+					})
+					this.editForm.yqEngineerName = item.name
+					this.editForm.yqEngineerId = item.id
+					this.compData.employees[this.index].yqEngineerId = item.id
+					this.compData.employees[this.index].yqEngineerName = item.name
+					this.editPopVisible = true
+					this.yqrShow = false
+				}else{
+					uni.showToast({
+						title: '修改失败',
+						duration: 2000,
+					})
+				}
+			})
 			
 		},
 		onEdit(row, index) {
@@ -477,6 +523,7 @@ export default {
 				engineer_id: row.engineerId
 			}
 			listOrderItem(params).then(res => {
+				console.log(row);
 				this.editForm.name = row.engineerRealname
 				this.editForm.img = row.headSculptureUrl
 				this.editForm.times = res?.data.length + '天'
@@ -485,7 +532,11 @@ export default {
 				this.editForm.realComplete = row.settlementMoney
 				this.editForm.creditScore = row.creditScore
 				this.editForm.engineerId = row.engineerId
+				this.editForm.yqEngineerName = row.yqEngineerName
 				this.editPopVisible = true
+				if (this.editForm.yqEngineerName) {
+					this.value1 = true
+				}
 			})
 
 

@@ -174,6 +174,11 @@ export default {
 		copyOrder(compData){
 			casualOrderCopy({id:compData.id}).then(res=>{
 				console.log(res);
+				if (res.code == '00000') {
+					uni.$u.toast('复制成功请前往待发布列表查看')
+				}else{
+					uni.$u.toast('复制失败')
+				}
 				this.switchStatus()
 			})
 		},
@@ -188,22 +193,6 @@ export default {
 			console.log('onTypePickConfirm', event)
 			this.currentType = event.indexs[0]
 			this.typePickerVisble = false
-			// switch (event.indexs[0]) {
-			// 	case 0:
-			// 		this.orderList = JSON.parse(JSON.stringify(this.being))
-			// 		break
-			// 	case 1:
-			// 		this.orderList = JSON.parse(JSON.stringify(this.grab))
-			// 		break
-			// 	case 2:
-			// 		this.orderList = JSON.parse(JSON.stringify(this.completes))
-			// 		break
-			// 	case 3:
-			// 		this.orderList = JSON.parse(JSON.stringify(this.exceptions))
-			// 		break
-			// 	default:
-			// 		break
-			// }
 		},
 		switchStatus() {
 			let userInfo = this.$store.state.user.userInfo
