@@ -85,7 +85,7 @@
 					<u-icon name="close-circle-fill" size="40rpx" color="#CCCCCC" @click="editPopVisible = false"></u-icon>
 				</view>
 
-				<u-form :model="editForm" label-width="180rpx"
+				<u-form :model="editForm" class="formBody" label-width="180rpx"
 					:label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }">
 					<u-form-item label="用工对象：">
 						<view class="round-img">
@@ -102,6 +102,22 @@
 					<u-form-item label="实际结算：" required>
 						<u-input v-model="editForm.realComplete" placeholder="请输入" border="none"></u-input>
 					</u-form-item>
+					<u-form-item label="信用分：" >
+						<u-input v-model="editForm.creditScore" placeholder="请输入" border="none"></u-input>
+					</u-form-item>
+					<u-form-item label="是否修改信用分：" >
+						<u-switch v-model="value"></u-switch>
+						<u-button class="xyfBtn" type="primary" @click="updatexyf" size='mini' v-if="value == true">修改</u-button>
+					</u-form-item>
+					<u-form-item label="是否有邀请人：" >
+						<u-switch v-model="value1"></u-switch>
+					</u-form-item>
+					<u-form-item label="邀请人：" v-if="value1 == true" @click="updateyqr" >
+						<text >{{editForm.yqEngineerName}}</text>
+					</u-form-item>
+					<u-form-item label="原因：" >
+						<u--textarea v-model="editForm.reason" placeholder="请输入" ></u--textarea>
+					</u-form-item>
 				</u-form>
 				<view class="form-footer">
 					<kefu name="phone" label="平台客服" label-pos="bottom" label-size="20rpx" label-color="#333" size="36rpx"
@@ -112,7 +128,120 @@
 				</view>
 			</view>
 		</u-popup>
-
+		<u-popup :show="xyfShow" @close="closexyf">
+			<view class="xyfHeader">
+				<view>
+					修改信用分
+				</view>
+				<view>
+					<u-icon name="close-circle" @click="xyfShow = false"></u-icon>
+				</view>
+			</view>
+			<view class="xyfform">
+				<u--form
+					labelPosition="left"
+					:model="xyfmodel"
+					label-width='150'
+					ref="xyfForm"
+				>
+					<u-form-item
+						label="处理方式"
+						borderBottom
+						required
+						@click="showtype = true"
+					>
+						<u--input
+							v-model="typeName"
+							disabled
+							disabledColor="#ffffff"
+							placeholder="请选择处理方式"
+							border="none"
+						></u--input>
+						<u-icon
+							slot="right"
+							name="arrow-right"
+						></u-icon>
+					</u-form-item>
+					<u-form-item
+						label="信用分"
+						borderBottom
+						required
+						ref="item1"
+					>
+						<u--input
+							v-model="xyfmodel.scoreLess"
+							border="none"
+						></u--input>
+					</u-form-item>
+					<u-form-item
+						label="原因"
+						borderBottom
+						required
+						ref="item1"
+					>
+						<u--textarea v-model="xyfmodel.reason" placeholder="请输入内容" ></u--textarea>
+					</u-form-item>
+				</u--form>
+				<u-button @click='updatexyfSubmit'>提交</u-button>
+				<u-action-sheet
+					:show="showtype"
+					:actions="actions"
+					title="请选择处理类型"
+					@close="showtype = false"
+					@select="sexSelect"
+				>
+				</u-action-sheet>
+			</view>
+		</u-popup>
+		<u-popup :show="yqrShow" @close="closeyqr">
+			<view class="xyfHeader">
+				<view>
+					选择邀请人
+				</view>
+				<view>
+					<u-icon name="close-circle" @click="yqrShow = false"></u-icon>
+				</view>
+			</view>
+			<view class="yqrform">
+				<view class="">
+					<view class="yqranan">
+						<u-button class="an" type="primary" @click="adduser">{{isadduser?'保存':'新增'}}</u-button>
+						<u-button class="an" v-if="isadduser" @click="isadduser= !isadduser">返回</u-button>
+					</view>
+					<u--form 
+						labelPosition="left"
+						v-if='isadduser'
+						:model="useraddmodel"
+						label-width='150'
+						ref="xyfForm"
+					>
+						<u-form-item
+							label="姓名"
+							borderBottom
+							required
+							ref="item1"
+						>
+							<u--input
+								v-model="useraddmodel.name"
+								border="none"
+							></u--input>
+						</u-form-item>
+						<u-form-item
+							label="手机号"
+							borderBottom
+							required
+							ref="item1"
+						>
+							<u--input
+								v-model="useraddmodel.phone"
+								border="none"
+							></u--input>
+						</u-form-item>
+					</u--form>
+				</view>
+				<search v-if='!isadduser' @searchItem='searchItem' :search='true'></search>
+			</view>
+		</u-popup>
 		<u-modal :show="cardShow" :showConfirmButton="false" cancelText="关闭" width="622rpx" style="padding-top: 0;">
 			<view style="min-height: 750rpx; position: relative;">
 				<view style="text-align: center;
@@ -142,8 +271,9 @@
 <script>
 import orderInfo from './components/order-info.vue'
 import kefu from "@/components/kefu.vue"
+import search from "@/pages/index/search.vue"
 import orderDescription from './components/order-description.vue'
-import { listOrderSetbtn, submit, examine, reviewNodes,settlementSubmission } from '@/api/sub.js'
+import { listOrderSetbtn,casualEngineerAdd, submit, examine, reviewNodes,settlementSubmission ,creditscoreEdit,casualEngineerList} from '@/api/sub.js'
 import {
 
 	listOrderItem
@@ -152,14 +282,36 @@ export default {
 	components: {
 		orderInfo,
 		orderDescription,
-		kefu
+		kefu,
+		search
 	},
 	data() {
 		return {
+			xyfmodel:{},
+			engineerName:'',
 			editPopVisible: false,
+			showtype: false,
 			id: '',
+			useraddmodel:{},
+			isadduser:false,
+			value:false,
+			value1:false,
+			xyfShow:false,
+			yqrShow:false,
+			tqrShow:false,
+			typeName:'',
 			orderItem:{},
 			looklist: [],
+			actions:[
+				{
+					name:'加分',
+					id:'1'
+				},
+				{
+					name:'扣分',
+					id:'2'
+				}
+			],
 			cardShow: false,
 			editForm: {
 				name: '',
@@ -221,6 +373,102 @@ export default {
 		
 	},
 	methods: {
+		updatexyf(){
+			this.xyfmodel = {}
+			this.editPopVisible = false
+			this.xyfmodel.engineerId = this.editForm.engineerId
+			this.xyfShow = true
+		},
+		updateyqr(){
+			console.log('执行了');
+			this.editPopVisible = false
+			this.yqrShow = true
+		},
+		adduser(){
+			console.log(this.isadduser);
+			if (this.isadduser) {
+				console.log('提交');
+				if(!uni.$u.test.mobile(this.useraddmodel.phone)) {
+					uni.showToast({
+						title:'请正确填写手机号',
+						icon:'none'
+					})
+					return 
+				}
+				casualEngineerAdd(this.useraddmodel).then(res=>{
+					if (res.code == '00000') {
+						uni.showToast({
+							title: '新增成功',
+							duration: 2000,
+						})
+						this.editForm.yqEngineerName = this.useraddmodel.name
+						this.editForm.yqEngineerId = res.data
+						this.yqrShow = false
+						this.editPopVisible = true
+					}else{
+						uni.showToast({
+							title: '新增失败',
+							duration: 2000,
+						})
+					}
+				})
+			}else{
+				this.isadduser = !this.isadduser
+			}
+		},
+		sexSelect(e){
+			console.log(e);
+			this.typeName = e.name
+			this.xyfmodel.type = e.id
+			this.showtype = false
+		},
+		updatexyfSubmit(){
+			if (!this.xyfmodel.type) {
+				uni.showToast({
+					title: '未选择处理方式',
+					duration: 2000,
+				})
+				return
+			}
+			if (!this.xyfmodel.reason) {
+				uni.showToast({
+					title: '未填写信用分',
+					duration: 2000,
+				})
+				return
+			}
+			if (!this.xyfmodel.scoreLess) {
+				uni.showToast({
+					title: '未填写原因',
+					duration: 2000,
+				})
+				return
+			}
+			creditscoreEdit(this.xyfmodel).then(res=>{
+				if (res.code == '00000') {
+					uni.showToast({
+						title: res.data,
+						duration: 2000,
+					})
+					this.getdetail(this.id)
+					this.xyfShow = false
+					this.editPopVisible = true
+				}else{
+					uni.showToast({
+						title: '修改时失败',
+						duration: 2000,
+					})
+				}
+			})
+		},
+		searchItem(item){
+			console.log(item);
+			this.editForm.yqEngineerName = item.name
+			this.editForm.yqEngineerId = item.id
+			this.editPopVisible = true
+			this.yqrShow = false
+			
+		},
 		onEdit(row, index) {
 			console.log(row, 'row');
 			this.index = index
@@ -232,7 +480,11 @@ export default {
 				this.editForm.name = row.engineerRealname
 				this.editForm.img = row.headSculptureUrl
 				this.editForm.times = res?.data.length + '天'
-				this.editForm.complete = '￥' + row.settlementMoney
+				this.editForm.complete = '￥' + row.orderMoney
+				this.editForm.reason = row.reason
+				this.editForm.realComplete = row.settlementMoney
+				this.editForm.creditScore = row.creditScore
+				this.editForm.engineerId = row.engineerId
 				this.editPopVisible = true
 			})
 
@@ -266,6 +518,8 @@ export default {
 		submit() {
 			this.editPopVisible = false
 			this.compData.employees[this.index].settlementMoney = Number(this.editForm.realComplete)
+			this.compData.employees[this.index].reason = this.editForm.reason
+			this.compData.employees[this.index].yqEngineerId = this.editForm.yqEngineerId
 			let sum = 0
 			this.compData.employees.forEach((item, index) => {
 				console.log(item, 'item')
@@ -276,6 +530,15 @@ export default {
 			this.editForm.realComplete = ''
 
 
+		},
+		closexyf(){
+			this.xyfShow = false
+		},
+		closeyqr(){
+			this.yqrShow = false
+		},
+		closetqr(){
+			this.tqrShow = false
 		},
 		open(index) {
 			console.log("index", index);
@@ -317,6 +580,7 @@ export default {
 				cashSurplusMoney: this.compData.orderStatistics.Remain,
 				orderMoney: this.compData.orderStatistics.summary,
 				settlementMoney: this.compData.orderStatistics.complete,
+				reason: this.compData.orderStatistics.reason,
 				id: Number(this.id)
 			}
 			if(noId){
@@ -358,10 +622,34 @@ export default {
 </script>
 
 <style lang="scss">
+	.xyfBtn{
+		display: inline-block;
+		width: 20%;
+	}
 page {
 	background-color: #f2f6ff;
 }
-
+.xyfHeader{
+	padding: 20rpx 30rpx;
+	display: flex;
+	justify-content: space-between;
+}
+.xyfform{
+	padding: 0 50rpx 50rpx 50rpx;
+}
+.yqrform{
+	padding: 0 50rpx 50rpx 50rpx;
+	height: 1100rpx;
+	overflow: auto;
+}
+.yqranan{
+	display: flex;
+	justify-content: space-around;
+	margin: 20rpx 0;
+	.an{
+		width: 40%;
+	}
+}
 .pages-order-detail-completing {
 	position: relative;
 
@@ -382,11 +670,12 @@ page {
 	}
 
 	.edit-form {
-		height: 730rpx;
 		padding: 42rpx 32rpx;
 		box-sizing: border-box;
 		position: relative;
-
+		.formBody{
+			padding-bottom: 210rpx;
+		}
 		.round-img {
 			image {
 				border-radius: 50%;

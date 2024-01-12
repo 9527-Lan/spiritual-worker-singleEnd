@@ -18,15 +18,28 @@
 					<view class="employee-list">
 						<view class="employee-item flex-center-between" v-for="(item, index) in compData.employees"
 							:key="index">
-							<view class="flex-center" @click="tourl(item)">
-								<u-avatar :src="item.headSculptureUrl" size="92rpx"></u-avatar>
-								<view class="name">{{ item.engineerRealname }}</view>
+							<view @click="tourl(item)" class="flex-sx">
+								<view class="flex-center">
+									<u-avatar :src="item.headSculptureUrl" size="92rpx"></u-avatar>
+									<view class="name">{{ item.engineerRealname }}</view>
+								</view>
+								<view class="score" :style="{color:item.creditScore>=95?'#3A84F0':''}">
+									<u-icon 
+										name="account-fill" 
+										size="24rpx" 
+										color="#3A84F0" 
+										:label="`${item.creditScore}分`" 
+										label-color="#3A84F0" 
+										label-size="24rpx"
+									>
+									</u-icon>
+								</view>
 							</view>
 							<view v-if="item.status === 2" class="flex-center review-btn">
-								<u-button text="取消抢单" @click="desc(item)" color="#3A84F0"></u-button>
+								<u-button text="取消抢单" @click="desc(item)" color="red"></u-button>
 							</view>
 							<view v-else-if="item.status === 1" class="flex-center review-btn">
-								<u-button text="抢单成功" @click="success(item)" color="#3A84F0"></u-button>
+								<u-button text="确认抢单" @click="success(item)" color="#3A84F0"></u-button>
 							</view>
 						</view>
 					</view>
@@ -45,13 +58,13 @@
 				size="36rpx" />
 			<view class="flex-center btn-box">
 				<u-button text="取消订单" type="primary" plain @click="onCancelOrder"></u-button>
-				<u-button text="转发微信" color="#3A84F0" @click="shareToWx"></u-button>
+				<u-button text="截止抢单" color="#3A84F0" @click="shareToWx"></u-button>
 			</view>
 		</view>
 		<u-modal :show="cancelModalVisible" title="是否取消此订单" :showConfirmButton="false">
 			<view class="cancel-modal-btns">
 				<u-button text="取消" type="info" plain style="height: 100%" @click="cancelOdrer"></u-button>
-				<u-button text="确定" type="primary" color="#3A84F0" style="height: 100%" @click="sureOdrder"></u-button>
+				<u-button text="确定"  type="primary" color="#3A84F0" style="height: 100%" @click="sureOdrder"></u-button>
 			</view>
 		</u-modal>
 	</view>
@@ -69,7 +82,8 @@ import {
 	getcasualOrder,
 	getEngineerdetail,
 	successBtn,
-	orderItemDesc
+	orderItemDesc,
+	casualOrderCutoff
 } from '@/api/sub.js'
 import { firmLogin } from '../../../api/user'
 export default {
@@ -82,6 +96,7 @@ export default {
 		return {
 			cancelModalVisible: false,
 			engineer_ids: '',//订单id
+			danziId:'',
 			compData: {
 				state: 'being',
 				title: '临时电工',
@@ -138,9 +153,10 @@ export default {
 		}
 	},
 	onLoad(option) {
-		
 		let obj = JSON.parse(option.orderItem)
+		console.log(obj);
 		this.engineer_ids = obj.id
+		this.danziId = obj.danziId
 		getcasualOrderList(this.engineer_ids).then((res) => {
 			console.log(res, 'res')
 			this.compData.employees = res.data
@@ -200,21 +216,24 @@ export default {
 			})
 		},
 		shareToWx() {
-			uni.share({
-				provider: "weixin",
-				scene: "WXSceneSession",
-				type: 0,
-				href: "http://uniapp.dcloud.io/",
-				title: "uni-app分享",
-				summary: "我正在使用HBuilderX开发uni-app，赶紧跟我一起来体验！",
-				imageUrl: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni@2x.png",
-				success: function (res) {
-					console.log("success:" + JSON.stringify(res));
-				},
-				fail: function (err) {
-					console.log("fail:" + JSON.stringify(err));
-				}
-			});
+			casualOrderCutoff({id:this.danziId}).then(res=>{
+				console.log(res);
+			})
+			// uni.share({
+			// 	provider: "weixin",
+			// 	scene: "WXSceneSession",
+			// 	type: 0,
+			// 	href: "http://uniapp.dcloud.io/",
+			// 	title: "uni-app分享",
+			// 	summary: "我正在使用HBuilderX开发uni-app，赶紧跟我一起来体验！",
+			// 	imageUrl: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/uni@2x.png",
+			// 	success: function (res) {
+			// 		console.log("success:" + JSON.stringify(res));
+			// 	},
+			// 	fail: function (err) {
+			// 		console.log("fail:" + JSON.stringify(err));
+			// 	}
+			// });
 		},
 		// 工人详情
 		tourl(item) {
@@ -227,7 +246,7 @@ export default {
 					name: res.data.engineerRealname,
 					sex: res.data.engineerSexName,
 					role: res.data?.typeName.split(','),
-					experience: res.data.labelName.split(','),
+					experience: res.data.labelName?labelName.split(','):[],
 					times: res.data.employmentNumber,
 					id: res.data.id,
 					hasCertificate: res.data.casualEngineerCertificate.length,
@@ -295,7 +314,11 @@ export default {
 page {
 	background-color: #f2f6ff;
 }
-
+.flex-sx{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
 .pages-order-detail-grab {
 	position: relative;
 
@@ -339,7 +362,12 @@ page {
 		align-items: center;
 		justify-content: space-between;
 	}
-
+	.score{
+		margin-top: 20rpx;
+		padding: 10rpx 12rpx;
+		font-size: 36rpx;
+		background-color: #eaeff4;
+	}
 	.salary {
 		font-size: 32rpx;
 		font-weight: bold;

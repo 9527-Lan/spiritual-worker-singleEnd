@@ -45,41 +45,51 @@
 							></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
+					<u-form-item label="联系电话" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="dataForm.phone" border="none" placeholder="请输入联系电话"
+							></u--input>
+					</u-form-item>
 					<u-form-item label="用工数量" prop="userInfo.name" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入用工数量"
 							@change='getWorkNum'></u--input>
 					</u-form-item>
-					
+					<u-form-item label="年龄区间" prop="userInfo.name" @click="agePopVisible = !agePopVisible" borderBottom ref="item1" >
+						<u--input v-model="age" border="none" placeholder="请选择年龄区间"
+							></u--input>
+					</u-form-item>
 					<u-form-item label="报名人数" prop="userInfo.name" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.qdQuantity" border="none" placeholder="请输入报名人数"
 							@change='getworkpeople'></u--input>
 					</u-form-item>
-					
-					
-					<u-form-item label="单人日薪" prop="userInfo.singleMoney" borderBottom ref="item1" required>
+					<u-form-item label="单人服务费用" prop="userInfo.singleMoney" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.singleMoney" border="none" @change='getSingleMoney'
-							placeholder="请输入单人日薪"></u--input>
+							placeholder="请输入单人服务费用"></u--input>
 					</u-form-item>
 					<u-form-item label="用工天数" prop="userInfo.employmentDay" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.employmentDay" border="none"
 							placeholder="请输入用工天数"></u--input>
 					</u-form-item>
-					<u-form-item label="开始时间" prop="userInfo.startTime" borderBottom ref="item1" required
+					<u-form-item label="用工开始时间" prop="userInfo.startTime" borderBottom ref="item1" required
 						@click="dateShow = !dateShow;">
-						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择开始时间"></u--input>
+						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择用工开始时间"></u--input>
 					</u-form-item>
-					<u-form-item label="结束时间" prop="userInfo.endTime" borderBottom ref="item1" required
+					<u-form-item label="用工结束时间" prop="userInfo.endTime" borderBottom ref="item1" required
 						@click="endDateShow = !endDateShow;">
-						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择结束时间"></u--input>
+						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择用工结束时间"></u--input>
 					</u-form-item>
-					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入详细描述"
-							@change='getWorkplace'></u--input>
+					<u-form-item label="报名截至时间" prop="userInfo.orderClose" borderBottom ref="item1" required
+						@click="orderCloseShow = !orderCloseShow;">
+						<u--input v-model="dataForm.orderClose" border="none" placeholder="请选择报名截至时间"></u--input>
+					</u-form-item>
+					<u-form-item label="详细描述" prop="userInfo.name" @click="goToMpHtml" borderBottom ref="item1" required>
+						<rich-text style="width: 100%;" :nodes="dataForm.workPlace"></rich-text>
 					</u-form-item>
 				</u-form>
 			</view>
 			<view class="footer-tip">平台承诺，严格保障您的隐私安全</view>
 		</view>
+		<u-datetime-picker :show="orderCloseShow" mode="datetime" @cancel='orderCloseShow = false' @confirm="orderCloseTimes"
+			v-model="value3" :formatter="formatter" ref="endPicker"></u-datetime-picker>
 		<qianziyu-select :show="showLabel" type="checkbox" name="label" :showSearch="false"
 					:dataLists="labelList" popupTitle="请选择服务类型" @cancel="showLabel=false" @submit="labelSelect" />
 
@@ -125,6 +135,7 @@
 				</view>
 			</view>
 		</u-popup>
+		<u-picker :defaultIndex='[17,44]' :show="agePopVisible" ref="uPicker" :columns="columns" @confirm="confirmAge" @cancel='agePopVisible = !agePopVisible'></u-picker>
 	</view>
 </template>
 
@@ -147,9 +158,13 @@
 		data() {
 			return {
 				addressPopVisible: false,
+				orderCloseShow: false,
 				addressForm: {},
+				agePopVisible:false,
 				value1:Number(new Date()),
 				value2:Number(new Date()),
+				value3:Number(new Date()),
+				columns:[],
 				dataForm: {
 					principal:'',
 					principalType:'',
@@ -174,6 +189,7 @@
 					label: "222",
 					value: 1
 				}],
+				age:'',
 				showSex: false,
 				showLabel: false,
 				dateShow: false,
@@ -190,119 +206,18 @@
 					{
 						name: '保密',
 					},
-				],
-				formList: [{
-						field: 'name',
-						label: '用工标题',
-						required: true,
-						placeholder: '张三',
-						border: 'none',
-					},
-					{
-						field: 'workType',
-						fieldType: 'picker',
-						options: [{
-							label: "222",
-							value: 1
-						}],
-						label: '用工类型',
-						required: true,
-						placeholder: '请选择',
-						suffix: {
-							type: 'icon',
-							name: 'arrow-right',
-							size: '21rpx'
-						},
-						border: 'none',
-					},
-					{
-						field: 'workLabel',
-						label: '用工标签',
-						fieldType: 'picker',
-						required: true,
-						suffix: {
-							type: 'icon',
-							name: 'arrow-right',
-							size: '21rpx'
-						},
-						placeholder: '',
-						border: 'none',
-					},
-					{
-						field: '',
-						fieldType: 'picker',
-						options: [],
-						label: '用工地址',
-						required: true,
-						placeholder: '',
-						border: 'none',
-						suffix: {
-							type: 'icon',
-							name: 'arrow-right',
-							size: '21rpx'
-						},
-						btnClickEvent: 'selectAddress',
-					},
-					{
-						field: '',
-						label: '详细描述',
-						required: true,
-						placeholder: '请输入',
-						border: 'none',
-					},
-					{
-						field: '',
-						label: '用工数量',
-						required: true,
-						fieldType: 'input',
-						placeholder: '请输入',
-						min: 0,
-						border: 'none'
-					},
-					{
-						field: '',
-						label: '单人日薪',
-						required: true,
-						fieldType: 'input',
-						placeholder: '请输入',
-						min: 0,
-						decimalLength: 2,
-						border: 'none'
-					},
-					{
-						field: '',
-						fieldType: 'picker',
-						options: [],
-						label: '开始时间',
-						required: true,
-						placeholder: '',
-						border: 'none',
-						suffix: {
-							type: 'icon',
-							name: 'arrow-right',
-							size: '21rpx'
-						},
-					},
-					{
-						field: '',
-						fieldType: 'picker',
-						options: [],
-						label: '结束时间',
-						required: true,
-						placeholder: '',
-						border: 'none',
-						suffix: {
-							type: 'icon',
-							name: 'arrow-right',
-							size: '21rpx'
-						},
-					},
-				],
+				]
 			}
 		},
 		created() {
+			let ageList = []
+			for (var i = 1; i < 100; i++) {
+				ageList.push(i)
+			}
+			this.columns[0] = ageList
+			this.columns[1] = ageList
 			this.principalType=this.$store.state.user.loginType
-		this.principal=this.$store.state.user.userInfo.id
+			this.principal=this.$store.state.user.userInfo.id
 			getType().then(res => {
 				this.workTypeList = res.data.map(item => {
 					return {
@@ -321,6 +236,31 @@
 				this.dataForm.latitude = addressForm.latitude
 				this.addressPopVisible = false
 			},
+			goToMpHtml(){
+				uni.navigateTo({
+					url:`/pages/order/components/mp-html-demo/index/index?data=${this.dataForm.workPlace}`
+				})
+			},
+			orderCloseTimes(e){
+				this.dataForm.orderClose = this.timestampToTime(e.value);
+				this.orderCloseShow = false
+			},
+			confirmAge(e){
+				console.log(e);
+				if(e.value[0]>e.value[1]){
+					uni.showToast({
+						title: '最小年龄不可大于最大年龄',
+						icon: 'none',
+						duration: 1000,
+					})
+					return
+				}else{
+					this.dataForm.startAge = e.value[0]
+					this.dataForm.endAge = e.value[1]
+					this.age = e.value[0] + '-' + e.value[1] + '岁'
+					this.agePopVisible = false
+				}
+			},
 			onBack() {
 				if(this.dataForm.workTitile == '') {
 					uni.showToast({
@@ -328,6 +268,13 @@
 						icon:'none'
 					})
 					return;
+				}
+				if(!uni.$u.test.mobile(this.dataForm.phone)) {
+					uni.showToast({
+						title:'请正确填写手机号',
+						icon:'none'
+					})
+					return 
 				}
 				if(this.dataForm.workTypeId == '') {
 					uni.showToast({
@@ -373,7 +320,7 @@
 				}
 				if(this.dataForm.singleMoney == '') {
 					uni.showToast({
-						title:'请输入单人日薪',
+						title:'请输入单人服务费用',
 						icon:'none'
 					})
 					return;
@@ -406,6 +353,13 @@
 					})
 					return;
 				}
+				if(this.dataForm.orderClose == '') {
+					uni.showToast({
+						title:'请选择报名截止时间',
+						icon:'none'
+					})
+					return;
+				}
 				console.log(this.dataForm,'222222');
 				edit({
 					name: this.dataForm.workTitile,
@@ -424,7 +378,9 @@
 					principal:this.principal,
 					principalType:this.principalType,
 					employmentDay: this.dataForm.employmentDay,
-					id:this.dataForm.id
+					id:this.dataForm.id,
+					orderClose:this.dataForm.orderClose,
+					phone:this.dataForm.phone
 				}).then(res => {
 					if (res.code == "00000") {
 						uni.showToast({
@@ -456,12 +412,32 @@
 				this.endDateShow = false;
 			},
 			getStartTimes(e) {
-				this.dataForm.startTime = this.timestampToTime(e.value);
-				this.dateShow = false;
+				let data = new Date(this.dataForm.endTime.replace('-','/')).getTime()
+				if(data>e.value || !this.dataForm.endTime){
+					this.dataForm.startTime = this.timestampToTime(e.value);
+					this.dateShow = false;
+				}else{
+					uni.showToast({
+						title: '开始时间不可大于结束时间',
+						icon: 'none',
+						duration: 1000,
+					})
+					this.dataForm.startTime = ''
+				}
 			},
 			getEndTimes(e) {
-				this.dataForm.endTime = this.timestampToTime(e.value);
-				this.endDateShow = false;
+				let data = new Date(this.dataForm.startTime.replace('-','/')).getTime()
+				if(data<e.value ||!this.dataForm.startTime){
+					this.dataForm.endTime = this.timestampToTime(e.value);
+					this.endDateShow = false;
+				}else{
+					uni.showToast({
+						title: '结束时间不可小于开始时间',
+						icon: 'none',
+						duration: 1000,
+					})
+					this.dataForm.endTime = ''
+				}
 			},
 			typeSelect(e) {
 				this.dataForm.workType = e.name;
@@ -611,9 +587,14 @@
 				return GMT;
 			},
 		},
+		onShow(){
+			console.log(uni.getStorageSync('workPlace'));
+			this.dataForm.workPlace = uni.getStorageSync('workPlace') ? uni.getStorageSync('workPlace') : this.dataForm.workPlace;
+		},
 		onLoad(options){
+			console.log('执行了');
 			let data= JSON.parse(options.data)
-			console.log(data,'data');
+			this.age = data.startAge + '-' + data.endAge + '岁'
 			this.dataForm=data
 			if (this.dataForm.workTypeId) {
 				getWorkType({
@@ -622,7 +603,8 @@
 					this.labelList = res.data
 				})
 			}
-			
+			console.log(uni.getStorageSync('workPlace'));
+			this.dataForm.workPlace = uni.getStorageSync('workPlace') ? uni.getStorageSync('workPlace') : this.dataForm.workPlace;
 		}
 	}
 </script>

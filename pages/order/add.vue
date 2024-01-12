@@ -3,15 +3,6 @@
 		<view class="body">
 
 			<view class="title">完善下单信息</view>
-			<!-- <view class="authenticate">
-				<view class="authenticate-left">
-					<u-icon name="/static/authenticate.png" size="34rpx"></u-icon>
-					<view class="label">您还未进行企业认证</view>
-				</view>
-				<view class="authenticate-right">
-					<u-button color="#3A84F0" :customStyle="{ height: '55rpx' }" @tap="$toRoute('/pages/my/enterpriseCertification')">去认证</u-button>
-				</view>
-			</view> -->
 			<view class="form">
 				<u-form label-width="145rpx" :label-style="{ fontSize: '28rpx', fontWeight: 'bold', color: '#333333' }"
 					:model="form">
@@ -45,36 +36,48 @@
 							></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
+					<u-form-item label="联系电话" prop="userInfo.name" borderBottom ref="item1" required>
+						<u--input v-model="dataForm.phone" border="none" placeholder="请填写联系电话"
+							></u--input>
+					</u-form-item>
 					<u-form-item label="用工数量" prop="userInfo.name" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.workNum" border="none" placeholder="请输入用工数量"
 							@change='getWorkNum'></u--input>
 					</u-form-item>
 					
 					<u-form-item label="报名人数" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.qdQuantity" border="none" placeholder="请输入报名人数"
+						<u--input v-model="dataForm.qdQuantity" class="qdQuantity" border="none" placeholder="建议报名人数大于用工人数，避免人员不符合要求"
 							@change='getworkpeople'></u--input>
+						<!-- <u--textarea @change='getworkpeople' v-model="dataForm.qdQuantity" placeholder="建议报名人数大于用工人数，避免人员不符合要求" ></u--textarea> -->
+					</u-form-item>
+					<u-form-item label="年龄区间" @click="agePopVisible = !agePopVisible" borderBottom ref="item1" >
+						<u--input v-model="age" border="none" placeholder="请输入最小年龄"
+							></u--input>
 					</u-form-item>
 					
 					
-					<u-form-item label="单人日薪" prop="userInfo.singleMoney" borderBottom ref="item1" required>
+					<u-form-item label="单人服务费用" prop="userInfo.singleMoney" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.singleMoney" border="none" @change='getSingleMoney'
-							placeholder="请输入单人日薪"></u--input>
+							placeholder="请输入单人服务费用"></u--input>
 					</u-form-item>
 					<u-form-item label="用工天数" prop="userInfo.employmentDay" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.employmentDay" border="none"
 							placeholder="请输入用工天数"></u--input>
 					</u-form-item>
-					<u-form-item label="开始时间" prop="userInfo.startTime" borderBottom ref="item1" required
+					<u-form-item label="用工开始时间" prop="userInfo.startTime" borderBottom ref="item1" required
 						@click="dateShow = !dateShow;">
-						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择开始时间"></u--input>
+						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择用工开始时间"></u--input>
 					</u-form-item>
-					<u-form-item label="结束时间" prop="userInfo.endTime" borderBottom ref="item1" required
+					<u-form-item label="用工结束时间" prop="userInfo.endTime" borderBottom ref="item1" required
 						@click="endDateShow = !endDateShow;">
-						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择结束时间"></u--input>
+						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择用工结束时间"></u--input>
 					</u-form-item>
-					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--textarea v-model="dataForm.workPlace" border="none" placeholder="请输入详细描述"
-							@change='getWorkplace'></u--textarea>
+					<u-form-item label="报名截至时间" prop="userInfo.orderClose" borderBottom ref="item1" required
+						@click="orderCloseShow = !orderCloseShow;">
+						<u--input v-model="dataForm.orderClose" border="none" placeholder="请选择报名截至时间"></u--input>
+					</u-form-item>
+					<u-form-item label="详细描述" prop="userInfo.name" @click="goToMpHtml" borderBottom ref="item1" required>
+						<rich-text style="width: 100%;" :nodes="dataForm.workPlace"></rich-text>
 					</u-form-item>
 				</u-form>
 			</view>
@@ -94,6 +97,8 @@
 			v-model="value1" :formatter="formatter" ref="startPicker"></u-datetime-picker>
 		<u-datetime-picker :show="endDateShow" mode="datetime" @cancel='ends' @confirm="getEndTimes"
 			v-model="value2" :formatter="formatter" ref="endPicker"></u-datetime-picker>
+		<u-datetime-picker :show="orderCloseShow" mode="datetime" @cancel='orderCloseShow = false' @confirm="orderCloseTimes"
+			v-model="value3" :formatter="formatter" ref="endPicker"></u-datetime-picker>
 
 
 			
@@ -128,6 +133,7 @@
 				</view>
 			</view>
 		</u-popup>
+		<u-picker :defaultIndex='[17,44]' :show="agePopVisible" ref="uPicker" :columns="columns" @confirm="confirmAge" @cancel='agePopVisible = !agePopVisible'></u-picker>
 	</view>
 </template>
 
@@ -149,10 +155,24 @@
 		},
 		data() {
 			return {
+				placeholder: '写点什么吧 ~',
+				// 是否只读
+				readOnly: false,
+				// 最大字数限制，-1不限
+				maxlength: -1,
+				// 初始模板
+				templates:'',
 				addressPopVisible: false,
+				agePopVisible: false,
+				orderCloseShow: false,
 				addressForm: {},
 				value1:Number(new Date()),
 				value2:Number(new Date()),
+				value3:Number(new Date()),
+				columns: [
+					
+				],
+				age:'',
 				dataForm: {
 					principal:'',
 					principalType:'',
@@ -168,8 +188,8 @@
 					workTypeId: '',
 					workLabelId: '',
 					qdQuantity:'',
-					employmentDay:''
-
+					employmentDay:'',
+					orderClose:''
 				},
 				workTypeList: [],
 				labelList: [],
@@ -252,6 +272,7 @@
 						required: true,
 						placeholder: '请输入',
 						border: 'none',
+						link:'pages/order/components/mp-html-demo/index/index'
 					},
 					{
 						field: '',
@@ -264,7 +285,7 @@
 					},
 					{
 						field: '',
-						label: '单人日薪',
+						label: '单人服务费用',
 						required: true,
 						fieldType: 'input',
 						placeholder: '请输入',
@@ -305,7 +326,13 @@
 		},
 		created() {
 			this.principalType=this.$store.state.user.loginType
-		this.principal=this.$store.state.user.userInfo.id
+			this.principal=this.$store.state.user.userInfo.id
+			let ageList = []
+			for (var i = 1; i < 100; i++) {
+				ageList.push(i)
+			}
+			this.columns[0] = ageList
+			this.columns[1] = ageList
 			getType().then(res => {
 				this.workTypeList = res.data.map(item => {
 					return {
@@ -350,8 +377,18 @@
 				if(this.dataForm.workPlace == '') {
 					return;
 				}
+				if(this.dataForm.phone == '') {
+					return;
+				}
 				return true
 			}
+		},
+		onShow(){
+			console.log(uni.getStorageSync('workPlace'));
+			this.dataForm.workPlace = uni.getStorageSync('workPlace');
+		},
+		onLoad() {
+			
 		},
 		methods: {
 			addressConfirm() {
@@ -362,6 +399,27 @@
 				this.dataForm.longitude = addressForm.longitude
 				this.dataForm.latitude = addressForm.latitude
 				this.addressPopVisible = false
+			},
+			confirmAge(e){
+				console.log(e);
+				if(e.value[0]>e.value[1]){
+					uni.showToast({
+						title: '最小年龄不可大于最大年龄',
+						icon: 'none',
+						duration: 1000,
+					})
+					return
+				}else{
+					this.dataForm.startAge = e.value[0]
+					this.dataForm.endAge = e.value[1]
+					this.age = e.value[0] + '-' + e.value[1] + '岁'
+					this.agePopVisible = false
+				}
+			},
+			goToMpHtml(){
+				uni.navigateTo({
+					url:`/pages/order/components/mp-html-demo/index/index?data=${this.dataForm.workPlace}`
+				})
 			},
 			onBack() {
 				if(this.dataForm.workTitile == '') {
@@ -415,7 +473,7 @@
 				}
 				if(this.dataForm.singleMoney == '') {
 					uni.showToast({
-						title:'请输入单人日薪',
+						title:'请输入单人服务费用',
 						icon:'none'
 					})
 					return;
@@ -448,6 +506,13 @@
 					})
 					return;
 				}
+				if(!uni.$u.test.mobile(this.dataForm.phone)) {
+					uni.showToast({
+						title:'请正确填写手机号',
+						icon:'none'
+					})
+					return 
+				}
 				console.log(this.dataForm,'222222');
 				submitLis({
 					name: this.dataForm.workTitile,
@@ -465,7 +530,11 @@
 					description: this.dataForm.workPlace,
 					principal:this.principal,
 					principalType:this.principalType,
-					employmentDay: this.dataForm.employmentDay
+					employmentDay: this.dataForm.employmentDay,
+					startAge:this.dataForm.startAge,
+					endAge:this.dataForm.endAge,
+					orderClose:this.dataForm.orderClose,
+					phone:this.dataForm.phone,
 				}).then(res => {
 					if (res.code == "00000") {
 						let ids = res.data;
@@ -498,7 +567,7 @@
 				this.endDateShow = false;
 			},
 			getStartTimes(e) {
-				let data = new Date(this.dataForm.endTime.replace('-','/')).getTime()
+				let data = new Date(this.dataForm.endTime.replace(/-/g,'/')).getTime()
 				if(data>e.value || !this.dataForm.endTime){
 					this.dataForm.startTime = this.timestampToTime(e.value);
 					this.dateShow = false;
@@ -511,8 +580,12 @@
 					this.dataForm.startTime = ''
 				}
 			},
+			orderCloseTimes(e){
+				this.dataForm.orderClose = this.timestampToTime(e.value);
+				this.orderCloseShow = false
+			},
 			getEndTimes(e) {
-				let data = new Date(this.dataForm.startTime.replace('-','/')).getTime()
+				let data = new Date(this.dataForm.startTime.replace(/-/g,'/')).getTime()
 				if(data<e.value ||!this.dataForm.startTime){
 					this.dataForm.endTime = this.timestampToTime(e.value);
 					this.endDateShow = false;
@@ -677,11 +750,23 @@
 </script>
 
 <style lang="scss">
+	.editor-box{
+		width: 100vw;
+		height: 100vh;
+	}
 	page {
 		background-color: #f2f6ff;
 	}
 	/deep/ .u-form-item__body__left__content__required{
 		left: -24rpx;
+	}
+	.qdQuantity{
+		/deep/ .u-input__content__field-wrapper__field{
+			height: 50px ;
+			.uni-input-placeholder.input-placeholder{
+				text-wrap: balance
+			}
+		}
 	}
 	.pages-order-add {
 		padding-bottom: 173rpx;;

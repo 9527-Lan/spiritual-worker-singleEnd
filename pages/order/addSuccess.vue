@@ -1,5 +1,11 @@
 <template>
 	<view class="pages-order-addSuccess">
+		<u-navbar
+			class="nav"
+			title="下单成功"
+			@leftClick="routeTo"
+		>
+		</u-navbar>
 		<view class="body">
 			<u-image src="/static/order-success.png" height="197rpx" width="185rpx"></u-image>
 			<view class="success-text">下单成功</view>
@@ -42,7 +48,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	page {
 		background-color: #f2f6ff;
 	}
@@ -56,6 +62,12 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+		}
+		.nav{
+			/deep/ .u-icon__icon.uicon-arrow-left{
+				font-size: 40rpx !important;
+				line-height: 54rpx !important;
+			}
 		}
 		.flex-center {
 			display: flex;
@@ -89,7 +101,8 @@
 		}
 		.body {
 			box-sizing: border-box;
-			height: 100%;
+			height: calc(100% - 40rpx);
+			margin-top: 40rpx;
 			border-radius: 15rpx;
 			background-color: #fff;
 			display: flex;

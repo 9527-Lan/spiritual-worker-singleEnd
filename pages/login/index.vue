@@ -83,8 +83,8 @@
 				}],
 				agree: false,
 				form: {
-					accountName: "王五",
-					password: "123"
+					accountName: "",
+					password: ""
 				},
 				rules: {
 					accountName: {

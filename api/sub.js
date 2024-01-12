@@ -7,6 +7,30 @@ export function employmentPerson (params){
 		params:params,
 	})
 }
+//截止抢单
+export function casualOrderCutoff (params){
+	return request({
+		url: '/web/casualOrder/cutoff',
+		method: 'get',
+		params:params,
+	})
+}
+//信用分变更
+export function creditscoreEdit (params){
+	return request({
+		url: '/creditscoreEdit',
+		method: 'get',
+		params:params,
+	})
+}
+//查询所有的工程师不分页
+export function casualEngineerList (params){
+	return request({
+		url: '/web/casualEngineer/list',
+		method: 'get',
+		params:params,
+	})
+}
 
 // 获取用工类型
 export function getWorkType (params){
@@ -42,6 +66,13 @@ export function submitLis (data){
 export function surePre (params){
 	return request({
 		url: '/web/casualOrder/releaseOrder',
+		method: 'get',
+		params:params,
+	})
+}
+export function casualOrderCopy (params){
+	return request({
+		url: '/web/casualOrder/copy',
 		method: 'get',
 		params:params,
 	})
@@ -171,6 +202,14 @@ export function submit (data){
 		url: '/payOrder',
 		method: 'post',
 		data,
+	})
+}
+export function casualEngineerAdd (params,){
+	console.log('data',params,)
+	return request({
+		url: '/web/casualEngineer/add',
+		method: 'get',
+		params,
 	})
 }
 // 订单审核

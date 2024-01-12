@@ -14,22 +14,33 @@
 							:color="colorFilter[compData.sex]"
 							:label-color="colorFilter[compData.sex]"></u-icon>
 					</view>
+					<view class="age-box">
+						{{compData.age}}岁
+					</view>
 				</view>
 				<view class="tip-text">用工数：{{ compData.times }}次</view>
 			</view>
 			<view class="information-tag">
 				<view class="tag-item" :style="{minWidth:item.length*24 + 20 + 'rpx'}" v-for="(item, index) in compData.role" :key="item">{{ item }}</view>
-				<view class="tag-item" :style="{minWidth:item.length*24 + 20 + 'rpx'}" v-if="compData.experience != null" v-for="(item, index) in compData.experience" :key="index">{{ item }}</view>
+				<view class="tag-item" :style="{minWidth:item == '1米8以上'?'120rpx':item.length*24 + 20 + 'rpx'}" v-if="compData.experience != null" v-for="(item, index) in compData.experience" :key="index">{{ item }}</view>
 				<view class="tag-item" :style="{minWidth:4*24 + 20 + 'rpx'}" v-if="compData.hasCertificate">持证上岗</view>
 			</view>
-			<view class="tip-text">{{ compData.hasCertificate ? '已上传证书' : '' }}</view>
+			<view style="display: flex; justify-content: space-between;align-items: center;">
+				<view class="tip-text">{{ compData.hasCertificate ? '已上传证书' : '' }}</view>
+				<kefu v-if="!search" name="phone" :phone = 'compData.phone' title='拨打电话' label="联系他" labelPos="bottom" labelSize="20rpx" labelColor="#333" size="36rpx"></kefu>
+			</view>
+			
 		</view>
 	</view>
 </template>
 
 <script>
+	import kefu from "@/components/kefu.vue"
 	export default {
-		props: { compData: Object },
+		props: { compData: Object,search:false },
+		components:{
+			kefu
+		},
 		data() {
 			return {
 				colorFilter: {
@@ -43,34 +54,34 @@
 			}
 		},
 		mounted(){
-			// this.ss()
+			this.ss()
 		},
 		methods:{
 			onClick(){
 				this.$emit('onClick')
 			},
 			
-			// ss(){
-			// 	let parent = {}
-			// 	let children = {}
-			// 	const query = uni.createSelectorQuery().in(this);
-			// 	query.select('.information-tag').boundingClientRect(data=>{
-			// 		console.log(data);
-			// 		parent = data
-			// 	}).exec()
-			// 	const query1 = uni.createSelectorQuery().in(this);
-			// 	query1.selectAll('.tag-item').fields({rect:true},data=>{
-			// 		console.log(data);
-			// 		children = data
-			// 	}).exec()
-			// 	children.forEach(child => {
-			// 	    const isOverflowX = child.right > parent.right;
+			ss(){
+				let parent = {}
+				let children = {}
+				const query = uni.createSelectorQuery().in(this);
+				query.select('.information-tag').boundingClientRect(data=>{
+					console.log(data);
+					parent = data
+				}).exec()
+				const query1 = uni.createSelectorQuery().in(this);
+				query1.selectAll('.tag-item').fields({rect:true},data=>{
+					console.log(data);
+					children = data
+				}).exec()
+				children.forEach(child => {
+				    const isOverflowX = child.right > parent.right;
 				
-			// 	    if (isOverflowX || isOverflowY) {
-			// 	      console.log('Child is overflowing:', child);
-			// 	    }
-			// 	  });
-			// }
+				    if (isOverflowX ) {
+				      console.log('Child is overflowing:', child);
+				    }
+				  });
+			}
 		}
 	}
 </script>
@@ -105,6 +116,13 @@
 					margin-left: 33rpx;
 					padding: 10rpx;
 					border-radius: 5rpx;
+				}
+				.age-box{
+					margin-left: 33rpx;
+					padding: 0 20rpx;
+					border-radius: 5rpx;
+					background-color: #abcdff;
+					font-size: 22rpx;
 				}
 			}
 			.information-tag {

@@ -11,7 +11,7 @@
 			</view>
 		</view>
 		<view class="order-list">
-			<orderItem v-for="(item, index) in orderList" :key="index" :compData="item" @deleteOrder= 'deleteOrder'></orderItem>
+			<orderItem v-for="(item, index) in orderList" :key="index" :compData="item" @copyOrder='copyOrder' @deleteOrder= 'deleteOrder'></orderItem>
 		</view>
 
 		<view class="page-footer">
@@ -38,6 +38,9 @@ import {
 	tomerService,
 	orderDel
 } from "@/api/user.js"
+import {
+	casualOrderCopy
+} from "@/api/sub.js"
 import { toChineseBig } from '@/utils/utils.js'
 export default {
 	components: {
@@ -158,10 +161,18 @@ export default {
 	},
 	methods: {
 		onBack() {
-			uni.navigateBack(1)
+			uni.switchTab({
+				url:'/pages/my/index'
+			})
 		},
 		deleteOrder(compData){
 			orderDel({id:compData.id}).then(res=>{
+				console.log(res);
+				this.switchStatus()
+			})
+		},
+		copyOrder(compData){
+			casualOrderCopy({id:compData.id}).then(res=>{
 				console.log(res);
 				this.switchStatus()
 			})
@@ -238,7 +249,8 @@ export default {
 				let data = res.data.map(el => {
 					return {
 						...el,
-						state: this.currentValue
+						state: this.currentValue,
+						danziId:userId
 					}
 				});
 				this.orderList = data

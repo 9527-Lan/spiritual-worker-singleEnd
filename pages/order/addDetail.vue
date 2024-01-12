@@ -54,26 +54,33 @@
 						<u--input v-model="dataForm.qdQuantity" border="none" placeholder="请输入报名人数"
 							@change='getworkpeople'></u--input>
 					</u-form-item>
+					<u-form-item label="最小年龄" borderBottom ref="item1" >
+						<u--input v-model="dataForm.startAge" border="none" placeholder="请输入最小年龄"
+							></u--input>
+					</u-form-item>
+					<u-form-item label="最大年龄"  borderBottom ref="item1" >
+						<u--input v-model="dataForm.endAge" border="none" placeholder="请输入最大年龄"
+							></u--input>
+					</u-form-item>
 					
-					
-					<u-form-item label="单人日薪" prop="userInfo.singleMoney" borderBottom ref="item1" required>
+					<u-form-item label="单人服务费用" prop="userInfo.singleMoney" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.singleMoney" border="none" @change='getSingleMoney'
-							placeholder="请输入单人日薪"></u--input>
+							placeholder="请输入单人服务费用"></u--input>
 					</u-form-item>
 					<u-form-item label="用工天数" prop="userInfo.employmentDay" borderBottom ref="item1" required>
 						<u--input v-model="dataForm.employmentDay" border="none"
 							placeholder="请输入用工天数"></u--input>
 					</u-form-item>
-					<u-form-item label="开始时间" prop="userInfo.startTime" borderBottom ref="item1" required
+					<u-form-item label="用工开始时间" prop="userInfo.startTime" borderBottom ref="item1" required
 						@click="dateShow = !dateShow;">
-						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择开始时间"></u--input>
+						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择用工开始时间"></u--input>
 					</u-form-item>
-					<u-form-item label="结束时间" prop="userInfo.endTime" borderBottom ref="item1" required
+					<u-form-item label="用工结束时间" prop="userInfo.endTime" borderBottom ref="item1" required
 						@click="endDateShow = !endDateShow;">
-						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择结束时间"></u--input>
+						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择用工结束时间"></u--input>
 					</u-form-item>
 					<u-form-item label="详细描述" prop="userInfo.name" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.workPlace" border="none" placeholder="请输入详细描述"
+						<u--input v-model="dataForm.workPlace" border="none" placeholder="如着装、仪容、工具"
 							@change='getWorkplace'></u--input>
 					</u-form-item>
 				</u-form>
@@ -264,7 +271,7 @@
 					},
 					{
 						field: '',
-						label: '单人日薪',
+						label: '单人服务费用',
 						required: true,
 						fieldType: 'input',
 						placeholder: '请输入',
@@ -305,7 +312,7 @@
 		},
 		created() {
 			this.principalType=this.$store.state.user.loginType
-		this.principal=this.$store.state.user.userInfo.id
+			this.principal=this.$store.state.user.userInfo.id
 			getType().then(res => {
 				this.workTypeList = res.data.map(item => {
 					return {
@@ -376,7 +383,7 @@
 				}
 				if(this.dataForm.singleMoney == '') {
 					uni.showToast({
-						title:'请输入单人日薪',
+						title:'请输入单人服务费用',
 						icon:'none'
 					})
 					return;

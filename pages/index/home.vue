@@ -114,6 +114,8 @@
 							experience: item.labelName?.split(','),
 							times: item.employmentNumber,
 							id: item.id,
+							age: item.age,
+							phone:item.phone,
 							hasCertificate: item.casualEngineerCertificate.length,
 							casualEngineerCertificate: item.casualEngineerCertificate.length?item.casualEngineerCertificate:['/static/nodata.png']
 						}			

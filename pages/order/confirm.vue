@@ -19,6 +19,9 @@
 							<u-icon :label="dataForm[item.field]" :label-color="item.color"
 								:label-size="item.size"></u-icon>
 						</view>
+						<view v-else-if="item.fieldType == 'rich'" class="input-container">
+							<rich-text style="width: 100%;" :nodes="dataForm[item.field]"></rich-text>
+						</view>
 						<view v-else class="input-container">
 							<u-input v-model="dataForm[item.field]" readonly :type="item.type" :placeholder="item.value"
 								:border="item.border"></u-input>
@@ -100,7 +103,14 @@ export default {
 			{
 				field: '5',
 				label: '详细描述',
-				fieldType: 'textarea',
+				fieldType: 'rich',
+				required: false,
+				value: '',
+				border: 'none'
+			},
+			{
+				field: '15',
+				label: '联系电话',
 				required: false,
 				value: '',
 				border: 'none'
@@ -120,8 +130,15 @@ export default {
 				border: 'none'
 			},
 			{
+				field: '13',
+				label: '年龄区间',
+				required: false,
+				value: '',
+				border: 'none'
+			},
+			{
 				field: '7',
-				label: '单人日薪',
+				label: '单人服务费用',
 				required: false,
 				value: '',
 				border: 'none'
@@ -136,6 +153,13 @@ export default {
 			{
 				field: '9',
 				label: '用工时间',
+				required: false,
+				value: '',
+				border: 'none'
+			},
+			{
+				field: '14',
+				label: '报名截止时间',
 				required: false,
 				value: '',
 				border: 'none'
@@ -173,6 +197,9 @@ export default {
 		this.dataForm['10'] = (this.datas.singleMoney * this.datas.workNum * this.datas.employmentDay).toFixed(2);
 		this.dataForm['11'] = this.datas.qdQuantity
 		this.dataForm['12'] = this.datas.addressItem
+		this.dataForm['13'] = this.datas.startAge + '-' + this.datas.endAge + '岁'
+		this.dataForm['14'] = this.datas.orderClose
+		this.dataForm['15'] = this.datas.phone
 		console.log(this.dataForm);
 
 	},
@@ -266,7 +293,6 @@ page {
 		border-radius: 15rpx;
 		background-color: #fff;
 		// position: relative;
-		height: 1980rpx !important;
 
 		.title {
 			margin-bottom: 50rpx;

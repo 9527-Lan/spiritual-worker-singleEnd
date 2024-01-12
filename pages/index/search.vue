@@ -2,7 +2,7 @@
 	<view class="page-index-search">
 		<u-search :showAction="false" :placeholder="searchPlaceholder" bgColor="#fff" v-model='value' @search="getValue"></u-search>
 		<view>
-			<listItem v-for="(item, index) in pageList" :key="index" @onClick="pageTo(item)"  :compData="item"></listItem>
+			<listItem :search='search' v-for="(item, index) in pageList" :key="index" @onClick="pageTo(item)"  :compData="item"></listItem>
 		</view>
 	</view>
 </template>
@@ -17,6 +17,9 @@
 		components: {
 			listItem,
 		},
+		props:{
+			search:false
+		},
 		data() {
 			return {
 				searchPlaceholder: '保安',
@@ -24,8 +27,8 @@
 				value:"",
 			}
 		},
-		onLoad(){
-		this.findCasualEngineerList()	
+		created() {
+			this.findCasualEngineerList()
 		},
 		methods: {
 			// 搜索
@@ -49,6 +52,10 @@
 				})
 			},
 			pageTo(item) {
+				if (this.search) {
+					this.$emit('searchItem',item)
+					return
+				}
 				uni.navigateTo({
 					url:'/pages/index/personalDetails/check?data=' + encodeURIComponent(JSON.stringify(item))
 				})

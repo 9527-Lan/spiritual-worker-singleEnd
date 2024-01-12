@@ -243,7 +243,17 @@
 			"style": {
 				"navigationBarTitleText": "下单成功",
 				"navigationBarBackgroundColor": "#f2f6ff",
+				"enablePullDownRefresh": false,
+				"navigationStyle":"custom"
+			}
+		},
+		{
+			"path": "pages/order/components/mp-html-demo/index/index",
+			"style": {
+				"navigationBarTitleText": "描述",
+				"navigationBarBackgroundColor": "#f2f6ff",
 				"enablePullDownRefresh": false
+				// "navigationStyle":"custom"
 			}
 		}
 	],
