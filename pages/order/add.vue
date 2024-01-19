@@ -325,8 +325,8 @@
 			}
 		},
 		created() {
-			this.principalType=this.$store.state.user.loginType
-			this.principal=this.$store.state.user.userInfo.id
+			this.principalType=uni.getStorageSync('loginType')
+			this.principal=uni.getStorageSync('userInfo').id
 			let ageList = []
 			for (var i = 1; i < 100; i++) {
 				ageList.push(i)
@@ -529,6 +529,7 @@
 					endAge:this.dataForm.endAge,
 					orderClose:this.dataForm.orderClose,
 					phone:this.dataForm.phone,
+					principalAccount:uni.getStorageSync('userInfoItem').id
 				}).then(res => {
 					if (res.code == "00000") {
 						let ids = res.data;

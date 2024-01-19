@@ -216,8 +216,8 @@
 			}
 			this.columns[0] = ageList
 			this.columns[1] = ageList
-			this.principalType=this.$store.state.user.loginType
-			this.principal=this.$store.state.user.userInfo.id
+			this.principalType=uni.getStorageSync('loginType')
+			this.principal=uni.getStorageSync('userInfo').id
 			getType().then(res => {
 				this.workTypeList = res.data.map(item => {
 					return {
@@ -380,7 +380,8 @@
 					employmentDay: this.dataForm.employmentDay,
 					id:this.dataForm.id,
 					orderClose:this.dataForm.orderClose,
-					phone:this.dataForm.phone
+					phone:this.dataForm.phone,
+					principalAccount:uni.getStorageSync('userInfoItem').id
 				}).then(res => {
 					if (res.code == "00000") {
 						uni.showToast({

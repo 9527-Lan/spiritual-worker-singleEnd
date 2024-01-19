@@ -101,14 +101,15 @@
 					}
 				},
 				// 基本案列数据
-				radiolist1: [{
+				radiolist1: [
+					{
 						name: '企业',
 						disabled: false
 					},
-					{
-						name: '个人',
-						disabled: false
-					}
+					// {
+					// 	name: '个人',
+					// 	disabled: false
+					// }
 
 				],
 				// u-radio-group的v-model绑定的值如果设置为某个radio的name，就会被默认选中

@@ -161,9 +161,10 @@ export default {
 	methods: {
 		unLogin(){
 			uni.redirectTo({
-				url: '/',
+				url: '/pages/login/index',
 				success:()=>{
 					this.$store.commit('SET_HAS_LOGIN',false)
+					uni.setStorageSync('userInfo',{})
 				}
 			})
 		},
@@ -204,11 +205,11 @@ export default {
 			})
 		},
 		personageList() {
-			let userInfo = this.$store.state.user.userInfo
+			let userInfo = uni.getStorageSync('userInfo')
 			this.userInfo = userInfo
 			let params = {
 				id: userInfo.id,
-				type: this.$store.state.user.loginType,
+				type: uni.getStorageSync('loginType'),
 			}
 			personage(params).then(res => {
 				const item = res.data;
@@ -272,14 +273,12 @@ export default {
 			this.show = false;
 		},
 		getmsgNum() {
-			console.log(this.userInfo.id,'id');
 			getmessageCount(
 				{
 					id: this.userInfo.id,
-					type: this.$store.state.user.loginType,
+					type: uni.getStorageSync('loginType'),
 				}
 			).then((res) => {
-				console.log(res,'res');
 				this.msgnum = res.data
 			});
 		},

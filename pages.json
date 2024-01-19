@@ -5,6 +5,14 @@
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/index/home",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "",
@@ -26,14 +34,14 @@
 				}
 			}
 		},
-		{
-			"path": "pages/index/home",
-			"style": {
-				"navigationBarTitleText": "首页",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
-			}
-		},
+		// {
+		// 	"path": "pages/index/home",
+		// 	"style": {
+		// 		"navigationBarTitleText": "首页",
+		// 		"enablePullDownRefresh": false,
+		// 		"navigationStyle": "custom"
+		// 	}
+		// },
 		{
 			"path": "pages/my/index",
 			"style": {

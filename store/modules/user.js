@@ -68,6 +68,7 @@ const actions = {
 				} = response.data
 				const token = token_type + " " + access_token
 				uni.setStorageSync('token', token)
+				uni.setStorageSync('login', token)
 				commit('SET_HAS_LOGIN', true)
 				resolve()
 			}).catch(error => {
@@ -87,6 +88,7 @@ const actions = {
 					let userInfo = data.casualEntrepreneur
 					let userInfoItem = data.casualEntrepreneurItem
 					uni.setStorageSync('userInfo', userInfo)
+					uni.setStorageSync('loginType', 1)
 					uni.setStorageSync('userInfoItem', userInfoItem)
 					commit('SET_LOGIN_TYPE', 1)
 					commit('SET_USER_INFO', userInfo)

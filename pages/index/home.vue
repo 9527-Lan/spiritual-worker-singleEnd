@@ -127,35 +127,51 @@
 				})				
 			},
 	
-		// 首页tab栏渲染
-		async casualServiceTypeList(){
-			let res = await casualServiceType();
-			console.log(res,'res')
-			let data = res.data.map(item=>{
-				return {
-					name:item.label,
-					value:item.value
-				}
-			})
-			
-			let list = [
-				{
-					name: '推荐',
-					value: null,
-				}
-			]
-			list.push(...data)
-			this.tabList = list
+			// 首页tab栏渲染
+			async casualServiceTypeList(){
+				let res = await casualServiceType();
+				console.log(res,'res')
+				let data = res.data.map(item=>{
+					return {
+						name:item.label,
+						value:item.value
+					}
+				})
+				
+				let list = [
+					{
+						name: '推荐',
+						value: null,
+					}
+				]
+				list.push(...data)
+				this.tabList = list
+			},
+			// 改变tab栏
+			changeTabList(e){
+				this.pageNum = 1
+				this.pageList = []
+				this.typeId = this.tabList[e.index].value
+				this.findCasualEngineerList()
+			},
 		},
-		// 改变tab栏
-		changeTabList(e){
-			this.pageNum = 1
-			this.pageList = []
-			this.typeId = this.tabList[e.index].value
-			this.findCasualEngineerList()
-		},
+		onShow() {
+			let userInfo = uni.getStorageSync('userInfo')
+			if (!userInfo || !userInfo.id) {
+				uni.navigateTo({
+					url:'/pages/login/index'
+				})
+				return 
+			}
 		},
 		mounted() {
+			let userInfo = uni.getStorageSync('userInfo')
+			if (!userInfo || !userInfo.id || !uni.getStorageSync('loginType')) {
+				uni.navigateTo({
+					url:'/pages/login/index'
+				})
+				return 
+			}
 			this.findCasualEngineerList()
 			this.casualServiceTypeList()
 		},

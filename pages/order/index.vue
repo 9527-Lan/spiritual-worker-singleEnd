@@ -195,9 +195,9 @@ export default {
 			this.typePickerVisble = false
 		},
 		switchStatus() {
-			let userInfo = this.$store.state.user.userInfo
+			let userInfo = uni.getStorageSync('userInfo')
 			let userId = userInfo.id
-			let loginType = this.$store.state.user.loginType
+			let loginType = uni.getStorageSync('loginType')
 			switch (this.currentValue) {
 				case 'being':
 					this.currentType = 0

@@ -246,8 +246,8 @@
 			<view style="min-height: 750rpx; position: relative;">
 				<view style="text-align: center;
     margin-bottom: 20px;
-    font-size: 16px;
-    font-weight: bold;">审核进度</view>
+			font-size: 16px;
+			font-weight: bold;">审核进度</view>
 				<u-steps :current="looklist.length" direction="column" dot>
 					<u-steps-item v-for="(item, index) in looklist">
 						<view slot="desc" class="progress-item flex-center">
@@ -487,7 +487,7 @@ export default {
 					this.xyfShow = false
 				}else{
 					uni.showToast({
-						title: '修改时失败',
+						title: '修改失败',
 						duration: 2000,
 					})
 				}
@@ -643,7 +643,8 @@ export default {
 				if (res.code === '00000') {
 					examine({
 						businessId: Number(this.id),
-						businessType: '1'
+						businessType: '1',
+						principalAccount:uni.getStorageSync('userInfoItem').id
 					}).then((res) => {
 						if (res.code === '00000') {
 							uni.showToast({

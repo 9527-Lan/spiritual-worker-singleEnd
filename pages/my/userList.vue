@@ -25,7 +25,7 @@
             <view
 			  class="namestyle"
             >
-				<view>{{ item.accountName }}</view>
+				<view style="height: 70rpx;">{{ item.nickname }}</view>
 				<view class="mainClass" v-if="item.isMain">主</view>
               </view
             >

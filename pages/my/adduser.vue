@@ -9,6 +9,10 @@
                         <u--input v-model="dataForm.accountName" border="none" placeholder="请输入账号名称"
                             ></u--input>
                     </u-form-item>
+					<u-form-item label="昵称" prop="userInfo.nickname" borderBottom ref="item1" required>
+                        <u--input v-model="dataForm.nickname" border="none" placeholder="请输入昵称"
+                            ></u--input>
+                    </u-form-item>
                     <u-form-item label="密码" prop="userInfo.workType" borderBottom ref="item1"
                         required>
                         <u--input v-model="dataForm.password" border="none" type="password" placeholder="请输入密码"
@@ -72,6 +76,13 @@ export default {
                 return;
             }
             if (this.dataForm.workTypeId == '') {
+                uni.showToast({
+                    title: '请选择用工类型',
+                    icon: 'none'
+                })
+                return;
+            }
+			if (this.dataForm.nickname == '') {
                 uni.showToast({
                     title: '请选择用工类型',
                     icon: 'none'

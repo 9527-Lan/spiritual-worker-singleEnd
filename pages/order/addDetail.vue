@@ -311,8 +311,8 @@
 			}
 		},
 		created() {
-			this.principalType=this.$store.state.user.loginType
-			this.principal=this.$store.state.user.userInfo.id
+			this.principalType=uni.getStorageSync('loginType')
+			this.principal=uni.getStorageSync('userInfo').id
 			getType().then(res => {
 				this.workTypeList = res.data.map(item => {
 					return {
