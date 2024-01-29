@@ -60,8 +60,8 @@ export default {
             queryMouth: "09",
             DateShow: false,
             params: {
-                id: this.$store.state.user.userInfo.id,
-                type: this.$store.state.user.loginType,
+                id: uni.getStorageSync('userInfoItem').id,
+                type: uni.getStorageSync('loginType'),
                 pageNo: 1,
                 pageSize: 10,
             },
@@ -90,13 +90,14 @@ export default {
         }
     },
     mounted() {
+		console.log(uni.getStorageSync('loginType'));
         casualMessage(this.params).then((res) => {
             if (res.code === '00000') {
                 this.list = res.data.list
                 editMessage(
                     {
-                        id: this.$store.state.user.userInfo.id,
-                        type: this.$store.state.user.loginType,
+                        id: uni.getStorageSync('userInfoItem').id,
+                        type: uni.getStorageSync('loginType'),
                     }
                 ).then((res) => {
                     console.log(res);

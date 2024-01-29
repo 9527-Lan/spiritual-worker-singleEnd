@@ -153,7 +153,6 @@ export default {
 		}
 		let state = event.state
 		this.currentValue = state
-		console.log("this.currentValue", this.currentValue);
 		this.switchStatus()
 	},
 	onPullDownRefresh() {
@@ -309,6 +308,8 @@ export default {
 				});
 				console.log(data, '22222');
 				this.orderList = data
+			}else{
+				this.orderList = []
 			}
 		},
 		async getcreateQxList(userId, loginType) {

@@ -62,7 +62,7 @@
 				size="36rpx" />
 			<view class="flex-center btn-box">
 				<u-button text="取消订单" type="primary" plain @click="onCancelOrder"></u-button>
-				<u-button text="截止抢单" color="#3A84F0" @click="copyOrder"></u-button>
+				<u-button :text="new Date(resData.orderClose.replace(/-/g,'/')).getTime() > new Date().getTime()?'截止抢单':'已截止抢单'" color="#3A84F0" @click="copyOrder"></u-button>
 			</view>
 		</view>
 		<u-modal :show="cancelModalVisible" title="是否取消此订单" :showConfirmButton="false">
@@ -193,7 +193,9 @@ export default {
 			})
 		},
 		copyOrder(){
-			this.$refs.copyDialog.open()
+			if(new Date(this.resData.orderClose).getTime() > new Date().getTime()){
+				this.$refs.copyDialog.open()
+			}
 		},
 		confirmCopy(){
 			this.shareToWx()

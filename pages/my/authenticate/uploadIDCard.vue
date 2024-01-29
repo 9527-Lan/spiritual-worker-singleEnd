@@ -103,7 +103,7 @@ export default {
 		uploadFilePromise(url) {
 			return new Promise((resolve, reject) => {
 				let a = uni.uploadFile({
-					url: 'http://39.108.59.181:9001' + '/file/upload',
+					url: 'https://lhyg.hollwingroup.com/prod-api'+'/file/upload',
 					filePath: url,
 					name: 'file',
 					formData: {

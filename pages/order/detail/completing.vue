@@ -23,7 +23,7 @@
 					<view class="employee-list">
 						<u-collapse @change="change" @open="open" accordion :border="false">
 							<view class="employee-item" v-for="(item, index) in compData.employees" :key="index">
-								<u-collapse-item ref="collapseItem" :name="index" :icon="item.headSculptureUrl"
+								<u-collapse-item ref="collapseItem" :name="index" :icon="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + item.headSculpture"
 									:title="item.engineerRealname">
 									<view class="progress">
 										<u-steps :current="compData.progress.current" direction="column" dot>
@@ -614,11 +614,13 @@ export default {
 				if (res.data.length) {
 					let dateList = res.data.map((el, index) => {
 						let big = index + 1
+						let imgs = el.orderImg?el.orderImg.split(',').map(el => 'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + el) :[]
+						
 						return {
 							day: '第' + big + '天',
 							time: el.orderDate,
 							remark: el.orderDesc,
-							imgs: el.orderImgUrl
+							imgs: imgs
 						}
 					})
 					this.compData.progress.dateList = dateList
@@ -639,23 +641,36 @@ export default {
 					item.id = ''
 				})
 			}
-			submit(obj).then((res) => {
+			examine({
+				businessId: Number(this.id),
+				businessType: '1',
+				principalAccount:uni.getStorageSync('userInfoItem').id
+			}).then((res) => {
+				if(res.code !='00000'){
+					uni.showToast({
+						title: res.msg,
+						duration: 2000,
+					})
+					return
+				}
 				if (res.code === '00000') {
-					examine({
-						businessId: Number(this.id),
-						businessType: '1',
-						principalAccount:uni.getStorageSync('userInfoItem').id
-					}).then((res) => {
-						if (res.code === '00000') {
+					submit(obj).then((res) => {
+						if(res.code !='00000'){
 							uni.showToast({
 								title: res.data,
 								duration: 2000,
-
 							})
+							return
+						}
+						if (res.code === '00000') {
 							this.getdetailed(this.id)
-							// this.getdetail(this.id)
 						}
 					})
+					uni.showToast({
+						title: res.data,
+						duration: 2000,
+					})
+					// this.getdetail(this.id)
 				}
 			})
 		},

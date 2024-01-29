@@ -24,7 +24,7 @@
 						placeholder="请输入登录账号"></u--input>
 				</u-form-item>
 				<u-form-item label="密码" labelWidth="120rpx" prop="password" ref="item1">
-					<u--input v-model="form.password" customStyle="input-box" type="password" border="none"
+					<u--input v-model="form.password" customStyle="input-box" type="password" autocomplete="off" border="none"
 						placeholder="请输入登录密码"></u--input>
 				</u-form-item>
 			</u--form>
@@ -49,7 +49,7 @@
 			</view>
 			<u-modal :show="cardShow" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
 			
-			<view class="rich" style="height: calc(100vh - 300rpx); margin:  auto; overflow: scroll">
+			<view class="rich" style="height: calc(100vh - 300rpx); margin:  auto; overflow: scroll ;overflow-x:hidden;">
 				<u-loading-icon v-if="!node" text="加载中" textSize="24"></u-loading-icon>
 				<view v-else>
 					<rich-text :nodes="node"></rich-text>
@@ -167,14 +167,10 @@
 				let data = this.form
 				this.$store.dispatch('user/firmLogin', data).then(res => {
 					const pages = getCurrentPages();
-					if (pages.length > 1) {
-						uni.navigateBack()
-					} else {
 						// 跳转首页
-						uni.switchTab({
-							url: '/pages/index/home'
-						});
-					}
+					uni.switchTab({
+						url: '/pages/index/home'
+					});
 					this.logining = false;
 				}).catch((err) => {
 					this.logining = false;

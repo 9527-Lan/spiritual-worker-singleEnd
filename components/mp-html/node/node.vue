@@ -25,7 +25,7 @@
       <text v-else-if="n.type==='text'&&ctrl['e'+i]===1" :data-i="i" style="border:1px dashed black;min-width:50px;width:auto;padding:5px;display:block" @tap.stop="editStart">{{n.text}}
         <text v-if="!n.text" style="color:gray">{{opts[6]||'请输入'}}</text>
       </text>
-      <textarea v-else-if="n.type==='text'" style="border:1px dashed black;min-width:50px;width:auto;padding:5px" auto-height maxlength="-1" :focus="ctrl['e'+i]===3" :value="n.text" :data-i="i" @input="editInput" @blur="editEnd" />
+      <textarea rows='10' v-else-if="n.type==='text'" style="border:1px dashed black;min-width:50px;width:auto;padding:5px" auto-height maxlength="-1" :focus="ctrl['e'+i]===3" :value="n.text" :data-i="i" @input="editInput" @blur="editEnd" />
       <text v-else-if="n.name==='br'">\n</text>
       <!-- 链接 -->
       <view v-else-if="n.name==='a'" :id="n.attrs.id" :class="(n.attrs.href?'_a ':'')+n.attrs.class" hover-class="_hover" :style="'display:inline;'+n.attrs.style" :data-i="i" @tap.stop="linkTap">

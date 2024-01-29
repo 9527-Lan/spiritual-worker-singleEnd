@@ -5,13 +5,14 @@ axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // create an axios instance
 const service = axios.create({
 	 // baseURL: "https://t44o902052.zicp.fun", //  线上接口地址(微信、HBX内置浏览器)
-	//  baseURL: "http://39.108.59.181:9001/LowerSingleEnd", //  线上接口地址(微信、HBX内置浏览器)
+	 // baseURL: "http://39.108.59.181:9001/LowerSingleEnd", //  生产线上IP接口地址(微信、HBX内置浏览器)
 	// baseURL: "http://app.youlai.tech/prod-api", // 线上接口地址(谷歌等有跨域限制浏览器)
-	// baseURL: "https://t44o902052.zicp.fun/LowerSingleEnd", // 本地开发环境地址
-	baseURL: "https://lhyg.hnxfsd.cn/prod-api/LowerSingleEnd", 
-	// baseURL: "http://172.20.10.3:9999/prod-api/LowerSingleEnd", 
+	baseURL: "https://lhyg.hnxfsd.cn/prod-api/LowerSingleEnd", // 本地开发环境地址
+	// baseURL: "https://lhyg.hollwingroup.com/",//本地开发
+	// baseURL: "https://lhyg.hollwingroup.com/prod-api", //生产地址域名
 	withCredentials: true, // send cookies when cross-domain requests
-	timeout: 10000 // request timeout
+	timeout: 10000 ,// request timeout
+	// baseURL: "https://t44o902052.zicp.fun/LowerSingleEnd", //线上地址
 })
 
 // request interceptor

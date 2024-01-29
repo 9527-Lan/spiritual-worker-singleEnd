@@ -74,7 +74,7 @@ export function casualOrderCopy (params){
 	return request({
 		url: '/web/casualOrder/copy',
 		method: 'get',
-		params:params,
+		params:{principalAccount:uni.getStorageSync('userInfoItem').id,...params},
 	})
 }
 
@@ -107,7 +107,12 @@ export function cancellationOrder (params){
 		params:params,
 	})
 }
-
+function isMain (a){
+	if(uni.getStorageSync('userInfoItem').isMain != 1){
+		a.principalAccount = uni.getStorageSync('userInfoItem').id
+	}
+	return a
+}
 // 个人中心订单
 
 export function personage (params){
@@ -123,7 +128,7 @@ export function queryOrderbyEngId (params){
 	return request({
 		url: '/queryOrderbyEngId',
 		method: 'get',
-		params:params,
+		params:isMain(params),
 	})
 }
 
@@ -132,7 +137,7 @@ export function queryOrderbyJxzEngId(params) {
 	return request({
 		url: '/queryOrderbyJxzEngId',
 		method: 'get',
-		params:params
+		params:isMain(params)
 	})
 }
 
@@ -141,7 +146,7 @@ export function queryOrderbyWcEngId(params) {
 	return request({
 		url: '/queryOrderbyWcEngId',
 		method: 'get',
-		params:params
+		params:isMain(params)
 	})
 }
 
@@ -150,7 +155,7 @@ export function queryOrderbyYcEngId(params) {
 	return request({
 		url: '/queryOrderbyYcEngId',
 		method: 'get',
-		params:params
+		params:isMain(params)
 	})
 }
 // 下单端-抢单中工程师列表
@@ -275,7 +280,7 @@ export function queryOrderbyCjId (params){
 	return request({
 		url: '/queryOrderbyCjId',
 		method: 'get',
-		params:params,
+		params:isMain(params),
 	})
 }
 // 下单人根据id 查询取消的订单
@@ -283,7 +288,7 @@ export function queryOrderbyQxId (params){
 	return request({
 		url: '/queryOrderbyQxId',
 		method: 'get',
-		params:params,
+		params:isMain(params),
 	})
 }
 // 订单明细查询

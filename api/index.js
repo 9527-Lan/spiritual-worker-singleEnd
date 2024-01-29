@@ -7,6 +7,13 @@ export function findCasualEngineer(params){
 		params:params,
 	})
 }
+export function toadd(params){
+	return request({
+		url: '/isConfiguration',
+		method: 'get',
+		params:params,
+	})
+}
 // 首页tab栏渲染
 export function casualServiceType(){
 	return request({

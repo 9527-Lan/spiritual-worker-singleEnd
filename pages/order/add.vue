@@ -12,13 +12,13 @@
 					</u-form-item>
 					<u-form-item label="用工类型" prop="userInfo.workType" borderBottom @click="showSex = !showSex; " ref="item1"
 						required>
-						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" placeholder="请选择用工类型"
+						<u--input v-model="dataForm.workType" disabledColor="#ffffff" placeholder="请选择用工类型"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="用工标签" prop="userInfo.sex" borderBottom @click="showLabel = !showSex; "
 						ref="item1" required>
-						<u--textarea  v-model="dataForm.workLabel" disabled disabledColor="#ffffff" placeholder="请选择用工标签"
+						<u--textarea  v-model="dataForm.workLabel" disabledColor="#ffffff" placeholder="请选择用工标签"
 							border="none" autoHeight></u--textarea>
 
 
@@ -60,10 +60,6 @@
 						<u--input v-model="dataForm.singleMoney" border="none" @change='getSingleMoney'
 							placeholder="请输入单人服务费用"></u--input>
 					</u-form-item>
-					<u-form-item label="用工天数" prop="userInfo.employmentDay" borderBottom ref="item1" required>
-						<u--input v-model="dataForm.employmentDay" border="none"
-							placeholder="请输入用工天数"></u--input>
-					</u-form-item>
 					<u-form-item label="用工开始时间" prop="userInfo.startTime" borderBottom ref="item1" required
 						@click="dateShow = !dateShow;">
 						<u--input v-model="dataForm.startTime" border="none" placeholder="请选择用工开始时间"></u--input>
@@ -72,11 +68,15 @@
 						@click="endDateShow = !endDateShow;">
 						<u--input v-model="dataForm.endTime" border="none" placeholder="请选择用工结束时间"></u--input>
 					</u-form-item>
+					<u-form-item label="用工天数" prop="userInfo.employmentDay" borderBottom ref="item1" required>
+						<u--input v-model="dataForm.employmentDay" border="none"
+							placeholder="请输入用工天数"></u--input>
+					</u-form-item>
 					<u-form-item label="报名截至时间" prop="userInfo.orderClose" borderBottom ref="item1" required
 						@click="orderCloseShow = !orderCloseShow;">
 						<u--input v-model="dataForm.orderClose" border="none" placeholder="请选择报名截至时间"></u--input>
 					</u-form-item>
-					<u-form-item label="详细描述" prop="userInfo.name" @click="goToMpHtml" borderBottom ref="item1" required>
+					<u-form-item label="工作内容、用工要求" prop="userInfo.name" @click="goToMpHtml" borderBottom ref="item1" required>
 						<rich-text style="width: 100%;" :nodes="dataForm.workPlace"></rich-text>
 					</u-form-item>
 				</u-form>
@@ -268,7 +268,7 @@
 					},
 					{
 						field: '',
-						label: '详细描述',
+						label: '工作内容、用工要求',
 						required: true,
 						placeholder: '请输入',
 						border: 'none',
@@ -471,6 +471,16 @@
 						icon:'none'
 					})
 					return;
+				}else{
+					let reg = /^[1-9]\d*$/
+					let res = reg.test(this.dataForm.singleMoney)
+					if (!res) {
+						uni.showToast({
+							title:'单人服务费用只能是正整数',
+							icon:'none'
+						})
+						return
+					}
 				}
 				if(this.dataForm.employmentDay == '') {
 					uni.showToast({
@@ -495,7 +505,7 @@
 				}
 				if(this.dataForm.workPlace == '') {
 					uni.showToast({
-						title:'请输入详细描述',
+						title:'请输入工作内容、用工要求',
 						icon:'none'
 					})
 					return;
@@ -529,7 +539,7 @@
 					endAge:this.dataForm.endAge,
 					orderClose:this.dataForm.orderClose,
 					phone:this.dataForm.phone,
-					principalAccount:uni.getStorageSync('userInfoItem').id
+					principalAccount:Number(uni.getStorageSync('userInfoItem').id)
 				}).then(res => {
 					if (res.code == "00000") {
 						let ids = res.data;
@@ -565,6 +575,7 @@
 				let data = new Date(this.dataForm.endTime.replace(/-/g,'/')).getTime()
 				if(data>e.value || !this.dataForm.endTime){
 					this.dataForm.startTime = this.timestampToTime(e.value);
+					this.dataForm.employmentDay = this.beApartDays(this.dataForm.startTime,this.dataForm.endTime);
 					this.dateShow = false;
 				}else{
 					uni.showToast({
@@ -579,10 +590,26 @@
 				this.dataForm.orderClose = this.timestampToTime(e.value);
 				this.orderCloseShow = false
 			},
+			beApartDays (Date_start, Date_end) {
+				if (Date_start && Date_end) {
+					// 时间格式化
+					let date1 = new Date(Date_start);
+					let date2 = new Date(Date_end);
+					date1 = new Date(date1.getFullYear(), date1.getMonth(), date1.getDate());
+					date2 = new Date(date2.getFullYear(), date2.getMonth(), date2.getDate());
+					//目标时间减去当前时间
+					const diff = date1.getTime() - date2.getTime();
+					//计算当前时间与结束时间之间相差天数
+					return Math.abs(diff) / (24 * 60 * 60 * 1000) + 1;
+				}else{
+					return null
+				}
+			},
 			getEndTimes(e) {
 				let data = new Date(this.dataForm.startTime.replace(/-/g,'/')).getTime()
 				if(data<e.value ||!this.dataForm.startTime){
 					this.dataForm.endTime = this.timestampToTime(e.value);
+					this.dataForm.employmentDay = this.beApartDays(this.dataForm.startTime,this.dataForm.endTime);
 					this.endDateShow = false;
 				}else{
 					uni.showToast({

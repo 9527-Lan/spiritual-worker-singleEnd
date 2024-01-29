@@ -18,7 +18,7 @@
         <view class="list-item" v-for="(item, index) in list" :key="index">
           <view class="item-img">
             <u-avatar
-              :src="item.headSculptureUrl"
+              :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + item.headSculpture"
               mode="aspectFit"
               size="108"
             ></u-avatar>

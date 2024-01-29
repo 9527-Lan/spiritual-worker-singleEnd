@@ -7,11 +7,11 @@
     <!-- #ifdef APP-PLUS-NVUE -->
     <web-view ref="web" src="/static/app-plus/mp-html/local.html" :style="'margin-top:-2px;height:' + height + 'px'" @onPostMessage="_onMessage" />
     <!-- #endif -->
-    <view v-if="tooltip" class="_tooltip_contain" :style="'top:'+tooltip.top+'px'">
+    <!-- <view v-if="tooltip" class="_tooltip_contain" :style="'top:'+tooltip.top+'px'">
       <view class="_tooltip">
         <view v-for="(item, index) in tooltip.items" v-bind:key="index" class="_tooltip_item" :data-i="index" @tap="_tooltipTap">{{item}}</view>
       </view>
-    </view>
+    </view> -->
     <view v-if="slider" class="_slider" :style="'top:'+slider.top+'px'">
       <slider :value="slider.value" :min="slider.min" :max="slider.max" handle-size="14" block-size="14" show-value activeColor="white" style="padding:3px" @changing="_sliderChanging" @change="_sliderChange" />
     </view>

@@ -167,16 +167,15 @@
 					if (res.data.length) {
 						let dateList = res.data.map((el, index) => {
 							let big = index + 1
+							let imgs = el.orderImg?el.orderImg.split(',').map(els => 'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + els) :[]
 							return {
 								day: '第' + big + '天',
 								time: el.orderDate,
 								remark: el.orderDesc,
-								imgs: el.orderImgUrl
+								imgs: imgs
 							}
 						})
 						this.progress.dateList = dateList
-
-						console.log('BeingList', this.progress.dateList)
 					}
 				})
 			}

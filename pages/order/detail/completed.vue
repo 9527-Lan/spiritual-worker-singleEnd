@@ -154,6 +154,7 @@ export default {
 		},
 		open(index) {
 			console.log("index", index);
+			console.log(this.employees,'this.employees');
 			let item = this.employees[index]
 			this.listOrderItemList(this.id, item.engineerId)
 		},
@@ -175,11 +176,12 @@ export default {
 				if (res.data.length) {
 					let dateList = res.data.map((el, index) => {
 						let big = index + 1
+						let imgs = el.orderImg?el.orderImg.split(',').map(el => 'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + el) :[]
 						return {
 							day: '第' + big + '天',
 							time: el.orderDate,
 							remark: el.orderDesc,
-							imgs: el.orderImgUrl
+							imgs: imgs
 						}
 					})
 					this.progress.dateList = dateList

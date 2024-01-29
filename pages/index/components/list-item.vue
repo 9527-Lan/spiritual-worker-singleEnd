@@ -1,6 +1,6 @@
 <template>
 	<view class="list-item" @click="onClick">
-		<u-avatar :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + compData.headSculpture" size="92rpx"></u-avatar>
+		<u-avatar :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + compData.headSculpture" size="92rpx"></u-avatar>
 		<view class="information" >
 			<view class="information-top">
 				<view class="flex-center">
@@ -158,6 +158,10 @@
 				font-size: 32rpx;
 				font-weight: bold;
 				color: #333333;
+				max-width: 120rpx;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
 			}
 		}
 	}

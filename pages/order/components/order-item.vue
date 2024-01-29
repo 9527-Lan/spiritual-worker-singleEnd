@@ -65,8 +65,15 @@
 			</text>
 			<text v-if="compData.state == 'completed'">状态：已结算</text>
 			<text v-if="compData.state == 'exception'">订单存在异常，若有结算争议，请联系平台客服</text>
-			<text v-if="compData.state == 'grab'">抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{
-				compData.orderQuantity }}</text>
+			<!-- <text v-if="compData.state == 'grab'">抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{
+				compData.orderQuantity }}
+			</text> -->
+			<view v-if="compData.state == 'grab'" style="display: flex;justify-content: space-between;">
+				<text >抢单成功数：{{ compData.successSum == null ? 0 : compData.successSum }}/{{
+					compData.orderQuantity }}
+				</text>
+				<text style="color: red;">{{new Date(compData.orderClose.replace(/-/g,'/')).getTime() < new Date().getTime()?'已截止抢单':''}}</text>
+			</view>
 		</view>
 		<uni-popup ref="alertDialog" type="dialog">
 			<uni-popup-dialog type="warn" cancelText="否" confirmText="是" title="通知" content="是否删除该订单" @confirm="dialogConfirm"
@@ -167,6 +174,7 @@ export default {
 						principalType:res.data.principalType,
 						employmentDay:res.data.employmentDay,
 						id:res.data.id,
+						phone:res.data.phone,
 						orderClose:res.data.orderClose
 					}
 					uni.navigateTo({
@@ -207,6 +215,8 @@ export default {
 		position: relative;
 		.body-line {
 			margin-top: 28rpx;
+			display: flex;
+			justify-content: space-between;
 		}
 		.deleteButton{
 			position: absolute;

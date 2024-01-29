@@ -3,7 +3,10 @@
 		<view class="information">
 			<view class="left">
 				<u-avatar :src="avater" size="120" @click="upAvatar"></u-avatar>
-				<avatar @upload="myUpload" v-if="!avater" ref="avatar" style="width: 0;height: 0;"></avatar>
+				<avatar @upload="myUpload"  ref="avatar" style="width: 0;height: 0;"></avatar>
+				<view class="shezhi" v-if="!avater" @click.native.stop="uploadTouX">
+					设置
+				</view>
 			</view>
 			<view class="information-right">
 				<view class="name">{{ userInfo.name }}</view>
@@ -169,6 +172,7 @@ export default {
 			})
 		},
 		upAvatar() {
+			console.log(this.$refs.avatar);
 			this.$refs.avatar.fChooseImg(0, {
 				selWidth: "300upx", selHeight: "300upx",
 				expWidth: '260upx', expHeight: '260upx'
@@ -180,7 +184,7 @@ export default {
 			return new Promise((resolve, reject) => {
 				let a = uni.uploadFile({
 					//service.defaults.baseURL
-					url: 'https://lhyg.hnxfsd.cn/prod-api' + '/file/upload', // 仅为示例，非真实的接口地址
+					url: 'https://lhyg.hollwingroup.com/prod-api' + '/file/upload', // 仅为示例，非真实的接口地址
 					filePath: rsp.base64,
 					name: 'file',
 					formData: {
@@ -188,9 +192,9 @@ export default {
 					},
 					success: (res) => {
 						console.log(JSON.parse(res.data).data);
-						
+						console.log(uni.getStorageSync('userInfoItem'));
 						let parmas = {
-							id: uni.getStorageSync('userInfoItem').headSculpture,
+							id: uni.getStorageSync('userInfoItem').entrepreneurId,
 							img: JSON.parse(res.data).data.id
 						}
 						casualEntrepreneurAvatar(parmas).then(res => {
@@ -204,16 +208,23 @@ export default {
 				});
 			})
 		},
+		uploadTouX(){
+			this.upAvatar()
+			this.$refs.avatar.fSelect()
+		},
 		personageList() {
 			let userInfo = uni.getStorageSync('userInfo')
 			this.userInfo = userInfo
 			let params = {
 				id: userInfo.id,
-				type: uni.getStorageSync('loginType'),
+				type: uni.getStorageSync('loginType')
+			}
+			if(uni.getStorageSync('userInfoItem').isMain != 1){
+				params.principalAccount = uni.getStorageSync('userInfoItem').id
 			}
 			personage(params).then(res => {
 				const item = res.data;
-				this.avater = item.headSculptureUrl
+				this.avater = 'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + item.headSculpture
 				this.operates = [
 				{
 					number: item.cjOrderCount,
@@ -316,7 +327,21 @@ export default {
 page {
 	background-color: #f2f6ff;
 }
-
+.left {
+		width: 120rpx;
+		position: relative;
+		border-radius: 50%;
+		overflow: hidden;
+		.shezhi{
+			position: absolute;
+			bottom: 0;
+			width: 120rpx;
+			display: flex;
+			justify-content: center;
+			align-items: flex-end;
+			background: #929292c7;
+		}
+	}
 .page-my-index {
 	padding-top: 222rpx;
 	padding-bottom: 60rpx;

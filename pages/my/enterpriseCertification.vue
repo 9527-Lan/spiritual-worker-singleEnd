@@ -27,8 +27,8 @@
 					<u-form-item label="法人身份证件照片" borderBottom required>
 						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" border="none"></u--input>
 						<view class="imgdelegate" v-if="dataForm.delegateImgGh&&dataForm.delegateImgRx">
-							<u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + dataForm.delegateImgGh" height="150rpx" width="200rpx"  style="margin-right: 20px;"></u-image>
-						   <u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + dataForm.delegateImgRx" height="150rpx" width="200rpx"></u-image>
+							<u-image  :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + dataForm.delegateImgGh" height="150rpx" width="200rpx"  style="margin-right: 20px;"></u-image>
+						   <u-image  :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + dataForm.delegateImgRx" height="150rpx" width="200rpx"></u-image>
 						</view>
 						
 						<u-tag v-else text='去认证' shape="circle" plain size="mini"
@@ -38,7 +38,7 @@
 	
 					<u-form-item label="营业执照" borderBottom required>
 						<u--input v-model="dataForm.workType" disabled disabledColor="#ffffff" border="none"></u--input>
-						<u-image v-if="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + dataForm.licenseImg" :src="dataForm.licenseImgUrl" height="200rpx" width="200rpx"></u-image>
+						<u-image v-if="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + dataForm.licenseImg" :src="dataForm.licenseImgUrl" height="200rpx" width="200rpx"></u-image>
 						<u-tag v-else text="去认证" shape="circle" plain size="mini"
 							@click="handleClick('uploadLicense')"></u-tag>
 						<!-- </view> -->

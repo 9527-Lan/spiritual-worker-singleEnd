@@ -21,14 +21,14 @@
 			<u-swiper :list="swiperList" circular height="280rpx" :radius="15" indicator></u-swiper>
 		</view>
 		<view class="order-box">
-			<u-image @click="$toRoute('/pages/order/add')" src="@/static/publish.png" height="200rpx" width="100%"></u-image>
+			<u-image @click="toadd" src="@/static/publish.png" height="200rpx" width="100%"></u-image>
 			<view class="order-btn">
-				<u-button color="#3A84F0" size="mini" @click="$toRoute('/pages/order/add')">一键下单</u-button>
+				<u-button color="#3A84F0" size="mini" @click="toadd">一键下单</u-button>
 			</view>
 		</view>
 		<view class="tab">
 			<!-- <u-tabs :list="tabList" lineHeight="0.4rem" lineWidth="35" @change="changeTabList"></u-tabs> -->
-			<u-tabs @change="changeTabList" :list="tabList" lineWidth="33" lineHeight="0.4rem" :scrollable="false"
+			<u-tabs @change="changeTabList" :list="tabList" lineWidth="33" lineHeight="0.4rem" :scrollable="true"
 				:activeStyle="{
 						color: '#333333',
 						fontWeight: 'bold',
@@ -48,7 +48,8 @@
 <script>
 	import {
 		findCasualEngineer,
-		casualServiceType
+		casualServiceType,
+		toadd
 	} from "@/api/index.js"
 	import listItem from './components/list-item'
 	export default {
@@ -94,6 +95,17 @@
 				uni.navigateTo({
 					url:'/pages/index/personalDetails/check?data=' + encodeURIComponent(JSON.stringify(item))
 				})
+			},
+			toadd(){
+				toadd({principalAccount:uni.getStorageSync('userInfoItem').id}).then(res=>{
+					console.log(res);
+					if (!res.data) {
+						uni.$u.toast(res.msg)
+						return
+					}
+					this.$toRoute('/pages/order/add')
+				})
+				
 			},
 			// 首页列表渲染
 			findCasualEngineerList(){
@@ -158,7 +170,7 @@
 		onShow() {
 			let userInfo = uni.getStorageSync('userInfo')
 			if (!userInfo || !userInfo.id) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/login/index'
 				})
 				return 
@@ -167,7 +179,7 @@
 		mounted() {
 			let userInfo = uni.getStorageSync('userInfo')
 			if (!userInfo || !userInfo.id || !uni.getStorageSync('loginType')) {
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/login/index'
 				})
 				return 
@@ -191,7 +203,7 @@
 		margin: 42rpx 32rpx;
 	
 		/deep/ .u-tabs__wrapper__nav__line {
-			width: 35px !important;
+			width: 90rpx !important;
 		}
 	}
 	.page-index {

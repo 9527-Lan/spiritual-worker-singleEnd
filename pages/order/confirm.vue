@@ -102,7 +102,7 @@ export default {
 			},
 			{
 				field: '5',
-				label: '详细描述',
+				label: '工作内容、用工要求',
 				fieldType: 'rich',
 				required: false,
 				value: '',

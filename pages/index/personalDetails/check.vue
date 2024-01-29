@@ -19,7 +19,7 @@
 							<view class="tag-item" v-if="detailData.hasCertificate">持证上岗</view>
 						</view>
 					</view>
-					<u-avatar class="toux" :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + detailData.headSculpture" size="96rpx"></u-avatar>
+					<u-avatar class="toux" :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + detailData.headSculpture" size="96rpx"></u-avatar>
 				</view>
 				<view class="title">持有证书</view>
 				<view class="certificate">
